@@ -1,9 +1,12 @@
 "use client";
+// This directive ensures that the component is rendered on the client side, as Next.js can render components on either the client or server.
+
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { useRouter } from "next/navigation"; // Import useRouter
-import styles from "./fetch.module.css"; // Import the CSS module
+import { useRouter } from "next/navigation"; // Import the useRouter hook for client-side navigation
+import styles from "./fetch.module.css"; // Import the CSS module for styling
 
+// Interface to define the structure of an Organization object
 interface Organization {
   id: number;
   email: string;
@@ -14,8 +17,11 @@ interface Organization {
 }
 
 const OrganizationComponent = () => {
+  // State to hold the list of organizations
   const [orgs, setOrgs] = useState<Organization[]>([]);
+  // State to track loading status
   const [loading, setLoading] = useState<boolean>(true);
+  // State to hold the form data for a new organization
   const [newOrg, setNewOrg] = useState<Partial<Organization>>({
     name: "",
     email: "",
@@ -23,18 +29,20 @@ const OrganizationComponent = () => {
     adrs: "",
     post: "",
   });
-  const router = useRouter(); // Initialize router
+  const router = useRouter(); // Initialize the router for navigation
 
+  // useEffect hook to fetch organizations data on component mount
   useEffect(() => {
     fetchOrg();
   }, []);
 
+  // Function to fetch the list of organizations from the API
   const fetchOrg = async () => {
     try {
       const response = await axios.get(
         `${process.env.NEXT_PUBLIC_API_URL}/api/organization/`
       );
-      setOrgs(response.data);
+      setOrgs(response.data); // Update the state with the fetched organizations
     } catch (error) {
       console.error("Error fetching organizations:", error);
     } finally {
@@ -42,11 +50,13 @@ const OrganizationComponent = () => {
     }
   };
 
+  // Function to handle input changes in the form for adding a new organization
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setNewOrg((prevOrg) => ({ ...prevOrg, [name]: value }));
+    setNewOrg((prevOrg) => ({ ...prevOrg, [name]: value })); // Update the corresponding field in the newOrg state
   };
 
+  // Function to handle form submission for adding a new organization
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
@@ -57,7 +67,8 @@ const OrganizationComponent = () => {
         adrs: newOrg.adrs,
         post: newOrg.post,
       });
-      fetchOrg(); // Récupérer la liste mise à jour des organisations
+      fetchOrg(); // Refresh the list of organizations after adding a new one
+      // Reset the form fields
       setNewOrg({
         name: "",
         email: "",
@@ -70,21 +81,24 @@ const OrganizationComponent = () => {
     }
   };
 
+  // Function to handle the deletion of an organization
   const deleteOrganization = async (id: number) => {
     try {
       await axios.delete(
         `${process.env.NEXT_PUBLIC_API_URL}/api/organization/${id}/`
       );
-      fetchOrg(); // Récupérer la liste mise à jour des organisations
+      fetchOrg(); // Refresh the list of organizations after deletion
     } catch (error) {
       console.error("Error deleting organization:", error);
     }
   };
 
+  // Function to handle editing an organization, navigates to the edit page
   const editOrganization = (id: number) => {
-    router.push(`/fetch_test/edit_test/${id}`); // Redirect to edit page
+    router.push(`/fetch_test/edit_test/${id}`); // Redirect to the edit page for the selected organization
   };
 
+  // If the data is still loading, show a loading message
   if (loading) {
     return <div>Loading...</div>;
   }
