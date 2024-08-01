@@ -130,7 +130,7 @@ export function DocumentsList({
     >
       <div className={styles.header}>
         <h1 className={styles.headerTitle}>
-          {group?.name ?? capitalize(filter)} 
+          {group?.name ?? capitalize(filter)}
         </h1>
         <div className={styles.headerActions}>
           <Select
