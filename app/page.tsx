@@ -65,7 +65,7 @@ export default async function Index() {
             API test {/* Link to an API test page */}
           </LinkButton>
           <LinkButton
-            href="https://simr-backend.onrender.com/accounts/login/"
+            href={`${process.env.NEXT_PUBLIC_API_URL}/accounts/login/`}
             target="_blank"
             variant="destructive"
           >
