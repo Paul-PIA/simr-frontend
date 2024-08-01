@@ -98,7 +98,7 @@ const OrganizationComponent = () => {
     router.push(`/fetch_test/edit_test/${id}`); // Redirect to the edit page for the selected organization
   };
 
-  // If the data is still loading, show a loading message
+  // If the data is still loading, this shows a loading message
   if (loading) {
     return <div>Loading...</div>;
   }
