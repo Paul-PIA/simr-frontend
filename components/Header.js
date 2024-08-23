@@ -19,17 +19,17 @@ const { Header } = Layout;
 //     </Menu>
 // );
 
-export default function _Header(){
+export default function _Header({ onMenuClick }){
     return (
         <Header className="header" style={{ padding:0, background: '#fff', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <div style={{ marginLeft: 24}}>
-                <Avatar style={{ backgroundColor: '#87d068' }} icon={<UserOutlined />} />
+                <Avatar style={{ backgroundColor: '#87d068', cursor: 'pointer' }} icon={<UserOutlined />} onClick={() => onMenuClick('Profile')}/>
                 <span style={{ marginLeft: 8}}>Username</span>
             </div>
             <div style={{ marginRight: 24}}>
                 <Space size="middle">
-                    <Avatar style={{ backgroundColor: '#f56a00', cursor: 'pointer' }} icon={<NotificationOutlined />} onClick={() => console.log('Notificaitons')}/>
-                    <Avatar style={{ backgroundColor: '#7265e6', cursor: 'pointer' }} icon={<SettingOutlined />} onClick={() => console.log('Settings')}/>
+                    <Avatar style={{ backgroundColor: '#f56a00', cursor: 'pointer' }} icon={<NotificationOutlined />} onClick={() => onMenuClick('Notifications')}/>
+                    <Avatar style={{ backgroundColor: '#7265e6', cursor: 'pointer' }} icon={<SettingOutlined />} onClick={() => onMenuClick('Settings')}/>
                     <Avatar style={{ backgroundColor: '#ffbf00', cursor: 'pointer' }} icon={<LogoutOutlined />} onClick={() => window.location.href = '/login'}/>
                     {/* <Dropdown>
                         <a onClick={e =>e.preventDefault()}>
