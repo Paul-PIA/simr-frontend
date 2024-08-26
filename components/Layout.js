@@ -3,6 +3,9 @@ import { Layout } from 'antd';
 import _Footer from './Footer';
 import _Header from './Header';
 import _Sider from './Sidebar';
+import Notifications from '../contents/Notifications';
+import Settings from '../contents/Settings';
+import Profile from '../contents/Profile';
 
 const { Content } = Layout;
 
@@ -11,13 +14,13 @@ export default function _Layout({ children }) {
     const HeaderClick = (contentKey) => {
         switch (contentKey) {
             case 'Notifications':
-                setContent('Here are Notifications.');
+                setContent(<Notifications/>);
                 break;
             case 'Settings':
-                setContent('Here are Settings.');
+                setContent(<Settings/>);
                 break;
             case 'Profile':
-                setContent('Here is Profile.');
+                setContent(<Profile/>);
                 break;
             default:
                 setContent('This is index');
