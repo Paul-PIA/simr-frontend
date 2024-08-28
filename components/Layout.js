@@ -9,7 +9,7 @@ import Profile from '../contents/Profile';
 
 const { Content } = Layout;
 
-export default function _Layout({ children }) {
+export default function _Layout({ item }) {
     const [content, setContent] = useState("This is index.");
     const HeaderClick = (contentKey) => {
         switch (contentKey) {
@@ -23,7 +23,7 @@ export default function _Layout({ children }) {
                 setContent(<Profile/>);
                 break;
             default:
-                setContent('This is index');
+                setContent('This is index.');
         }
     };
     const SiderClick = (content) => {

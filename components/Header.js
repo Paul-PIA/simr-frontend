@@ -30,7 +30,7 @@ export default function _Header({ onMenuClick }){
                 <Space size="middle">
                     <Avatar style={{ backgroundColor: '#f56a00', cursor: 'pointer' }} icon={<NotificationOutlined />} onClick={() => onMenuClick('Notifications')}/>
                     <Avatar style={{ backgroundColor: '#7265e6', cursor: 'pointer' }} icon={<SettingOutlined />} onClick={() => onMenuClick('Settings')}/>
-                    <Avatar style={{ backgroundColor: '#ffbf00', cursor: 'pointer' }} icon={<LogoutOutlined />} onClick={() => window.location.href = '/login'}/>
+                    <Avatar style={{ backgroundColor: '#ffbf00', cursor: 'pointer' }} icon={<LogoutOutlined />} onClick={() => window.location.href = '/auth'}/>
                     {/* <Dropdown>
                         <a onClick={e =>e.preventDefault()}>
                             <Space>
