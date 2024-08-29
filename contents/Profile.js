@@ -25,21 +25,24 @@ export default function Profile() {
     };
 
     return (
-        <Card title='Profile' extra={<Button onClick={handleEditToggle}>
-            {isEditing ? 'save' : 'edit'}
-        </Button>}>
-            <p><strong>First name: </strong>{
-                isEditing ? <Input name='first' value={editProfile.first_name} onChange={handleInputChange} /> : profile.first_name
-            }</p>
-             <p><strong>Last name: </strong>{
-                isEditing ? <Input name='last' value={editProfile.last_name} onChange={handleInputChange} /> : profile.last_name
-            }</p>
-             <p><strong>Email adress: </strong>{
-                isEditing ? <Input name='email' value={editProfile.email} onChange={handleInputChange} /> : profile.email
-            }</p>
-             <p><strong>Telephone: </strong>{
-                isEditing ? <Input name='tel' value={editProfile.tel} onChange={handleInputChange} /> : profile.tel
-            }</p>
-        </Card>
+        <div style={{ flex: 1 }}>
+            <Card title='Profile' extra={<Button onClick={handleEditToggle}>
+                {isEditing ? 'save' : 'edit'}
+            </Button>}>
+                <p><strong>First name: </strong>{
+                    isEditing ? <Input name='first' value={editProfile.first_name} onChange={handleInputChange} /> : profile.first_name
+                }</p>
+                <p><strong>Last name: </strong>{
+                    isEditing ? <Input name='last' value={editProfile.last_name} onChange={handleInputChange} /> : profile.last_name
+                }</p>
+                <p><strong>Email adress: </strong>{
+                    isEditing ? <Input name='email' value={editProfile.email} onChange={handleInputChange} /> : profile.email
+                }</p>
+                <p><strong>Telephone: </strong>{
+                    isEditing ? <Input name='tel' value={editProfile.tel} onChange={handleInputChange} /> : profile.tel
+                }</p>
+            </Card>
+        </div>
+        
     )
 }

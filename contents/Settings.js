@@ -12,6 +12,7 @@ export default function Settings() {
     const [message, setMessage] = useState(true);
 
     return (
+        <div style={{flex:1}}>
         <Card title='Email Settings' bordered={true}>
             <SettingItem title='Frequence' type='number' value={frequence} onChange={setFrequence}
                 description='Set the maximum of mails received everyday.'
@@ -37,5 +38,7 @@ export default function Settings() {
                 },
             ]}/>
         </Card>
+        </div>
+
     );
 }
