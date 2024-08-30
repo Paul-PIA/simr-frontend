@@ -75,7 +75,8 @@ export default function _Footer() {
       <p key={"adrs"} className="footer-text">
         Adress: 5 rue Eugène Freyssinet, 75013 Paris-France
         <br />
-        15 Rue Lacépède, 75005 Paris-France
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;15
+        Rue Lacépède, 75005 Paris-France
       </p>,
     ],
   ];
