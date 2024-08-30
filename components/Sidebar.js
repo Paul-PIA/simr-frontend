@@ -1,30 +1,55 @@
-import React from 'react';
-import { useState } from 'react';
-import { Layout, Menu } from 'antd';
+import React from "react";
+import { useState } from "react";
+import { Layout, Menu } from "antd";
+import { BookOutlined, TeamOutlined } from "@ant-design/icons";
 
 const { Sider } = Layout;
 const { SubMenu } = Menu;
 
 export default function _Sider() {
-    const [collapsed, setCollapsed] = useState(false);
+  const [collapsed, setCollapsed] = useState(false); // open and close the sider
+  const [openKeys, setOpenKeys] = useState([]); //open and close subMenu
 
-    return (
-        <Sider collapsible collapsed={collapsed} onCollapse={setCollapsed} width={200} style={{ background: '#fff' }}>
-            <Menu
-                mode="inline"
-                defaultSelectedKeys={['1']}
-                style={{ height: '100%', borderRight:0 }}
-            >
-                <Menu.SubMenu key="1" title="Contracts">
-                    <Menu.Item key='1' onClick={() => onMenuClick('Con1')}>Con1</Menu.Item>
-                    <Menu.Item key='2' onClick={() => onMenuClick('Con2')}>Con2</Menu.Item>
-                    <Menu.Item key='2' onClick={() => onMenuClick('Con3')}>Con3</Menu.Item>
-                </Menu.SubMenu>
-                <Menu.SubMenu key="1" title="My Firm">
-                    <Menu.Item key='1' onClick={() => onMenuClick('Fellow')}>Fellow</Menu.Item>
-                    <Menu.Item key='2' onClick={() => onMenuClick('Contact')}>Contact</Menu.Item>
-                </Menu.SubMenu>
-            </Menu>
-        </Sider>
-    );
+  const handleOpenChange = (keys) => {
+    const latestOpenKey = keys.find((key) => !openKeys.includes(key));
+    if (!latestOpenKey) {
+      setOpenKeys([]);
+    } else {
+      setOpenKeys([latestOpenKey]);
+    }
+  };
+  return (
+    <Sider
+      collapsible
+      collapsed={collapsed}
+      onCollapse={setCollapsed}
+      width={200}
+      style={{ background: "#fff", padding: 0 }}
+    >
+      <Menu
+        mode="inline"
+        openKeys={openKeys}
+        onOpenChange={handleOpenChange}
+        style={{ height: "100%", borderRight: 0 }}
+      >
+        <SubMenu
+          key="sub1"
+          title={collapsed ? null : "Contracts"}
+          icon={<BookOutlined />}
+        >
+          <Menu.Item key="1">Con1</Menu.Item>
+          <Menu.Item key="2">Con2</Menu.Item>
+          <Menu.Item key="3">Con3</Menu.Item>
+        </SubMenu>
+        <SubMenu
+          key="sub2"
+          title={collapsed ? null : "My Firm"}
+          icon={<TeamOutlined />}
+        >
+          <Menu.Item key="1">Fellow</Menu.Item>
+          <Menu.Item key="2">Contact</Menu.Item>
+        </SubMenu>
+      </Menu>
+    </Sider>
+  );
 }

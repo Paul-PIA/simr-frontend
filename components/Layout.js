@@ -32,7 +32,7 @@ export default function _Layout({ item }) {
   };
   return (
     <div>
-      <Layout style={{ minHeight: "100vh" }}>
+      <Layout style={{ minHeight: "100vh", margin: 0, padding: 0 }}>
         <_Header onMenuClick={HeaderClick} />
         <Layout>
           <_Sider onMenuClick={SiderClick} />
