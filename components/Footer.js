@@ -18,7 +18,7 @@ export default function _Footer() {
     [
       <h3 key={1}>
         <a
-          href="https://www.pia.com/privacy-policy"
+          href="https://parisinfrastructureadvisory.com/privacy-policy/"
           className="footer-link"
           title="Understand how we handle your data."
         >
