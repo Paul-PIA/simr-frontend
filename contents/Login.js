@@ -1,11 +1,25 @@
 import React, { useState } from "react";
+import { apiClient } from "../services/api";
 
 export default function Login() {
   return (
     <div>
       <div className="auth-form">
         <h2>Login</h2>
-        <form>
+        <form 
+  name="login" 
+  onSubmit={(e) => {
+    e.preventDefault();
+    apiClient({
+      method: 'POST',
+      path: 'auth/login',
+      data: {
+        username: document.forms.login.username.value,
+        password: document.forms.login.password.value
+      }
+    });
+  }}
+>
           <label>
             Username&nbsp;
             <input type="text" name="username" />
@@ -14,8 +28,9 @@ export default function Login() {
             Password&nbsp;&nbsp;
             <input type="password" name="password" />
           </label>
+          <button type="submit">Login</button>
         </form>
-        <button type="submit">Login</button>
+
         {/* <div className="auth-links">
           <a href="/forgot-password" className="forgot-password">
             Forgot Password?
