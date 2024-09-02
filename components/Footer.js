@@ -55,7 +55,7 @@ export default function _Footer() {
           <FontAwesomeIcon icon={faTwitter} />
         </a>
         <a
-          href="https://linkedin.com"
+          href="https://www.linkedin.com/company/pia-paris-infrastructure-advisory/?viewAsMember=true"
           target="_blank"
           rel="noopener noreferrer"
           className="icon-link"
