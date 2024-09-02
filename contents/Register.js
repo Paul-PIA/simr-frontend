@@ -1,11 +1,26 @@
 import React, { useState } from "react";
+import { apiClient } from "../services/api";
 
 export default function Register() {
   return (
     <div>
       <div className="auth-form">
         <h2>Register</h2>
-        <form>
+        <form 
+  name="register" 
+  onSubmit={(e) => {
+    e.preventDefault();
+    apiClient({
+      method: 'POST',
+      path: 'auth/registration/',
+      data: {
+        username: document.forms.register.username.value,
+        email:document.forms.register.email.value,
+        password1: document.forms.register.password1.value,
+        password2: document.forms.register.password2.value
+      }
+    });
+  }}>
           <label>
             <input
               type="text"
@@ -16,8 +31,16 @@ export default function Register() {
           </label>
           <label>
             <input
+              type="text"
+              name="email"
+              placeholder="Email"
+              required
+            />
+          </label>
+          <label>
+            <input
               type="password"
-              name="password"
+              name="password1"
               placeholder="Password"
               required
             />
@@ -25,7 +48,7 @@ export default function Register() {
           <label>
             <input
               type="password"
-              name="password"
+              name="password2"
               placeholder="Repeat password"
               required
             />
