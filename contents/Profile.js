@@ -41,7 +41,8 @@ export default function Profile() {
             <strong>First name: </strong>
             {isEditing ? (
               <Input
-                name="first"
+              type="text"
+                name="first_name"
                 value={editProfile.first_name}
                 onChange={handleInputChange}
               />
@@ -53,7 +54,8 @@ export default function Profile() {
             <strong>Last name: </strong>
             {isEditing ? (
               <Input
-                name="last"
+                type="text"
+                name="last_name"
                 value={editProfile.last_name}
                 onChange={handleInputChange}
               />
@@ -65,6 +67,7 @@ export default function Profile() {
             <strong>Email adress: </strong>
             {isEditing ? (
               <Input
+                type="email"
                 name="email"
                 value={editProfile.email}
                 onChange={handleInputChange}

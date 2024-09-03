@@ -1,6 +1,6 @@
 import React from "react";
 import { Layout } from "antd";
-import logo from './logo.png';
+import logo from "./logo.png";
 
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
