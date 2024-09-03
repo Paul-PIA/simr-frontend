@@ -31,7 +31,7 @@ export default function Register() {
           </label>
           <label>
             <input
-              type="text"
+              type="email"
               name="email"
               placeholder="Email"
               required

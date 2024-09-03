@@ -5,7 +5,19 @@ export default function ForgotPassword() {
     <div>
       <div className="auth-form">
         <h2>Forgot Password</h2>
-        <form>
+        <form 
+  name="forgot" 
+  onSubmit={(e) => {
+    e.preventDefault();
+    apiClient({
+      method: 'POST',
+      path: 'auth/login/',
+      data: {
+        email: document.forgot.email.value,
+      }
+    });
+  }}
+>
           <label>
             <input
               type="email"

@@ -1,5 +1,7 @@
 import React from "react";
 import { Layout } from "antd";
+import logo from './logo.png';
+
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -84,6 +86,7 @@ export default function _Footer() {
   return (
     <>
       <Footer className="footer">
+      <img src={logo} alt="Logo" />
         <MultiColumn columns={columns} />
       </Footer>
       <div className="footer-bottom">
