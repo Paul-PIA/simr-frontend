@@ -27,7 +27,7 @@ importers:
         specifier: ^1.7.7
         version: 1.7.7
       fs:
-        specifier: 0.0.1-security
+        specifier: ^0.0.1-security
         version: 0.0.1-security
       jsdom:
         specifier: ^25.0.0

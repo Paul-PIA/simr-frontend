@@ -15,6 +15,7 @@ import { MultiColumn } from "./MultiColumn";
 
 const { Footer } = Layout;
 
+
 export default function _Footer() {
   const columns = [
     [
@@ -75,10 +76,10 @@ export default function _Footer() {
         Tel:(+33) 1 02 03 04 05
       </p>,
       <p key={"adrs"} className="footer-text">
-        Adress: 5 rue Eugène Freyssinet, 75013 Paris-France
+        Adress: 5 rue Eugène Freyssinet, 75013 Paris, France
         <br />
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;15
-        Rue Lacépède, 75005 Paris-France
+        Rue Lacépède, 75005 Paris, France
       </p>,
     ],
   ];
@@ -86,7 +87,9 @@ export default function _Footer() {
   return (
     <>
       <Footer className="footer">
-      <img src={logo} alt="Logo" />
+      <div className="Logo-PIA">
+      <img src={logo} alt="Logo-PIA" height={2} width={5}/>
+    </div>
         <MultiColumn columns={columns} />
       </Footer>
       <div className="footer-bottom">
@@ -137,6 +140,7 @@ export default function _Footer() {
         }
         .icon-link:hover {
           color: #ff5722;
+      }
       `}</style>
     </>
   );
