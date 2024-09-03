@@ -11,7 +11,7 @@ export default function ForgotPassword() {
     e.preventDefault();
     apiClient({
       method: 'POST',
-      path: 'auth/login/',
+      path: 'auth/forgotpassword/',
       data: {
         email: document.forgot.email.value,
       }
