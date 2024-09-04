@@ -9,7 +9,7 @@ export default function Profile() {
     last_name: "default last",
     email: "default email",
     tel: "default phone",
-    name: "John Doe",
+    username: "John Doe",
     location: "New York, USA",
   });
   const [editProfile, setEditProfile] = useState(profile);
@@ -37,6 +37,19 @@ export default function Profile() {
             </Button>
           }
         >
+          <p>
+            <strong>Username: </strong>
+            {isEditing ? (
+              <Input
+              type="text"
+                name="username"
+                value={editProfile.username}
+                onChange={handleInputChange}
+              />
+            ) : (
+              profile.username
+            )}
+          </p>
           <p>
             <strong>First name: </strong>
             {isEditing ? (
@@ -86,6 +99,19 @@ export default function Profile() {
               />
             ) : (
               profile.tel
+            )}
+          </p>
+          <p>
+            <strong>Location: </strong>
+            {isEditing ? (
+              <Input
+              type="text"
+                name="location"
+                value={editProfile.location}
+                onChange={handleInputChange}
+              />
+            ) : (
+              profile.location
             )}
           </p>
           {/* <div className="profile-container">
