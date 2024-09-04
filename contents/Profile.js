@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { Button, Card, Input, Typography } from "antd";
 const { Paragraph } = Typography;
+import { getToken } from "../services/jwt";
+import { jwtDecode } from "jwt-decode";
 
 export default function Profile() {
   const [isEditing, setIsEditing] = useState(false);
@@ -17,6 +19,14 @@ export default function Profile() {
   const handleEditToggle = () => {
     if (isEditing) {
       setProfile(editProfile);
+      const token=getToken();
+      const decoded=jwtDecode(token);
+      const id=decoded.user_id;
+      apiClient({
+        method: 'PATCH/PUT',
+        path: `/api/user/${id}`,
+        data: profile
+      });
     }
     setIsEditing(!isEditing);
   };
