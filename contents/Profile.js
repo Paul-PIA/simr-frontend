@@ -12,7 +12,7 @@ export default function Profile() {
     email: "default email",
     tel: "default phone",
     username: "John Doe",
-    location: "New York, USA",
+    city: "New York, USA",
   });
   const [editProfile, setEditProfile] = useState(profile);
 
@@ -112,16 +112,16 @@ export default function Profile() {
             )}
           </p>
           <p>
-            <strong>Location: </strong>
+            <strong>City: </strong>
             {isEditing ? (
               <Input
               type="text"
-                name="location"
-                value={editProfile.location}
+                name="city"
+                value={editProfile.city}
                 onChange={handleInputChange}
               />
             ) : (
-              profile.location
+              profile.city
             )}
           </p>
           {/* <div className="profile-container">
