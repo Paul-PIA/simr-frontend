@@ -12,7 +12,7 @@ export default function ChangePassword() {
     e.preventDefault();
     apiClient({
       method: 'POST',
-      path: 'auth/password/change/',
+      path: 'api/auth/password/change/',
       data: {
         new_password1: document.forms.change.new_password1.value,
         new_password2: document.forms.change.new_password2.value

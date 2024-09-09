@@ -88,7 +88,7 @@ export default function _Footer() {
     <>
       <Footer className="footer">
       <div className="Logo-PIA">
-      <img src={logo} alt="Logo-PIA" height={2} width={5}/>
+      <img src={logo} alt="Logo-PIA" height={50} width={200}/>
     </div>
         <MultiColumn columns={columns} />
       </Footer>

@@ -20,11 +20,12 @@ export default function Profile() {
     if (isEditing) {
       setProfile(editProfile);
       const token=getToken();
+      console.log(token)
       const decoded=jwtDecode(token);
       const id=decoded.user_id;
       apiClient({
         method: 'PATCH/PUT',
-        path: `/api/user/${id}`,
+        path: `user/${id}`,
         data: profile
       });
     }

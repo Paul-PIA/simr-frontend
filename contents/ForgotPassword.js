@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { apiClientNotoken } from "../services/api";
 
 export default function ForgotPassword() {
   return (
@@ -9,7 +10,7 @@ export default function ForgotPassword() {
   name="forgot" 
   onSubmit={(e) => {
     e.preventDefault();
-    apiClient({
+    apiClientNotoken({
       method: 'POST',
       path: 'auth/forgotpassword/',
       data: {
