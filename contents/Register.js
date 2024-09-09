@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { apiClient } from "../services/api";
+import { apiClientNotoken } from "../services/api";
 
 export default function Register() {
   return (
@@ -10,7 +10,7 @@ export default function Register() {
   name="register" 
   onSubmit={(e) => {
     e.preventDefault();
-    apiClient({
+    apiClientNotoken({
       method: 'POST',
       path: 'auth/registration/',
       data: {
