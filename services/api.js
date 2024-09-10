@@ -36,3 +36,21 @@ export const apiClientNotoken = async ({ method, path, data }) => {
         throw error;
     }
 };
+
+export const apiClientGetoken = async ({ method, path, data }) => {
+    const url = `${API_URL}/${path}`;
+    try {
+        const response = await axios({ method, url, headers: {
+            'X-CSRFToken': csrfToken
+        }, data });
+        const { access, refresh } = response.data;  // Récupère les tokens
+        console.log('Access Token:', access);
+        console.log('Refresh Token:', refresh);
+        localStorage.setItem('access', access);
+        localStorage.setItem('refresh', refresh);
+        return response.data;
+    } catch (error) {
+        console.error(`Failed:`, error);
+        throw error;
+    }
+};

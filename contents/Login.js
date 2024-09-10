@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { apiClientNotoken } from "../services/api";
+import { apiClientNotoken,apiClientGetoken } from "../services/api";
 import { getToken, setToken } from "../services/jwt";
 
 export default function Login() {
@@ -19,17 +19,14 @@ export default function Login() {
         password: document.forms.login.password.value
       }
     });
-    const { access, refresh }= apiClientNotoken({
+    apiClientGetoken({
       method: 'POST',
       path: 'token/',
       data: {
         username: document.forms.login.username.value,
         password: document.forms.login.password.value
       }
-    });
-
-  console.log(access);
-  console.log(refresh);
+    })
   }}
 >
           <label>
