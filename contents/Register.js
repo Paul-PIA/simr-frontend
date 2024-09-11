@@ -8,9 +8,9 @@ export default function Register() {
         <h2>Register</h2>
         <form 
   name="register" 
-  onSubmit={(e) => {
+  onSubmit={async (e) => {
     e.preventDefault();
-    apiClientNotoken({
+    await apiClientNotoken({
       method: 'POST',
       path: 'auth/registration',
       data: {
@@ -20,6 +20,7 @@ export default function Register() {
         password2: document.forms.register.password2.value
       }
     });
+    window.location=window.location
   }}>
           <label>
             <input

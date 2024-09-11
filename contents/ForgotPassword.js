@@ -8,15 +8,16 @@ export default function ForgotPassword() {
         <h2>Forgot Password</h2>
         <form 
   name="forgot" 
-  onSubmit={(e) => {
+  onSubmit={async (e) => {
     e.preventDefault();
-    apiClientNotoken({
+    await apiClientNotoken({
       method: 'POST',
       path: 'auth/forgotpassword',
       data: {
         email: document.forgot.email.value,
       }
     });
+    window.location=window.location
   }}
 >
           <label>
