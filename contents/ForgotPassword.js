@@ -12,7 +12,7 @@ export default function ForgotPassword() {
     e.preventDefault();
     apiClientNotoken({
       method: 'POST',
-      path: 'auth/forgotpassword/',
+      path: 'auth/forgotpassword',
       data: {
         email: document.forgot.email.value,
       }

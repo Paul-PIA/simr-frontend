@@ -1,30 +1,62 @@
+'use client'
+
 import React, { useState } from "react";
 import { Button, Card, Input, Typography } from "antd";
 const { Paragraph } = Typography;
-import { getToken } from "../services/jwt";
+import {apiClient} from "../services/api";
 import { jwtDecode } from "jwt-decode";
+import { useEffect } from "react";
+import { getToken } from "../services/jwt";
+
+
 
 export default function Profile() {
+  async function SetFirstProfile(){
+    await apiClient({
+      method:'POST',
+      path:'token/refresh',
+      data:{refresh:localStorage.getItem('refresh')}
+    })
+    const token=localStorage.getItem('access');
+    const decoded=jwtDecode(token);
+    const id=decoded.user_id ;
+    const response=await apiClient({
+      method:'GET',
+      path:`user/${id}`,
+      data:{}
+    });
+    setProfile({
+      first_name: response.first_name,
+      last_name: response.last_name,
+      email: response.email,
+      tel: response.tel,
+      username: response.username,
+      city: response.city
+    });
+  };
   const [isEditing, setIsEditing] = useState(false);
   const [profile, setProfile] = useState({
-    first_name: "default first",
-    last_name: "default last",
-    email: "default email",
-    tel: "default phone",
-    username: "John Doe",
-    city: "New York, USA",
+    first_name: "",
+    last_name: "",
+    email: "",
+    tel: "",
+    username: "",
+    city: "",
   });
+  SetFirstProfile();
   const [editProfile, setEditProfile] = useState(profile);
 
   const handleEditToggle = () => {
     if (isEditing) {
       setProfile(editProfile);
-      const token=getToken();
-      console.log(token)
-      const decoded=jwtDecode(token);
-      const id=decoded.user_id;
       apiClient({
-        method: 'PATCH/PUT',
+        method: 'POST',
+        path: 'token/refresh',
+        data: localStorage.getItem('refresh')
+      });
+
+      apiClient({
+        method: 'PATCH',
         path: `user/${id}`,
         data: profile
       });

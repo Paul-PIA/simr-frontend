@@ -11,8 +11,13 @@ export default function ChangePassword() {
   onSubmit={(e) => {
     e.preventDefault();
     apiClient({
+      method:'POST',
+      path:'token/refresh',
+      data:{refresh:localStorage.getItem('refresh')}
+    });
+    apiClient({
       method: 'POST',
-      path: 'api/auth/password/change/',
+      path: 'api/auth/password/change',
       data: {
         new_password1: document.forms.change.new_password1.value,
         new_password2: document.forms.change.new_password2.value

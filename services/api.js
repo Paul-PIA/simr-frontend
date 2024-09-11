@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { getToken, csrfToken } from './jwt';
+import { jwtDecode } from 'jwt-decode';
 
 
 const LOCAL_URL = 'http://127.0.0.1:8000/api';
@@ -10,8 +11,8 @@ const API_URL = SERVER_URL; // switch LOCAL_URL or SERVER_URL to adapt the envir
 axios.defaults.withCredentials = true;
 
 export const apiClient = async ({ method, path, data }) => {
-    const url = `${API_URL}/${path}`;
-    const token = getToken();
+    const url = `${API_URL}/${path}/`;
+    const token = localStorage.getItem('access');
     try {
         const response = await axios({ method, url, headers: {
             'Authorization': `Bearer ${token}`,
@@ -25,7 +26,7 @@ export const apiClient = async ({ method, path, data }) => {
 };
 
 export const apiClientNotoken = async ({ method, path, data }) => {
-    const url = `${API_URL}/${path}`;
+    const url = `${API_URL}/${path}/`;
     try {
         const response = await axios({ method, url, headers: {
             'X-CSRFToken': csrfToken
@@ -38,12 +39,12 @@ export const apiClientNotoken = async ({ method, path, data }) => {
 };
 
 export const apiClientGetoken = async ({ method, path, data }) => {
-    const url = `${API_URL}/${path}`;
+    const url = `${API_URL}/${path}/`;
     try {
         const response = await axios({ method, url, headers: {
             'X-CSRFToken': csrfToken
         }, data });
-        const { access, refresh } = response.data;  // Récupère les tokens
+        const { refresh, access } = response.data;  // Récupère les tokens
         console.log('Access Token:', access);
         console.log('Refresh Token:', refresh);
         localStorage.setItem('access', access);
@@ -54,3 +55,19 @@ export const apiClientGetoken = async ({ method, path, data }) => {
         throw error;
     }
 };
+
+export const fetchProfile=async ({}) =>{
+    const token= await apiClient({
+        method: 'POST',
+        path: 'token/refresh',
+        data: localStorage.getItem('refresh')
+      });
+    const decoded=jwtDecode(token);
+    const id=decoded.user_id ;
+    const response=await apiClient({
+        method:'GET',
+        path:`user/${id}`,
+        data:NaN
+      });
+      localStorage.setItem('profile',response)
+}

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { apiClientNotoken,apiClientGetoken } from "../services/api";
+import { apiClientNotoken,apiClientGetoken,apiClient } from "../services/api";
 import { getToken, setToken } from "../services/jwt";
 
 export default function Login() {
@@ -9,24 +9,28 @@ export default function Login() {
         <h2>Login</h2>
         <form 
   name="login" 
-  onSubmit={(e) => {
+  onSubmit={async (e) => {
     e.preventDefault();
-    apiClientNotoken({
+    await apiClientNotoken({
       method: 'POST',
-      path: 'auth/login/',
+      path: 'auth/login',
       data: {
         username: document.forms.login.username.value,
         password: document.forms.login.password.value
       }
     });
-    apiClientGetoken({
+    await apiClientGetoken({
       method: 'POST',
-      path: 'token/',
+      path: 'token',
       data: {
         username: document.forms.login.username.value,
         password: document.forms.login.password.value
       }
-    })
+    });
+    // await apiClient({
+    //   method:'GET',
+    //   path:'adam'
+    // })
   }}
 >
           <label>
