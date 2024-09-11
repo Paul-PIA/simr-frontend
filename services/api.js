@@ -55,19 +55,3 @@ export const apiClientGetoken = async ({ method, path, data }) => {
         throw error;
     }
 };
-
-export const fetchProfile=async ({}) =>{
-    const token= await apiClient({
-        method: 'POST',
-        path: 'token/refresh',
-        data: localStorage.getItem('refresh')
-      });
-    const decoded=jwtDecode(token);
-    const id=decoded.user_id ;
-    const response=await apiClient({
-        method:'GET',
-        path:`user/${id}`,
-        data:NaN
-      });
-      localStorage.setItem('profile',response)
-}

@@ -31,6 +31,7 @@ export default function Login() {
     //   method:'GET',
     //   path:'adam'
     // })
+    window.location='..'
   }}
 >
           <label>
