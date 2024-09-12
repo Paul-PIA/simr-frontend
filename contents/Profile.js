@@ -11,6 +11,7 @@ import { getToken } from "../services/jwt";
 
 
 export default function Profile() {
+  const [first,setFirst]=useState(true);
   async function SetFirstProfile(){
     await apiClient({
       method:'POST',
@@ -43,7 +44,9 @@ export default function Profile() {
     username: "",
     city: "",
   });
+  if (first){
   SetFirstProfile();
+  setFirst(false)}
   const [editProfile, setEditProfile] = useState(profile);
 
   const handleEditToggle = () => {
@@ -52,9 +55,11 @@ export default function Profile() {
       apiClient({
         method: 'POST',
         path: 'token/refresh',
-        data: localStorage.getItem('refresh')
+        data: {refresh:localStorage.getItem('refresh')}
       });
-
+      const token=localStorage.getItem('access');
+      const decoded=jwtDecode(token);
+      const id=decoded.user_id ;
       apiClient({
         method: 'PATCH',
         path: `user/${id}`,

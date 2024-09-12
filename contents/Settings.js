@@ -9,7 +9,7 @@ const { Paragraph } = Typography;
 export default function Settings() {
     const [isFirst,setIsFirst]=useState(true)
     async function FirstSettings(){
-        if (isFirst) {
+
         await apiClient({
             method:'POST',
             path:'token/refresh',
@@ -28,15 +28,16 @@ export default function Settings() {
         setChange(response.newchange);
         setComment(response.newcomment);
         setMessage(response.newmessage);
-        setIsFirst(false)
-    }};
+};
     const [frequence, setFrequence] = useState(5);
     const [file, setFile] = useState(true);
     const [change, setChange] = useState(true);
     const [comment, setComment] = useState(true);
     const [message, setMessage] = useState(true);
+    if (isFirst) {
     FirstSettings();
-
+    setIsFirst(false)
+};
     return (
         <div style={{flex:1}}>
         <Card name="sett" title='Email Settings' bordered={true}>
