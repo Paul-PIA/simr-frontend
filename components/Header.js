@@ -24,7 +24,7 @@ export default function _Header({ onMenuClick }){
         <Header className="header" style={{ padding:0, background: '#fff', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <div style={{ marginLeft: 24}}>
                 <Avatar style={{ backgroundColor: '#87d068', cursor: 'pointer' }} icon={<UserOutlined />} onClick={() => onMenuClick('Profile')}/>
-                <span style={{ marginLeft: 8}}>Username</span>
+                <span style={{ marginLeft: 8}}>Profile</span>
             </div>
             <div style={{ marginRight: 24}}>
                 <Space size="middle">

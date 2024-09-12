@@ -11,20 +11,22 @@ export default function inscription() {
         <h2>Please fill in the necessary information</h2>
         <form 
   name="inscription" 
-  onSubmit={(e) => {
+  onSubmit={async (e) => {
     e.preventDefault();
-    const token=getToken();
+    const token=localStorage.getItem('access');
     const decoded=jwtDecode(token);
     const id=decoded.user_id;
-    apiClient({
-      method: 'PATCH/PUT',
-      path: `/api/user/${id}`,
+    await apiClient({
+      method: 'PATCH',
+      path: `user/${id}`,
       data: {
         tel:document.forms.inscription.tel.value,
         first_name:document.forms.inscription.first.value,
         last_name:document.forms.inscription.last.value,
+        city:document.forms.inscription.city.value
       }
     });
+    window.location='../'
   }}
 >
           <label>
@@ -43,6 +45,12 @@ export default function inscription() {
             Phone number&nbsp;&nbsp;
             <input type="tel" 
             name="tel" 
+            required/>
+          </label>
+          <label>
+            City&nbsp;&nbsp;
+            <input type="text" 
+            name="city" 
             required/>
           </label>
           <button type="submit">Save</button>

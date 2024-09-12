@@ -10,9 +10,9 @@ export default function SettingItem({ title, description, type, value, onChange 
             <Paragraph strong>{title}</Paragraph>
             <Paragraph type='secondary'>{description}</Paragraph>
             {type === 'number' ? (
-                <InputNumber value={value} onChange={onChange} min={0}/>
+                <InputNumber value={value} onChange={(newValue) => onChange({ target: { value: newValue } })} min={0}/>
             ) : (
-                <Switch checked={value} onChange={onChange}/>
+                <Switch checked={value} onChange={(checked) => onChange({ target: { value: checked } })}/>
             )}
         </div>
     );

@@ -60,7 +60,7 @@ export default function Profile() {
         path: `user/${id}`,
         data: profile
       });
-    }
+    } else {setEditProfile(profile)}
     setIsEditing(!isEditing);
   };
 
