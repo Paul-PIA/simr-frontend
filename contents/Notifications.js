@@ -79,13 +79,13 @@ export default function Notifications() {
     'S':'Shared'
   };
   const objets={
-    'C':'contract',
-    'E':'exercise',
-    'F':'file',
-    'U':'user',
-    'M':'comment',
-    'T':'team',
-    'R':'right'
+    'C':'a contract',
+    'E':'an exercise',
+    'F':'a file',
+    'U':'a user',
+    'M':'a comment',
+    'T':'a team',
+    'R':'a right'
   };
   const [currentPage, setCurrentPage] = useState(1);
   const pageSize = 1;
@@ -135,7 +135,7 @@ export default function Notifications() {
               title={<a href="javascript:void(0);">{item.title}</a>}
               description={
                 <>
-                <Paragraph>{evenements[item.event]} a {objets[item.object]}</Paragraph>
+                <Paragraph>{evenements[item.event]} {objets[item.object]}</Paragraph>
                   <Paragraph>{item.description}</Paragraph>
                   <Text type="secondary">
                     sent by {item.user} at {item.time}
