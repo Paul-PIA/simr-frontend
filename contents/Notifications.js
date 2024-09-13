@@ -10,6 +10,8 @@ import {
 } from "antd";
 import { NotificationOutlined } from "@ant-design/icons";
 const { Text, Paragraph } = Typography;
+import { apiClient } from "../services/api";
+import { jwtDecode } from "jwt-decode";
 
 const list = [
   {
@@ -17,7 +19,6 @@ const list = [
     title: "notif 1",
     description: "create a contract",
     icon: "bell",
-    read: true,
     user: "Paul",
     time: "yesterday",
   },
@@ -26,7 +27,6 @@ const list = [
     title: "notif 2",
     description: "create an exercise",
     icon: "bell",
-    read: false,
     user: "Paul",
     time: "today",
   },
@@ -35,13 +35,58 @@ const list = [
     title: "notif 3",
     description: "upload a file",
     icon: "bell",
-    read: false,
     user: "Giulio",
     time: "tomorrow",
   },
 ];
 
 export default function Notifications() {
+  const [first,setFirst]=useState(true);
+  async function RetrieveNotif(){
+    const token=localStorage.getItem('access');
+    const decoded=jwtDecode(token);
+    const id=decoded.user_id ;
+    const response=await apiClient({
+      method:'GET',
+      path:`notification/?receiver_exact=${id}`,
+      data:{}
+    });
+    const l=[];
+    for (let step = 0; step < response.length; step++){
+      const user_info=await apiClient({
+        method:'GET',
+        path:`user/${response[step].actor}`
+      });
+      l.push({
+        id:step+1,
+        notif_id:id,
+        title:`notif ${step+1}`,
+        description:response[step].message,
+        icon:"bell",
+        user_info:user_info,
+        user:user_info.username,
+        time:response[step].send_time,
+        object:response[step].object,
+        event:response[step].event
+      })
+    }
+    setData(l)
+  };
+  const evenements={
+    'C':'Created',
+    'U':'Updated',
+    'D':'Deleted',
+    'S':'Shared'
+  };
+  const objets={
+    'C':'contract',
+    'E':'exercise',
+    'F':'file',
+    'U':'user',
+    'M':'comment',
+    'T':'team',
+    'R':'right'
+  };
   const [currentPage, setCurrentPage] = useState(1);
   const pageSize = 1;
   const [data, setData] = useState(list);
@@ -49,6 +94,11 @@ export default function Notifications() {
   const total = list.length;
   const totalPages = Math.ceil(total / pageSize);
   const showTotal = (total, range) => `Total ${totalPages} pages`;
+
+  if (first){
+    RetrieveNotif();
+    setFirst(false)
+  };
 
   const handleRead = (id) => {
     const newData = data.map((item) => {
@@ -73,16 +123,7 @@ export default function Notifications() {
         renderItem={(item) => (
           <List.Item
             key={item.id}
-            actions={[
-              <Button
-                key={`btn-${item.id}`}
-                type="link"
-                onClick={() => handleRead(item.id)}
-                disabled={item.read}
-              >
-                Mark as read
-              </Button>,
-            ]}
+
             style={item.read ? {} : { backgroundColor: "#e6f7ff" }}
           >
             <List.Item.Meta
@@ -94,6 +135,7 @@ export default function Notifications() {
               title={<a href="javascript:void(0);">{item.title}</a>}
               description={
                 <>
+                <Paragraph>{evenements[item.event]} a {objets[item.object]}</Paragraph>
                   <Paragraph>{item.description}</Paragraph>
                   <Text type="secondary">
                     sent by {item.user} at {item.time}
