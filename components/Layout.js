@@ -6,11 +6,12 @@ import _Sider from "./Sidebar";
 import Notifications from "../contents/Notifications";
 import Settings from "../contents/Settings";
 import Profile from "../contents/Profile";
+import Grid from "../contents/Grid";
 
 const { Content } = Layout;
 
 export default function _Layout({ item }) {
-  const [content, setContent] = useState("This is index.");
+  const [content, setContent] = useState(<Grid/>);
 
   const HeaderClick = (contentKey) => {
     switch (contentKey) {
@@ -24,7 +25,7 @@ export default function _Layout({ item }) {
         setContent(<Profile />);
         break;
       default:
-        setContent("This is index.");
+        setContent(<Grid/>);
     }
   };
   const SiderClick = (content) => {

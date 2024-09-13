@@ -13,14 +13,15 @@ import { getToken } from "../services/jwt";
 export default function Profile() {
   const [first,setFirst]=useState(true);
   async function SetFirstProfile(){
-    await apiClient({
+    const rep=await apiClient({
       method:'POST',
       path:'token/refresh',
       data:{refresh:localStorage.getItem('refresh')}
-    })
+    });
+    localStorage.setItem('access',rep.access);
     const token=localStorage.getItem('access');
     const decoded=jwtDecode(token);
-    const id=decoded.user_id ;
+    const id=decoded.user_id;
     const response=await apiClient({
       method:'GET',
       path:`user/${id}`,
@@ -52,11 +53,12 @@ export default function Profile() {
   const handleEditToggle =async () => {
     if (isEditing) {
       setProfile(editProfile);
-      await apiClient({
+      const rep=await apiClient({
         method: 'POST',
         path: 'token/refresh',
         data: {refresh:localStorage.getItem('refresh')}
       });
+      localStorage.setItem('access',rep.access)
       const token=localStorage.getItem('access');
       const decoded=jwtDecode(token);
       const id=decoded.user_id ;
@@ -87,7 +89,9 @@ export default function Profile() {
         <Card
           title="Profile"
           extra={
-            <Button onClick={handleEditToggle}>
+            <Button onClick={async (e) => {
+              e.preventDefault();
+              await handleEditToggle()}}>
               {isEditing ? "save" : "edit"}
             </Button>
           }
