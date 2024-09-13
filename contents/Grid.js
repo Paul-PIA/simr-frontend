@@ -31,16 +31,21 @@ export function Grid() {
   );
 }
 
+const detectCellType = (cell) => {
+  if (cell === null || cell === undefined || cell === "") {
+    return "empty";
+  } else if (!isNaN(cell)) {
+    return "numeric";
+  } else if (typeof cell === "string" && Date.parse(cell)) {
+    return "date";
+  } else {
+    return "string";
+  }
+};
+
 export default function App() {
   const [rowData, setRowData] = useState([]);
   const [columnDefs, setColumnDefs] = useState([]);
-  const [cellFormats, setCellFormats] = useState({}); // State to store cell formats
-  const [contextMenu, setContextMenu] = useState({
-    visible: false,
-    x: 0,
-    y: 0,
-    cellKey: null,
-  }); // State for context menu
   const gridRef = useRef(null);
 
   // Handle file upload
@@ -52,108 +57,101 @@ export default function App() {
       const data = new Uint8Array(e.target.result);
       const workbook = XLSX.read(data, { type: "array" });
       const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
-      const jsonData = XLSX.utils.sheet_to_json(firstSheet, { header: 1 });
+      const jsonData = XLSX.utils.sheet_to_json(firstSheet, {
+        header: 1,
+        raw: false,
+      });
 
-      if (jsonData.length === 0) return; // No data
+      if (jsonData.length === 0) return;
 
-      const rows = jsonData.map((row) =>
-        row.map((cell) => {
-          // Determine cell type and handle empty cells
-          if (cell === null || cell === undefined || cell === "") {
-            return ""; // Handle empty cells
-          } else if (!isNaN(cell)) {
-            return parseFloat(cell); // Convert numeric values
-          } else {
-            return cell; // Keep as string
-          }
-        })
-      );
-
-      // Generate column definitions
-      const headers = rows[0].map((_, index) => ({
+      // Generate dynamic column definitions
+      const headers = jsonData[0].map((_, index) => ({
         headerName: `Column ${index + 1}`,
         field: `col${index}`,
         editable: true,
-        cellRenderer: "formatCellRenderer", // Use custom cell renderer
-        type:
-          typeof rows[1] && typeof rows[1][index] === "number"
-            ? "numericColumn"
-            : "textColumn",
+        cellEditor: "agTextCellEditor", // Default editor
+        valueFormatter: (params) =>
+          formatCellValue(params.value, params.node.data.types[index]), // Use custom formatter
       }));
 
-      // Set column definitions and row data
+      // Set row data
+      const rows = jsonData.slice(1).map((row) => {
+        const rowObject = row.reduce((acc, cell, index) => {
+          acc[`col${index}`] = cell;
+          return acc;
+        }, {});
+
+        rowObject.types = row.map((cell) => detectCellType(cell)); // Store cell types for formatting
+        return rowObject;
+      });
+
       setColumnDefs(headers);
-      setRowData(
-        rows.slice(1).map((row) =>
-          row.reduce((acc, cell, index) => {
-            acc[`col${index}`] = cell;
-            return acc;
-          }, {})
-        )
-      );
+      setRowData(rows);
     };
 
     reader.readAsArrayBuffer(file);
   };
 
-  // Function to format cell based on the stored format
-  const formatCellRenderer = (params) => {
-    const cellKey = `${params.node.rowIndex}-${params.colDef.field}`;
-    const format = cellFormats[cellKey];
-
-    if (
-      params.value === "" ||
-      params.value === null ||
-      params.value === undefined
-    ) {
-      return ""; // Handle empty cells
+  // Format cell values based on their detected type
+  const formatCellValue = (value, type) => {
+    switch (type) {
+      case "numeric":
+        return !isNaN(value) ? Number(value).toLocaleString() : value;
+      case "date":
+        return new Date(value).toLocaleDateString();
+      case "percentage":
+        return `${parseFloat(value) * 100}%`;
+      case "currency":
+        return `$${parseFloat(value).toFixed(2)}`;
+      default:
+        return value;
     }
-
-    if (format === "date" && !isNaN(params.value)) {
-      const dateNumber = parseFloat(params.value);
-      const date = new Date(Date.UTC(1900, 0, dateNumber - 1)); // Convert from Excel date number to JS Date
-      return date.toISOString().split("T")[0]; // Format to YYYY-MM-DD
-    } else if (format === "currency" && !isNaN(params.value)) {
-      // Convert to currency format
-      return `$${parseFloat(params.value).toFixed(2)}`;
-    } else if (format === "percent" && !isNaN(params.value)) {
-      // Convert to percentage format
-      return `${(parseFloat(params.value) * 100).toFixed(2)}%`;
-    }
-
-    return params.value.toString(); // Default to original string value
   };
 
-  // Function to handle format change
-  const handleFormatChange = (newFormat) => {
-    if (!contextMenu.cellKey) return;
-    setCellFormats((prevFormats) => {
-      const updatedFormats = {
-        ...prevFormats,
-        [contextMenu.cellKey]: newFormat,
-      };
-      // Refresh specific cell after updating format
-      gridRef.current.api.refreshCells({
-        rowNodes: [
-          gridRef.current.api.getRowNode(contextMenu.cellKey.split("-")[0]),
+  // Handle context menu actions
+  const getContextMenuItems = (params) => {
+    return [
+      "copy",
+      "paste",
+      "cut",
+      {
+        name: "Change Format",
+        subMenu: [
+          {
+            name: "String",
+            action: () =>
+              changeCellFormat(params.node, params.column, "string"),
+          },
+          {
+            name: "Number",
+            action: () =>
+              changeCellFormat(params.node, params.column, "numeric"),
+          },
+          {
+            name: "Date",
+            action: () => changeCellFormat(params.node, params.column, "date"),
+          },
+          {
+            name: "Percentage",
+            action: () =>
+              changeCellFormat(params.node, params.column, "percentage"),
+          },
+          {
+            name: "Currency",
+            action: () =>
+              changeCellFormat(params.node, params.column, "currency"),
+          },
         ],
-        columns: [contextMenu.cellKey.split("-")[1]],
-      });
-      return updatedFormats;
-    });
-    setContextMenu({ visible: false, x: 0, y: 0, cellKey: null }); // Hide context menu after selection
+      },
+    ];
   };
 
-  // Function to handle right-click (context menu)
-  const onCellContextMenu = (params) => {
-    params.event.preventDefault(); // Prevent default right-click menu
-    const cellKey = `${params.node.rowIndex}-${params.colDef.field}`;
-    setContextMenu({
-      visible: true,
-      x: params.event.clientX,
-      y: params.event.clientY,
-      cellKey,
-    });
+  // Change the format of a cell
+  const changeCellFormat = (node, column, newType) => {
+    const columnIndex = column.getColId().replace("col", "");
+    const newData = [...rowData];
+    newData[node.rowIndex].types[columnIndex] = newType;
+    setRowData(newData);
   };
 
   return (
@@ -162,41 +160,15 @@ export default function App() {
       <div
         className="ag-theme-alpine"
         style={{ height: "500px", width: "100%" }}
-        onContextMenu={(e) => e.preventDefault()} // Disable default context menu in the grid area
       >
         <AgGridReact
           ref={gridRef}
           columnDefs={columnDefs}
           rowData={rowData}
-          frameworkComponents={{ formatCellRenderer }} // Register the custom renderer
           defaultColDef={{ editable: true }}
-          onCellContextMenu={onCellContextMenu} // Handle right-click event
+          getContextMenuItems={getContextMenuItems} // Custom context menu
         />
       </div>
-
-      {/* Context Menu */}
-      {contextMenu.visible && (
-        <div
-          style={{
-            position: "absolute",
-            top: `${contextMenu.y}px`,
-            left: `${contextMenu.x}px`,
-            backgroundColor: "white",
-            border: "1px solid #ccc",
-            zIndex: 1000,
-          }}
-        >
-          <button onClick={() => handleFormatChange("date")}>
-            Set as Date
-          </button>
-          <button onClick={() => handleFormatChange("currency")}>
-            Set as Currency
-          </button>
-          <button onClick={() => handleFormatChange("percent")}>
-            Set as Percent
-          </button>
-        </div>
-      )}
     </div>
   );
 }
