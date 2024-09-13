@@ -58,7 +58,7 @@ export default function Profile() {
         path: 'token/refresh',
         data: {refresh:localStorage.getItem('refresh')}
       });
-      localStorage.setItem('access',rep.access)
+      localStorage.setItem('access',rep.access);
       const token=localStorage.getItem('access');
       const decoded=jwtDecode(token);
       const id=decoded.user_id ;
@@ -66,12 +66,12 @@ export default function Profile() {
         method: 'PATCH',
         path: `user/${id}`,
         data: 
-        {first_name:profile.first_name,
-          last_name:profile.last_name,
-          username:profile.username,
-          tel:profile.tel,
-          city:profile.city,
-          email:profile.email
+        {first_name:editProfile.first_name,
+          last_name:editProfile.last_name,
+          username:editProfile.username,
+          tel:editProfile.tel,
+          city:editProfile.city,
+          email:editProfile.email
         }
       });
     } else {setEditProfile(profile)}
