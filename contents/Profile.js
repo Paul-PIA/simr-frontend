@@ -49,10 +49,10 @@ export default function Profile() {
   setFirst(false)}
   const [editProfile, setEditProfile] = useState(profile);
 
-  const handleEditToggle = () => {
+  const handleEditToggle =async () => {
     if (isEditing) {
       setProfile(editProfile);
-      apiClient({
+      await apiClient({
         method: 'POST',
         path: 'token/refresh',
         data: {refresh:localStorage.getItem('refresh')}
@@ -60,10 +60,17 @@ export default function Profile() {
       const token=localStorage.getItem('access');
       const decoded=jwtDecode(token);
       const id=decoded.user_id ;
-      apiClient({
+      await apiClient({
         method: 'PATCH',
         path: `user/${id}`,
-        data: profile
+        data: 
+        {first_name:profile.first_name,
+          last_name:profile.last_name,
+          username:profile.username,
+          tel:profile.tel,
+          city:profile.city,
+          email:profile.email
+        }
       });
     } else {setEditProfile(profile)}
     setIsEditing(!isEditing);

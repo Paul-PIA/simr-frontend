@@ -10,11 +10,12 @@ export default function Settings() {
     const [isFirst,setIsFirst]=useState(true)
     async function FirstSettings(){
 
-        await apiClient({
+        const resp=await apiClient({
             method:'POST',
             path:'token/refresh',
             data:{refresh:localStorage.getItem('refresh')}
           });
+          localStorage.setItem('access',resp.access);
           const token=localStorage.getItem('access');
           const decoded=jwtDecode(token);
           const id=decoded.user_id ;
