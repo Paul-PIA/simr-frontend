@@ -6,13 +6,14 @@ import _Sider from "./Sidebar";
 import Notifications from "../contents/Notifications";
 import Settings from "../contents/Settings";
 import Profile from "../contents/Profile";
-import Grid from "../contents/Grid";
+import ContractHomePage from "../contents/ContractHomePage";
 
 const { Content } = Layout;
 
 export default function _Layout({ item }) {
-  const [content, setContent] = useState(<Grid/>);
-
+  const SiderClick = (content) => {
+    setContent(content);
+  };
   const HeaderClick = (contentKey) => {
     switch (contentKey) {
       case "Notifications":
@@ -25,12 +26,11 @@ export default function _Layout({ item }) {
         setContent(<Profile />);
         break;
       default:
-        setContent(<Grid/>);
-    }
-  };
-  const SiderClick = (content) => {
-    setContent(content);
-  };
+        setContent(<ContractHomePage/>)
+  }};
+  const [content, setContent] = useState(<ContractHomePage/>);
+
+
   return (
     <div>
       <Layout style={{ minHeight: "100vh", margin: 0, padding: 0 }}>

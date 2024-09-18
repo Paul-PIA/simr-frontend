@@ -2,6 +2,7 @@ import React,{useEffect} from "react";
 import Layout from "../components/Layout";
 import { apiClient } from "../services/api";
 
+
 export default function Home() {
   async function test() {
     

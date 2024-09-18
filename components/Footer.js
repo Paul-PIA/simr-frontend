@@ -28,18 +28,18 @@ export default function _Footer() {
           Privacy policy
         </a>
       </h3>,
-      <h3 key={2}>
-        <a
-          href="https://www.pia.com/terms-of-service"
-          className="footer-link"
-          title="View the terms and conditions of our services."
-        >
-          Terms of service
-        </a>
-      </h3>,
+      // <h3 key={2}>
+      //   <a
+      //     href="https://www.pia.com/terms-of-service"
+      //     className="footer-link"
+      //     title="View the terms and conditions of our services."
+      //   >
+      //     Terms of service
+      //   </a>
+      // </h3>,
       <h3 key={"follow"}>Follow us</h3>,
       <div key={"social"}>
-        <a
+        {/* <a
           href="https://facebook.com"
           target="_blank"
           rel="noopener noreferrer"
@@ -56,7 +56,7 @@ export default function _Footer() {
           aria-label="Twitter"
         >
           <FontAwesomeIcon icon={faTwitter} />
-        </a>
+        </a> */}
         <a
           href="https://www.linkedin.com/company/pia-paris-infrastructure-advisory/?viewAsMember=true"
           target="_blank"
@@ -76,10 +76,10 @@ export default function _Footer() {
         Tel:(+33) 1 02 03 04 05
       </p>,
       <p key={"adrs"} className="footer-text">
-        Adress: 5 rue Eugène Freyssinet, 75013 Paris, France
-        <br />
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;15
+        Adress:15
         Rue Lacépède, 75005 Paris, France
+        <br />
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
       </p>,
     ],
   ];

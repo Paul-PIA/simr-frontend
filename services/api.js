@@ -1,6 +1,5 @@
 import axios from 'axios';
-import { getToken, csrfToken } from './jwt';
-import { jwtDecode } from 'jwt-decode';
+import { csrfToken } from './jwt';
 
 
 const LOCAL_URL = 'http://127.0.0.1:8000/api';
