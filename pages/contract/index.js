@@ -11,6 +11,12 @@ export default function Contract() {  // Récupérer l'ID du contrat depuis l'UR
   const [exercises, setExercises] = useState([]);
   const fetchContract = async () => {
     try {
+      const tok=await apiClient({
+        method:'POST',
+        path:'token/refresh',
+        data:{refresh:localStorage.getItem('refresh')}
+      });
+      localStorage.setItem('access',tok.access)
       const ind=window.location.href.indexOf('contract?id') //Position de la lettre c
       const id = window.location.href.substring(ind+12) //12= taille de 'contract?id=
       const response = await apiClient({

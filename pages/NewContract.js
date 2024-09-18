@@ -45,8 +45,16 @@ export default function NewContract() {
     await apiClient({
       method: 'POST', // correction d'une typo "meyhod" => "method"
       path: 'contract',
-      data: { org: IdOrganizations, name: contractName, nb_org: IdOrganizations.length, nb_access:1024 },
+      data: { org: IdOrganizations[0], name: contractName, nb_org: IdOrganizations.length, nb_access:1024 },
     });
+    const contract_Id=await apiClient({
+      method:'GET',
+      path:'contract/?'
+    })
+    await apiClient({
+      method:'PATCH',
+      path:
+    })
   };
   
 

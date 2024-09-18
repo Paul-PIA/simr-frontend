@@ -17,6 +17,14 @@ const [contractId,setContractId]=useState(null)
   // Récupérer les organisations du contrat
   const fetchContractOrganizations = async () => {
     try {
+        const tok=await apiClient({
+            method:'POST',
+            path:'token/refresh',
+            data:{refresh:localStorage.getItem('refresh')}
+          });
+          localStorage.setItem('access',tok.access)}
+          catch(error){window.location='../auth'}
+    try {
         const ind=window.location.href.indexOf('contract/new_ex?con_id='); //Position de la lettre c
         const contract_Id = window.location.href.substring(ind+23);
         setContractId(contract_Id);
