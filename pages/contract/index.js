@@ -13,7 +13,7 @@ export default function Contract() {  // Récupérer l'ID du contrat depuis l'UR
     try {
       const tok=await apiClient({
         method:'POST',
-        path:'token/refresh',
+        path:'token/refresh/',
         data:{refresh:localStorage.getItem('refresh')}
       });
       localStorage.setItem('access',tok.access)
@@ -21,7 +21,7 @@ export default function Contract() {  // Récupérer l'ID du contrat depuis l'UR
       const id = window.location.href.substring(ind+12) //12= taille de 'contract?id=
       const response = await apiClient({
         method: 'GET',
-        path: `contract/${id}`,
+        path: `contract/${id}/`,
       });
       setContract(response);
       console.log(response);
@@ -29,7 +29,7 @@ export default function Contract() {  // Récupérer l'ID du contrat depuis l'UR
         response.org.map(async (orga) => {
           const Orgesponse=await apiClient({
             method: 'GET',
-            path: `organization/${orga}`,
+            path: `organization/${orga}/`,
             data:{}
           });
           return Orgesponse.name

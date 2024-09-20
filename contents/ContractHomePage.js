@@ -13,7 +13,7 @@ export default function ContractHomePage() {
     const id=decoded.user_id;
     const org=await apiClient({
       method:'GET',
-      path:`user/${id}`,
+      path:`user/${id}/`,
       data:{}
     }).org;
     const con=await apiClient({

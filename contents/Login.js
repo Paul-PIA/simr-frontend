@@ -13,7 +13,7 @@ export default function Login() {
     e.preventDefault();
     await apiClientNotoken({
       method: 'POST',
-      path: 'auth/login',
+      path: 'auth/login/',
       data: {
         username: document.forms.login.username.value,
         password: document.forms.login.password.value
@@ -21,7 +21,7 @@ export default function Login() {
     });
     await apiClientGetoken({
       method: 'POST',
-      path: 'token',
+      path: 'token/',
       data: {
         username: document.forms.login.username.value,
         password: document.forms.login.password.value

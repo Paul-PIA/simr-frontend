@@ -14,7 +14,7 @@ export default function CreateNewOrganization() {
       // Soumission des données pour créer une nouvelle organisation
       await apiClient({
         method: "POST",
-        path: "organization",
+        path: "organization/",
         data: { name:name, email:email, tel:telephone, adrs:address, post:postcode },
       });
       // Affiche un message de succès ou redirige après soumission

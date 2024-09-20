@@ -10,7 +10,7 @@ const API_URL = SERVER_URL; // switch LOCAL_URL or SERVER_URL to adapt the envir
 axios.defaults.withCredentials = true;
 
 export const apiClient = async ({ method, path, data }) => {
-    const url = `${API_URL}/${path}/`;
+    const url = `${API_URL}/${path}`;
     const token = localStorage.getItem('access');
     try {
         const response = await axios({ method, url, headers: {
@@ -25,10 +25,11 @@ export const apiClient = async ({ method, path, data }) => {
 };
 
 export const apiClientNotoken = async ({ method, path, data }) => {
-    const url = `${API_URL}/${path}/`;
+    const url = `${API_URL}/${path}`;
     try {
         const response = await axios({ method, url, headers: {
-            'X-CSRFToken': csrfToken
+            'X-CSRFToken': csrfToken,
+            'accept':'application/json'
         }, data });
         return response.data;
     } catch (error) {
@@ -38,7 +39,7 @@ export const apiClientNotoken = async ({ method, path, data }) => {
 };
 
 export const apiClientGetoken = async ({ method, path, data }) => {
-    const url = `${API_URL}/${path}/`;
+    const url = `${API_URL}/${path}`;
     try {
         const response = await axios({ method, url, headers: {
             'X-CSRFToken': csrfToken

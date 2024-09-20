@@ -26,35 +26,61 @@ export default function NewContract() {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    const tok=await apiClient({
+      method:'POST',
+      path:'token/refresh/',
+      data:{refresh:localStorage.getItem('refresh')}
+    });
+    localStorage.setItem('access',tok.access);
+
+    console.log(organizations);
   
     // Utiliser Promise.all pour effectuer les requêtes en parallèle
-    const IdOrganizations = await Promise.all(
-      organizations.map(async (org) => {
+    const IdOrganizations =[];
         const response = await apiClient({
           method: 'GET',
-          path: `organization/?name_exact=${org}`,
+          path: 'organization/',
         });
         console.log(response);
-        return response[0].id; // Retourne l'ID de l'organisation
-      })
-    );
+        for (let step=0;step<response.length;step++){
+          const indice=organizations.indexOf(response[step].name);
+          if (indice>=0){
+            IdOrganizations[indice]=response[step].id
+          }
+        }
+        if (organizations.length!==IdOrganizations.length){
+          console.error("One organization does not exist");
+          throw new Error('One organization does not exist');
+        }
   
     console.log(IdOrganizations);
   
-    // Faire la requête POST après avoir récupéré tous les IDs d'organisations
     await apiClient({
-      method: 'POST', // correction d'une typo "meyhod" => "method"
-      path: 'contract',
-      data: { org: IdOrganizations[0], name: contractName, nb_org: IdOrganizations.length, nb_access:1024 },
+      method: 'POST', 
+      path: 'contract/',
+      data: { org: [IdOrganizations[0]], name: contractName, nb_org: IdOrganizations.length, nb_access:1024 },
     });
-    const contract_Id=await apiClient({
+    const contract_db=await apiClient({
       method:'GET',
-      path:'contract/?'
-    })
-    await apiClient({
-      method:'PATCH',
-      path:
-    })
+      path:`contract/?name=${contractName}`,
+      data:{}
+    });
+    // const right= await apiClient({
+    //   method:'GET',
+    //   path:`orgconright/?org=${IdOrganizations[0]}&con=${contract_db[0].id}`
+    // });
+    // console.log(right)
+    // const token=localStorage.getItem('access');
+    // await apiClient({
+    //   method:'PATCH',
+    //   path:`setchief/${right[0].id}/?token=${token}`
+    // });
+    // await apiClient({
+    //   method:'PATCH',
+    //   path:`contract/${contract_db[0].id}/`,
+    //   data:{org:IdOrganizations}
+    // });
+  
   };
   
 

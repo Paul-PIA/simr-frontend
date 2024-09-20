@@ -9,6 +9,7 @@ const [contractId,setContractId]=useState(null)
   const [duration, setDuration] = useState(0);
   const [mainOrganization, setMainOrganization] = useState(null);
   const [organizations, setOrganizations] = useState([]);
+  const [orgId,setOrgId]=useState([])
 
   useEffect(() => {
     fetchContractOrganizations();
@@ -19,7 +20,7 @@ const [contractId,setContractId]=useState(null)
     try {
         const tok=await apiClient({
             method:'POST',
-            path:'token/refresh',
+            path:'token/refresh/',
             data:{refresh:localStorage.getItem('refresh')}
           });
           localStorage.setItem('access',tok.access)}
@@ -30,13 +31,14 @@ const [contractId,setContractId]=useState(null)
         setContractId(contract_Id);
       const response = await apiClient({
         method: "GET",
-        path: `contract/${contract_Id}`,
+        path: `contract/${contract_Id}/`,
       });
+      setOrgId(response.org);
       const org_names=await Promise.all(
         response.org.map(async (orga) => {
             const Orgesponse=await apiClient({
               method: 'GET',
-              path: `organization/${orga}`,
+              path: `organization/${orga}/`,
               data:{}
             });
             return Orgesponse.name
@@ -69,20 +71,22 @@ const [contractId,setContractId]=useState(null)
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
-      await apiClient({
+      const response=await apiClient({
         method: "POST",
-        path: "exercise",
+        path: "exercise/",
         data: {
           name: exerciseName,
           date_i: startDate,
           date_f: endDate,
           period: duration,
-          org: mainOrganization,
+          org: orgId[organizations.indexOf(mainOrganization)], //Id de l'organisation principale
           con: contractId,
-          type:'audit'
+          type:1
         }
       });
+      console.log('response');
       alert("Exercise created successfully!");
+      window.location=`./?id=${contractId}`
     } catch (error) {
       console.error("Failed to create exercise:", error);
     }
