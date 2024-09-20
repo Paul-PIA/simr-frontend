@@ -26,19 +26,15 @@ export default function NewFile() {
       return;
     }
 
-    const formData = new FormData();
-    formData.append("name", fileName);
-    formData.append("file", file);
-    formData.append("exercise", exerciseId);
-
     try {
       await apiClient({
         method: "POST",
         path: "file/",
-        data: formData,
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
+        data: {
+            name:fileName,
+            content:file,
+            exer:exerciseId
+        }
       });
       alert("Fichier créé avec succès !");
       window.location = `/exercise?id=${exerciseId}`;
