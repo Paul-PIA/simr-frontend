@@ -1,134 +1,153 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { apiClient } from "../services/api";
 
-export default function NewContract() {
+export default function EditContract() {
   const [contractName, setContractName] = useState("");
-  const [organizations, setOrganizations] = useState([""]);
+  const [organizations, setOrganizations] = useState([]);
+  const [newOrganizations, setNewOrganizations] = useState([{ name: "", leader: "" }]);
 
-  const handleContractNameChange = (event) => {
-    setContractName(event.target.value);
+  const fetchContract = async () => {
+    try{
+      const response=await apiClient({
+        method:'POST',
+        path:'token/refresh/',
+        data:{refresh:localStorage.getItem('refresh')}
+      });
+      localStorage.setItem('access',response.access);
+    }
+    catch (error){
+      window.location='./auth';
+    }
+    const queryParams = new URLSearchParams(window.location.search);
+    const contractId = queryParams.get("id");
+    const response = await apiClient({
+      method: "GET",
+      path: `contract/${contractId}`,
+    });
+    setContractName(response.name);
+
+    const list_org = await Promise.all(
+      response.org.map(async (value) => {
+        const orga = await apiClient({
+          method: "GET",
+          path: `organization/${value}`,
+        });
+        return orga.name;
+      })
+    );
+    setOrganizations(list_org);
   };
 
-  const handleOrganizationChange = (index, event) => {
-    const newOrganizations = [...organizations];
-    newOrganizations[index] = event.target.value;
-    setOrganizations(newOrganizations);
+  useEffect(() => {
+    fetchContract();
+  }, []);
+
+  const handleNewOrganizationChange = (index, event) => {
+    const { name, value } = event.target;
+    const updatedNewOrganizations = [...newOrganizations];
+    updatedNewOrganizations[index] = {
+      ...updatedNewOrganizations[index],
+      [name]: value,
+    };
+    setNewOrganizations(updatedNewOrganizations);
   };
 
-  const addOrganizationField = () => {
-    setOrganizations([...organizations, ""]);
+  const addNewOrganizationField = () => {
+    setNewOrganizations([...newOrganizations, { name: "", leader: "" }]);
   };
 
-  const removeOrganizationField = (index) => {
-    const newOrganizations = organizations.filter((_, i) => i !== index);
-    setOrganizations(newOrganizations);
+  const removeNewOrganizationField = (index) => {
+    const updatedNewOrganizations = newOrganizations.filter((_, i) => i !== index);
+    setNewOrganizations(updatedNewOrganizations);
   };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    const tok=await apiClient({
-      method:'POST',
-      path:'token/refresh/',
-      data:{refresh:localStorage.getItem('refresh')}
-    });
-    localStorage.setItem('access',tok.access);
-
-    console.log(organizations);
-  
-    // Utiliser Promise.all pour effectuer les requêtes en parallèle
-    const IdOrganizations =[];
-        const response = await apiClient({
-          method: 'GET',
-          path: 'organization/',
+    const IdOrga= await Promise.all(
+      newOrganizations.map(async (value)=>{
+        const response=await apiClient({
+          method:'GET',
+          path:`organization/?name_exact=${value.name}`
         });
-        console.log(response);
-        for (let step=0;step<response.length;step++){
-          const indice=organizations.indexOf(response[step].name);
-          if (indice>=0){
-            IdOrganizations[indice]=response[step].id
-          }
-        }
-        if (organizations.length!==IdOrganizations.length){
-          console.error("One organization does not exist");
-          throw new Error('One organization does not exist');
-        }
-  
-    console.log(IdOrganizations);
-  
+        return response.id
+      })
+    );
+    const data={};
+    IdOrga.forEach((value,index)=>{
+      data[String(value)]=newOrganizations[index].leader
+    });
+    const queryParams = new URLSearchParams(window.location.search);
+    const contractId = queryParams.get("id");
     await apiClient({
-      method: 'POST', 
-      path: 'contract/',
-      data: { org: [IdOrganizations[0]], name: contractName, nb_org: IdOrganizations.length, nb_access:1024 },
-    });
-    const contract_db=await apiClient({
-      method:'GET',
-      path:`contract/?name=${contractName}`,
-      data:{}
-    });
-    // const right= await apiClient({
-    //   method:'GET',
-    //   path:`orgconright/?org=${IdOrganizations[0]}&con=${contract_db[0].id}`
-    // });
-    // console.log(right)
-    // const token=localStorage.getItem('access');
-    // await apiClient({
-    //   method:'PATCH',
-    //   path:`setchief/${right[0].id}/?token=${token}`
-    // });
-    // await apiClient({
-    //   method:'PATCH',
-    //   path:`contract/${contract_db[0].id}/`,
-    //   data:{org:IdOrganizations}
-    // });
-  
+      method:'POST',
+      path:`invitechief/${contractId}/`,
+      data:data
+    })  
+    
   };
-  
 
   return (
     <div>
       <div className="contract-form">
-        <h2>New Contract</h2>
+        <h2>Modifier le Contrat</h2>
         <form name="contract" onSubmit={handleSubmit}>
           <label>
-            Contract Name&nbsp;
-            <input
-              type="text"
-              name="contractName"
-              value={contractName}
-              onChange={handleContractNameChange}
-              required
-            />
+            Nom du contrat&nbsp;
+            <input type="text" value={contractName} disabled />
           </label>
 
-          <h3>Organizations</h3>
+          <h3>Organisations existantes</h3>
           {organizations.map((organization, index) => (
             <div key={index} className="organization-field">
               <label>
-                Organization {index + 1}&nbsp;
+                Organisation {index + 1}:&nbsp;
+                <input type="text" value={organization} disabled />
+              </label>
+            </div>
+          ))}
+
+          <h3>Ajouter de nouvelles organisations</h3>
+          {newOrganizations.map((organization, index) => (
+            <div key={index} className="new-organization-field">
+              <label>
+                Nom de l'organisation {index + 1}&nbsp;
                 <input
                   type="text"
-                  value={organization}
-                  onChange={(event) => handleOrganizationChange(index, event)}
+                  name="name"
+                  value={organization.name}
+                  onChange={(event) => handleNewOrganizationChange(index, event)}
                   required
                 />
               </label>
-              {organizations.length > 1 && (
+              <label>
+                Email du chef&nbsp;
+                <input
+                  type="email"
+                  name="leader"
+                  value={organization.leader}
+                  onChange={(event) => handleNewOrganizationChange(index, event)}
+                  required
+                />
+              </label>
+              {newOrganizations.length > 1 && (
                 <button
                   type="button"
                   className="remove-btn"
-                  onClick={() => removeOrganizationField(index)}
+                  onClick={() => removeNewOrganizationField(index)}
                 >
-                  Remove
+                  Supprimer
                 </button>
               )}
             </div>
           ))}
 
-          <button type="button" className="add-btn" onClick={addOrganizationField}>
-            Add Organization
+          <button type="button" className="add-btn" onClick={addNewOrganizationField}>
+            Ajouter une organisation
           </button>
 
-          <button type="submit" className="submit-btn">Submit</button>
+          <button type="submit" className="submit-btn">
+            Soumettre
+          </button>
         </form>
       </div>
       <style jsx="true">{`
@@ -166,7 +185,7 @@ export default function NewContract() {
         .contract-form button:hover {
           background-color: #0056b3;
         }
-        .organization-field {
+        .organization-field, .new-organization-field {
           display: flex;
           align-items: center;
           justify-content: space-between;

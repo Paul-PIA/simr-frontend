@@ -28,9 +28,7 @@ export default function ContractHomePage() {
     setFirst(false)
   }
 
-  const handleNewContract = () => {
-    window.location='./NewContract'
-  };
+
 
     // Fonction pour rediriger vers la page du contrat
     const handleContractClick = (contractId) => {
@@ -40,9 +38,6 @@ export default function ContractHomePage() {
       <div style={styles.container}>
         <h1 style={styles.header}>Page d'accueil</h1>
   
-        <button style={styles.button} onClick={handleNewContract}>
-          Créer un nouveau contrat
-        </button>
   
         <div style={styles.contractsContainer}>
           <h2 style={styles.subHeader}>Contrats actuels</h2>

@@ -15,7 +15,8 @@ export const apiClient = async ({ method, path, data }) => {
     try {
         const response = await axios({ method, url, headers: {
             'Authorization': `Bearer ${token}`,
-            'X-CSRFToken': csrfToken
+            'X-CSRFToken': csrfToken,
+            "Content-Type": "multipart/form-data"
         }, data });
         return response.data;
     } catch (error) {
@@ -49,6 +50,22 @@ export const apiClientGetoken = async ({ method, path, data }) => {
         console.log('Refresh Token:', refresh);
         localStorage.setItem('access', access);
         localStorage.setItem('refresh', refresh);
+        return response.data;
+    } catch (error) {
+        console.error(`Failed:`, error);
+        throw error;
+    }
+};
+
+export const apiClientGetFile = async ({ method, path, data }) => {
+    const url = path;
+    const token = localStorage.getItem('access');
+    try {
+        const response = await axios({ method, url, headers: {
+            'Authorization': `Bearer ${token}`,
+            'X-CSRFToken': csrfToken,
+            "Content-Type": "multipart/form-data",
+        }, data,  responseType: 'arraybuffer', });
         return response.data;
     } catch (error) {
         console.error(`Failed:`, error);

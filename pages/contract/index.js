@@ -16,7 +16,9 @@ export default function Contract() {  // Récupérer l'ID du contrat depuis l'UR
         path:'token/refresh/',
         data:{refresh:localStorage.getItem('refresh')}
       });
-      localStorage.setItem('access',tok.access)
+      localStorage.setItem('access',tok.access);
+    } catch(error){ window.location='./auth'}
+    try{
       const ind=window.location.href.indexOf('contract?id') //Position de la lettre c
       const id = window.location.href.substring(ind+12) //12= taille de 'contract?id=
       const response = await apiClient({
@@ -24,7 +26,6 @@ export default function Contract() {  // Récupérer l'ID du contrat depuis l'UR
         path: `contract/${id}/`,
       });
       setContract(response);
-      console.log(response);
        const l=await Promise.all(
         response.org.map(async (orga) => {
           const Orgesponse=await apiClient({
@@ -54,6 +55,9 @@ export default function Contract() {  // Récupérer l'ID du contrat depuis l'UR
 }
 setFirst(false)
 }
+const handleExerciseClick = (ExId) => {
+  window.location=`./exercise?id=${ExId}`; // Navigation vers la page du contrat
+ };
   if (!contract) {
     return <div>Chargement...</div>;
   }
@@ -83,11 +87,31 @@ setFirst(false)
       <h2 style={styles.subHeader}>Exercices passés :</h2>
       <ul>
         {exercises.length > 0 ? (
-          exercises.map((exercise, index) => (
-            <li key={index} style={styles.listItem}>
-              Exercice {exercise.id} : {exercise.name}
-            </li>
-          ))
+                      <table style={styles.table}>
+                      <thead>
+                        <tr>
+                          <th style={styles.th}>ID</th>
+                          <th style={styles.th}>Nom</th>
+                          <th style={styles.th}>Date de début</th>
+                          <th style={styles.th}>Date de fin</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+          {exercises.map((exercise) => (
+            <tr key={exercise.id} style={styles.row}>
+            <td style={styles.td}>{exercise.id}</td>
+            <td
+              style={{ ...styles.td, cursor: 'pointer', color: 'blue' }}
+              onClick={() => handleExerciseClick(exercise.id)}
+            >
+              {exercise.name}
+            </td>
+            <td style={styles.td}>{exercise.date_i}</td>
+            <td style={styles.td}>{exercise.date_f}</td>
+          </tr>
+          ))}
+          </tbody>
+          </table>
         ) : (
           <p>Aucun exercice passé trouvé.</p>
         )}

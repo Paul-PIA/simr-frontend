@@ -6,7 +6,7 @@ export default function ExercisePage() {
     const [user,setUser]=useState({});
   const [exercise, setExercise] = useState({});
   const [selectedSpace, setSelectedSpace] = useState('Mon espace');
-  const[allFiles,setallFiles]=useState([]);
+  const [allFiles,setallFiles]=useState([]);
   const [rights,setRights]=useState([]);
   const [files, setFiles] = useState([]);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -27,7 +27,6 @@ export default function ExercisePage() {
       }
     const params = new URLSearchParams(window.location.search);
     const id = params.get('id');
-    // Remplacer par la requête réelle pour obtenir les données de l'exercice
     const response = await apiClient({
         method:'GET',
         path:`exercise/${id}/`
@@ -35,19 +34,20 @@ export default function ExercisePage() {
     setExercise(response);
     const response_files=await apiClient({
         method:'GET',
-        path:`file/?exer_exact=${exercise.id}`
+        path:`file/?exer_exact=${id}`
     });
     setallFiles(response_files);
     const response_rights=await Promise.all(
-        allFiles.map(async(fil)=>{await apiClient({
+        response_files.map(async (fil)=>{const rep=await apiClient({
         method:'GET',
-        path:`access/${fil.id}`
-    })}));
+        path:`access/${fil.id}/`
+    });
+  return rep}));
     setRights(response_rights);
     const token=localStorage.getItem('access');
     const decoded=jwtDecode(token);
     const user_id=decoded.user_id;
-    const User=apiClient({
+    const User=await apiClient({
         method:'GET',
         path:`user/${user_id}/`
     });
@@ -66,25 +66,24 @@ export default function ExercisePage() {
     }
     if (selectedSpace=='Mon espace'){
         setFiles(allFiles.filter((file,index)=>{
-            (rights[index].user.includes(user.id))
+            return (rights[index].user.includes(user.id))
         }))
     }
     if (selectedSpace=='Mon organisation'){
         setFiles(allFiles.filter((file,index)=>{
-            (rights[index].org.includes(user.org)) 
+           return (rights[index].org.includes(user.org)) 
     }))
 
     }
   }
 
-  // Charger des fichiers en fonction de l'espace sélectionné
   useEffect(() => {
     fetchFiles()
-  }, [selectedSpace]);
+  }, [selectedSpace,user]); //S'active en changeant d'espace ou à la fin de l'exécution de fetchEx
 
   // Fonction pour ouvrir un fichier
   const handleOpen = (fileId) => {
-    alert(`Ouverture du fichier ${fileId}`);
+    window.location=`./file?id=${fileId}`;
   };
 
   // Ouvrir la fenêtre de confirmation de suppression
@@ -107,7 +106,7 @@ export default function ExercisePage() {
   };
 
   const handleNewFile = () => {
-    history.push(`/exercise/newfile?exer_id=${exercise.id}`);
+    window.location=`/exercise/newfile?exer_id=${exercise.id}`;
   };
 
   if (!exercise.name) {

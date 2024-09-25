@@ -6,12 +6,17 @@ export default function NewFile() {
   const [file, setFile] = useState(null);
   const [exerciseId, setExerciseId] = useState(null);
 
-  // Récupérer l'ID de l'exercice à partir de l'URL
-  useState(() => {
-    const params = new URLSearchParams(window.location.search);
-    const exer_id = params.get('exer_id');
-    setExerciseId(exer_id);
-  }, []);
+  const fetchCon=async()=>
+    { if (typeof window !=='undefined'){
+      const params = new URLSearchParams(window.location.search);
+      const exer_id = params.get('exer_id');
+      setExerciseId(exer_id);
+    }
+    
+
+  }
+
+  useState(fetchCon, []);
 
   // Gestion du changement de fichier
   const handleFileChange = (event) => {
@@ -27,13 +32,18 @@ export default function NewFile() {
     }
 
     try {
+      const response=await apiClient({
+        method:'GET',
+        path:`exercise/${exerciseId}/`
+      });
       await apiClient({
         method: "POST",
         path: "file/",
         data: {
             name:fileName,
             content:file,
-            exer:exerciseId
+            exer:exerciseId,
+            con:response.con
         }
       });
       alert("Fichier créé avec succès !");
@@ -74,7 +84,7 @@ export default function NewFile() {
         </form>
       </div>
 
-      <style jsx="true">{`
+      <style dangerouslySetInnerHTML={{ __html: `
         .file-form {
           display: flex;
           flex-direction: column;
@@ -110,7 +120,7 @@ export default function NewFile() {
         .file-form button:hover {
           background-color: #0056b3;
         }
-      `}</style>
+      ` }} />
     </div>
   );
 }
