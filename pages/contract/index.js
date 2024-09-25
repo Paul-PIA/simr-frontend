@@ -40,7 +40,7 @@ export default function Contract() {  // Récupérer l'ID du contrat depuis l'UR
 
         const l_ex=await apiClient({
             method:'GET',
-            path:`exercise/?con_exact=${id}`,
+            path:`exercise/?con=${id}`,
             data: {}
         } );
         setExercises(l_ex);

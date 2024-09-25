@@ -27,6 +27,7 @@ export default function ExercisePage() {
       }
     const params = new URLSearchParams(window.location.search);
     const id = params.get('id');
+    console.log(id);
     const response = await apiClient({
         method:'GET',
         path:`exercise/${id}/`
@@ -34,7 +35,7 @@ export default function ExercisePage() {
     setExercise(response);
     const response_files=await apiClient({
         method:'GET',
-        path:`file/?exer_exact=${id}`
+        path:`file/?exer=${id}`
     });
     setallFiles(response_files);
     const response_rights=await Promise.all(
