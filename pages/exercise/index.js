@@ -10,7 +10,9 @@ export default function ExercisePage() {
   const [rights,setRights]=useState([]);
   const [files, setFiles] = useState([]);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [showPublicModal,setShowPublicModal]=useState(false);
   const [fileToDelete, setFileToDelete] = useState(null);
+  const [fileToShare,setFileToSharePublic]=useState(null);
 
   // Fonction pour récupérer les informations de l'exercice
   const fetchEx = async () => {
@@ -93,6 +95,10 @@ export default function ExercisePage() {
     setShowDeleteModal(true);
   };
 
+  const handlePublic = (file) => {
+    setFileToSharePublic(file);
+    setShowPublicModal(true);
+  };
   // Confirmer la suppression du fichier
   const confirmDelete = () => {
     alert(`Fichier ${fileToDelete.name} supprimé`);
@@ -100,10 +106,21 @@ export default function ExercisePage() {
     setFileToDelete(null);
   };
 
+  const confirmPublic = () => {
+    alert(`Fichier ${fileToShare.name} partagé`);
+    setShowPublicModal(false);
+    setFileToSharePublic(null);
+  };
+
   // Annuler la suppression
   const cancelDelete = () => {
     setShowDeleteModal(false);
     setFileToDelete(null);
+  };
+
+  const cancelPublic = () => {
+    setShowPublicModal(false);
+    setFileToSharePublic(null);
   };
 
   const handleNewFile = () => {
@@ -153,10 +170,15 @@ export default function ExercisePage() {
               <div key={file.id} style={styles.fileRow}>
                 <span>{file.name}</span>
                 <button style={styles.blueButton} onClick={() => handleOpen(file.id)}>
-                  Open
+                  Ouvrir
                 </button>
+                { selectedSpace=="Mon organisation" ?(
+                    <button style={styles.blueButton} onClick={() => handlePublic(file)}>
+                     Rendre public
+                  </button>
+                ):(null)}
                 <button style={styles.redButton} onClick={() => handleDelete(file)}>
-                  Delete
+                  Supprimer
                 </button>
               </div>
             ))
@@ -169,13 +191,28 @@ export default function ExercisePage() {
       {showDeleteModal && (
         <div style={styles.modal}>
           <div style={styles.modalContent}>
-            <p>Are you sure you want to delete {fileToDelete.name}?</p>
+            <p>Etes-vous sûr de vouloir supprimer {fileToDelete.name}?</p>
             <div>
               <button style={styles.whiteButton} onClick={cancelDelete}>
-                Cancel
+                Annuler
               </button>
               <button style={styles.redButton} onClick={confirmDelete}>
-                Confirm Delete
+                Confirmer la suppression
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+      {showPublicModal && (
+        <div style={styles.modal}>
+          <div style={styles.modalContent}>
+            <p>Etes-vous sûr(e) de vouloir partager  {fileToShare.name}?</p>
+            <div>
+              <button style={styles.whiteButton} onClick={cancelPublic}>
+                Annuler
+              </button>
+              <button style={styles.redButton} onClick={confirmPublic}>
+                Confirmer
               </button>
             </div>
           </div>

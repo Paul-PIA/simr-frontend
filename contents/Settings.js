@@ -12,7 +12,7 @@ export default function Settings() {
 
         const resp=await apiClient({
             method:'POST',
-            path:'token/refresh',
+            path:'token/refresh/',
             data:{refresh:localStorage.getItem('refresh')}
           });
           localStorage.setItem('access',resp.access);

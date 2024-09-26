@@ -1,12 +1,12 @@
 'use client'
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { apiClient } from '../../services/api';
+import HomePageButton from '../../components/HomePageButton';
 
 
 export default function Contract() {  // Récupérer l'ID du contrat depuis l'URL
   const [contract, setContract] = useState(null);
-  const [first,setFirst]=useState(true);
   const [org_names,setOrg_names]=useState([]);
   const [exercises, setExercises] = useState([]);
   const fetchContract = async () => {
@@ -35,7 +35,6 @@ export default function Contract() {  // Récupérer l'ID du contrat depuis l'UR
           });
           return Orgesponse.name
         }));
-          console.log(l);
           setOrg_names(l);
 
         const l_ex=await apiClient({
@@ -49,12 +48,7 @@ export default function Contract() {  // Récupérer l'ID du contrat depuis l'UR
       console.error('Failed to fetch contract:', error);
     }
   };
-  if (first){
-    if (typeof window !=='undefined'){
-    fetchContract();
-}
-setFirst(false)
-}
+useEffect(fetchContract,[]);
 const handleExerciseClick = (ExId) => {
   window.location=`./exercise?id=${ExId}`; // Navigation vers la page du contrat
  };
@@ -65,6 +59,7 @@ const handleExerciseClick = (ExId) => {
     <div style={styles.container}>
       {/* Contrat Details Section */}
       <div style={styles.contractDetailsBanner}>
+        <HomePageButton/>
         <h1 style={styles.header}>Détails du contrat : {contract.name}</h1>
         <p>Nombre d'organisations: {contract.nb_org}</p>
       </div>

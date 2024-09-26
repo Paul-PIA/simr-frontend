@@ -3,7 +3,6 @@
 import React, { useState } from "react";
 import { apiClient } from "../services/api";
 import {jwtDecode} from 'jwt-decode';
-import {getToken} from "../services/jwt";
 export default function inscription() {
   return (
     <div>

@@ -1,11 +1,13 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { jwtDecode } from 'jwt-decode';
 import { apiClient } from '../services/api';
+import { Button } from 'antd';
 
 export default function ContractHomePage() {
 
-  const[first,setFirst]=useState(true);
   const [contracts, setContracts] = useState([]);
+  const [space,setSpace]=useState("General");
+  const [exercises,setExercise]=useState([])
 
   const fetchContracts=async ()=>{
     const token=localStorage.getItem('access');
@@ -21,12 +23,20 @@ export default function ContractHomePage() {
       path:`contract/?org_icontains=${org}`
     });
     setContracts(con);
-  };
+    if (con.length==1){
+      const ex=await apiClient({
+        method:'GET',
+        path:`exercise/?con=${con[0].id}`
+      });
+      setExercise(ex);
+      if (ex.length==1){
+        setSpace("Exercise")
+      }
+      else{setSpace("Contract")}
+    }
+};
 
-  if (first){
-    fetchContracts();
-    setFirst(false)
-  }
+useEffect(()=>{fetchContracts()},[]);
 
 
 
@@ -34,6 +44,61 @@ export default function ContractHomePage() {
     const handleContractClick = (contractId) => {
      window.location=`/contract?id=${contractId}`; // Navigation vers la page du contrat
     };
+    const handleExerciseClick = (exId) => {
+      window.location=`/exercise?id=${exId}`; // Navigation vers la page du contrat
+     };
+     const styles = {
+      container: {
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        padding: '20px',
+        fontFamily: 'Arial, sans-serif',
+      },
+      header: {
+        fontSize: '32px',
+        marginBottom: '20px',
+      },
+      button: {
+        padding: '10px 20px',
+        fontSize: '16px',
+        cursor: 'pointer',
+        marginBottom: '30px',
+        backgroundColor: '#0056b3',
+        color: 'white',
+        border: 'none',
+      },
+      contractsContainer: {
+        width: '100%',
+        maxWidth: '600px',
+        border: '1px solid #ccc',
+        borderRadius: '8px',
+        padding: '20px',
+      },
+      subHeader: {
+        fontSize: '24px',
+        marginBottom: '10px',
+      },
+      table: {
+        width: '100%',
+        borderCollapse: 'collapse',
+        textAlign: 'left',
+        border: '1px solid #ccc',
+      },
+      th: {
+        borderBottom: '2px solid #ccc',
+        padding: '12px 8px',
+        textAlign: 'left',
+      },
+      td: {
+        padding: '12px 8px',
+        borderBottom: '1px solid #eee',
+      },
+      row: {
+        cursor: 'pointer',
+      },
+    };
+    if (space=="General"){
     return (
       <div style={styles.container}>
         <h1 style={styles.header}>Page d'accueil</h1>
@@ -72,57 +137,55 @@ export default function ContractHomePage() {
           )}
         </div>
       </div>
-    );
+    )};
+    if (space=="Contract"){
+      return (
+        <div style={styles.container}>
+          <h1 style={styles.header}>Page d'accueil</h1>
+    
+    
+          <div style={styles.contractsContainer}>
+            <h2 style={styles.subHeader}>Contract: {contracts[0].name}</h2>
+            <h2 style={styles.subHeader}>Exercices passés :</h2>
+      <ul>
+        {exercises.length > 0 ? (
+                      <table style={styles.table}>
+                      <thead>
+                        <tr>
+                          <th style={styles.th}>ID</th>
+                          <th style={styles.th}>Nom</th>
+                          <th style={styles.th}>Date de début</th>
+                          <th style={styles.th}>Date de fin</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+          {exercises.map((exercise) => (
+            <tr key={exercise.id} style={styles.row}>
+            <td style={styles.td}>{exercise.id}</td>
+            <td
+              style={{ ...styles.td, cursor: 'pointer', color: 'blue' }}
+              onClick={() => handleExerciseClick(exercise.id)}
+            >
+              {exercise.name}
+            </td>
+            <td style={styles.td}>{exercise.date_i}</td>
+            <td style={styles.td}>{exercise.date_f}</td>
+          </tr>
+          ))}
+          </tbody>
+          </table>
+        ) : (
+          <p>Aucun exercice passé trouvé.</p>
+        )}
+      </ul>
+        </div>
+        </div>)}
+
+  if (space=="Exercise"){
+    return (
+      <div styles={styles.container}>
+        <Button onClick={()=>{window.location=`/exercise?id=${exercises[0].id}`}}>Accéder à la page de mon exercice</Button>
+      </div>
+    )
   }
-  
-  const styles = {
-    container: {
-      display: 'flex',
-      flexDirection: 'column',
-      alignItems: 'center',
-      padding: '20px',
-      fontFamily: 'Arial, sans-serif',
-    },
-    header: {
-      fontSize: '32px',
-      marginBottom: '20px',
-    },
-    button: {
-      padding: '10px 20px',
-      fontSize: '16px',
-      cursor: 'pointer',
-      marginBottom: '30px',
-      backgroundColor: '#0056b3',
-      color: 'white',
-      border: 'none',
-    },
-    contractsContainer: {
-      width: '100%',
-      maxWidth: '600px',
-      border: '1px solid #ccc',
-      borderRadius: '8px',
-      padding: '20px',
-    },
-    subHeader: {
-      fontSize: '24px',
-      marginBottom: '10px',
-    },
-    table: {
-      width: '100%',
-      borderCollapse: 'collapse',
-      textAlign: 'left',
-      border: '1px solid #ccc',
-    },
-    th: {
-      borderBottom: '2px solid #ccc',
-      padding: '12px 8px',
-      textAlign: 'left',
-    },
-    td: {
-      padding: '12px 8px',
-      borderBottom: '1px solid #eee',
-    },
-    row: {
-      cursor: 'pointer',
-    },
-  };
+}

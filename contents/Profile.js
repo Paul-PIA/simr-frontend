@@ -12,7 +12,7 @@ export default function Profile() {
   async function SetFirstProfile(){
     const rep=await apiClient({
       method:'POST',
-      path:'token/refresh',
+      path:'token/refresh/',
       data:{refresh:localStorage.getItem('refresh')}
     });
     localStorage.setItem('access',rep.access);
@@ -52,7 +52,7 @@ export default function Profile() {
       setProfile(editProfile);
       const rep=await apiClient({
         method: 'POST',
-        path: 'token/refresh',
+        path: 'token/refresh/',
         data: {refresh:localStorage.getItem('refresh')}
       });
       localStorage.setItem('access',rep.access);

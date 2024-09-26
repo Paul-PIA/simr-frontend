@@ -12,7 +12,7 @@ export default function ChangePassword() {
     e.preventDefault();
     apiClient({
       method:'POST',
-      path:'token/refresh',
+      path:'token/refresh/',
       data:{refresh:localStorage.getItem('refresh')}
     });
     apiClient({
