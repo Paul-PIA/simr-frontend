@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { apiClient } from '../../services/api';
+import { apiClient } from '../services/api';
 import { jwtDecode } from 'jwt-decode';
 
-export default function ExercisePage() {
+export default function ExercisePage({id}) {
     const [user,setUser]=useState({});
   const [exercise, setExercise] = useState({});
   const [selectedSpace, setSelectedSpace] = useState('Mon espace');
@@ -27,10 +27,8 @@ export default function ExercisePage() {
         localStorage.setItem('access',response.access);
       }
       catch (error){
-        window.location='../auth';
+        window.location='./auth';
       }
-      const queryParams = new URLSearchParams(window.location.search);
-      const id = queryParams.get('id');
     const response = await apiClient({
         method:'GET',
         path:`exercise/${id}/`

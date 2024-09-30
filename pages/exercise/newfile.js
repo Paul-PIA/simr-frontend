@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { apiClient } from "../../services/api";
+import HomePageButton from "../../components/HomePageButton";
 
 export default function NewFile() {
   const [fileName, setFileName] = useState("");
@@ -16,7 +17,7 @@ export default function NewFile() {
 
   }
 
-  useState(fetchCon, []);
+  useState(()=>{fetchCon()}, []);
 
   // Gestion du changement de fichier
   const handleFileChange = (event) => {
@@ -56,11 +57,12 @@ export default function NewFile() {
 
   return (
     <div>
+      <HomePageButton/>
       <div className="file-form">
-        <h2>New File</h2>
+        <h2>Nouveau fichier</h2>
         <form onSubmit={handleSubmit}>
           <label>
-            File Name&nbsp;
+            Nom du fichier&nbsp;
             <input
               type="text"
               name="fileName"
@@ -80,7 +82,7 @@ export default function NewFile() {
             />
           </label>
 
-          <button type="submit" className="submit-btn">Create File</button>
+          <button type="submit" className="submit-btn">Créer le fichier</button>
         </form>
       </div>
 

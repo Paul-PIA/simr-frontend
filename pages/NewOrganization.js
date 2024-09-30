@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { apiClient } from "../services/api";
+import HomePageButton from "../components/HomePageButton";
 
 export default function CreateNewOrganization() {
   const [name, setName] = useState("");
@@ -29,6 +30,7 @@ export default function CreateNewOrganization() {
 
   return (
     <div>
+      <HomePageButton/>
       <div className="organization-form">
         <h2>Create New Organization</h2>
         <form name="organization" onSubmit={handleSubmit}>

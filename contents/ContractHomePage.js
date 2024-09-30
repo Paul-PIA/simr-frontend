@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { jwtDecode } from 'jwt-decode';
 import { apiClient } from '../services/api';
 import { Button } from 'antd';
+import ExercisePage from './filePage';
 
 export default function ContractHomePage() {
 
@@ -184,7 +185,8 @@ useEffect(()=>{fetchContracts()},[]);
   if (space=="Exercise"){
     return (
       <div styles={styles.container}>
-        <Button onClick={()=>{window.location=`/exercise?id=${exercises[0].id}`}}>Accéder à la page de mon exercice</Button>
+        <ExercisePage id={exercises[0].id}/>
+        {/* <Button onClick={()=>{window.location=`/exercise?id=${exercises[0].id}`}}>Accéder à la page de mon exercice</Button> */}
       </div>
     )
   }

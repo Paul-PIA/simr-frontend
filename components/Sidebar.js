@@ -29,7 +29,7 @@ export default function _Sider() {
     setContracts(con);
   };
 
-  useEffect(fetchContracts,[]);
+  useEffect(()=>{fetchContracts()},[]);
   const handleOpenChange = (keys) => {
     const latestOpenKey = keys.find((key) => !openKeys.includes(key));
     if (!latestOpenKey) {

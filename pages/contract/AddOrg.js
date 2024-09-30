@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { apiClient } from "../services/api";
+import { apiClient } from "../../services/api";
+import HomePageButton from "../../components/HomePageButton";
 
 export default function EditContract() {
   const [contractName, setContractName] = useState("");
@@ -22,7 +23,7 @@ export default function EditContract() {
     const contractId = queryParams.get("id");
     const response = await apiClient({
       method: "GET",
-      path: `contract/${contractId}`,
+      path: `contract/${contractId}/`,
     });
     setContractName(response.name);
 
@@ -30,7 +31,7 @@ export default function EditContract() {
       response.org.map(async (value) => {
         const orga = await apiClient({
           method: "GET",
-          path: `organization/${value}`,
+          path: `organization/${value}/`,
         });
         return orga.name;
       })
@@ -88,6 +89,7 @@ export default function EditContract() {
 
   return (
     <div>
+      <HomePageButton/>
       <div className="contract-form">
         <h2>Modifier le Contrat</h2>
         <form name="contract" onSubmit={handleSubmit}>
@@ -110,7 +112,7 @@ export default function EditContract() {
           {newOrganizations.map((organization, index) => (
             <div key={index} className="new-organization-field">
               <label>
-                Nom de l'organisation {index + 1}&nbsp;
+                Nom de l'organisation {index + 1 +organizations.length}&nbsp;
                 <input
                   type="text"
                   name="name"

@@ -48,7 +48,7 @@ export default function Contract() {  // Récupérer l'ID du contrat depuis l'UR
       console.error('Failed to fetch contract:', error);
     }
   };
-useEffect(fetchContract,[]);
+useEffect(()=>{fetchContract()},[]);
 const handleExerciseClick = (ExId) => {
   window.location=`./exercise?id=${ExId}`; // Navigation vers la page du contrat
  };
