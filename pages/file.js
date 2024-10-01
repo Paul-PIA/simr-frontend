@@ -1,112 +1,52 @@
-import React, { useEffect, useState} from 'react';
-import { AgGridReact } from 'ag-grid-react';
+import React, { useEffect, useState } from 'react';
 import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-alpine.css';
-import axios from 'axios';
 import { apiClient, apiClientGetFile } from '../services/api';
+import ExcelToAgGrid from '../contents/AffichageGrid';
 import * as XLSX from 'xlsx';
+import HomePageButton from '../components/HomePageButton';
 
 const FilePage = () => {
-  const [rowData, setRowData] = useState([]);
-  const [columnDefs, setColumnDefs] = useState([]);
   const [fileDetails, setfileDetails] = useState({});
-
-  const detectCellType = (cell) => {
-    if (cell === null || cell === undefined || cell === "") {
-      return "empty";
-    } else if (!isNaN(cell)) {
-      return "numeric";
-    } else if (typeof cell === "string" && Date.parse(cell)) {
-      return "date";
-    } else {
-      return "string";
-    }
-  };
-  
-  const convertExcelToGridData = (jsonData) => {
-    if (!jsonData || jsonData.length === 0) {
-      return { columns: [], rows: [] };
-    }
-  
-    // 1. Créer les définitions de colonnes dynamiques
-    const headers = jsonData[0].map((_, index) => ({
-      headerName: `Column ${index + 1}`,  // Utiliser le nom des colonnes par défaut ou personnaliser selon votre besoin
-      field: `col${index}`,  // Champ associé aux données
-      editable: true,  // Permettre l'édition des cellules
-      cellEditor: "agTextCellEditor",  // Utiliser l'éditeur par défaut
-      valueFormatter: (params) =>
-        formatCellValue(params.value, params.node.data.types[index]),  // Mise en forme personnalisée
-    }));
-  
-    // 2. Convertir les lignes de données
-    const rows = jsonData.slice(1).map((row) => {
-      const rowObject = row.reduce((acc, cell, index) => {
-        acc[`col${index}`] = cell;  // Associer chaque cellule à un champ dans l'objet de la ligne
-        return acc;
-      }, {});
-  
-      // Stocker les types de chaque cellule pour formater correctement les données
-      rowObject.types = row.map((cell) => detectCellType(cell));
-      return rowObject;
-    });
-  
-    return { columns: headers, rows: rows };
-  };
-  
-  const formatCellValue = (value, type) => {
-    switch (type) {
-      case "numeric":
-        return !isNaN(value) ? Number(value).toLocaleString() : value;
-      case "date":
-        return new Date(value).toLocaleDateString();
-      case "percentage":
-        return `${parseFloat(value) * 100}%`;
-      case "currency":
-        return `$${parseFloat(value).toFixed(2)}`;
-      default:
-        return value;
-    }
-  };
+  const [doc, setDoc] = useState(null);
+  const [comments, setComments] = useState([]); // Pour stocker les commentaires
+  const [showComments, setShowComments] = useState(false); // Pour afficher l'onglet des commentaires
+  const [highlightedCell, setHighlightedCell] = useState(null); // Pour stocker la cellule surlignée
+  const [columnDefs, setColumnDefs] = useState([]);
+  const [commenting,setCommenting]=useState(false);
 
   useEffect(() => {
     const fetchFile = async () => {
-      try{
-        const response=await apiClient({
-          method:'POST',
-          path:'token/refresh/',
-          data:{refresh:localStorage.getItem('refresh')}
+      try {
+        const response = await apiClient({
+          method: 'POST',
+          path: 'token/refresh/',
+          data: { refresh: localStorage.getItem('refresh') },
         });
-        localStorage.setItem('access',response.access);
+        localStorage.setItem('access', response.access);
+      } catch (error) {
+        window.location = './auth';
       }
-      catch (error){
-        window.location='./auth';
-      }
+
       const queryParams = new URLSearchParams(window.location.search);
       const id = queryParams.get('id');
 
       try {
         const response = await apiClient({
-            method:'GET',
-            path:`file/${id}/`
+          method: 'GET',
+          path: `file/${id}/`,
         });
         setfileDetails(response);
-        console.log(response);
-        const fichier=await apiClientGetFile({
-          method:'GET',
-          path:response.content
+        const fichier = await apiClientGetFile({
+          method: 'GET',
+          path: response.content,
         });
-  ;
-        const data = new Uint8Array(fichier);
-        const workbook = XLSX.read(data, { type: 'array' });
+        setDoc(fichier);
+        const workbook = XLSX.read(fichier, { type: 'array' });
         const worksheet = workbook.Sheets[workbook.SheetNames[0]];
-
-        // 3. Conversion en données utilisables par AgGrid
         const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
-        const excelData = convertExcelToGridData(jsonData);
-
-        setRowData(excelData.rows);
-        setColumnDefs(excelData.columns);
-        console.log(excelData.rows)
+        const columns = jsonData[0];
+        setColumnDefs(columns);
       } catch (error) {
         console.error('Error fetching file:', error);
       }
@@ -114,9 +54,14 @@ const FilePage = () => {
 
     fetchFile();
   }, []);
+
   const handleSaveCopy = async () => {
     try {
-      await axios.post('/save-copy', { id: fileDetails, data: rowData });
+      await apiClient({
+        method: 'POST',
+        path: 'file/',
+        data: { name: "copie de " + fileDetails.name, content: doc },
+      });
       alert('Copie enregistrée avec succès.');
     } catch (error) {
       console.error('Erreur lors de la sauvegarde de la copie:', error);
@@ -125,53 +70,140 @@ const FilePage = () => {
 
   const handleSaveChanges = async () => {
     try {
-      await axios.patch(`/file?id=${fileDetails}`, { data: rowData });
+      await apiClient({
+        method: 'PATCH',
+        path: `file/${fileDetails.id}/`,
+        data: { content: doc },
+      });
       alert('Modifications enregistrées avec succès.');
     } catch (error) {
       console.error('Erreur lors de la sauvegarde des modifications:', error);
     }
   };
 
-  // Styles intégrés
+  const handleGridUpdate = (updatedData) => {
+    setDoc(updatedData);
+  };
+
+  const handleDownloadCopy = () => {
+    const workbook = XLSX.utils.book_new();
+    const worksheet = XLSX.utils.aoa_to_sheet(doc);
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'Sheet1');
+    XLSX.writeFile(workbook, `${fileDetails.name || 'tableau'}.xlsx`);
+  };
+
+  const getColumnIndex = (columnName) => {
+    const columnIndex = columnDefs.indexOf(columnName);
+    return columnIndex >= 0 ? columnIndex + 1 : null; // Retourner l'indice (en ajoutant 1 pour la logique de l'API)
+  };
+
+  // Fonction pour ajouter un commentaire
+  const handleAddComment = async (line, column, text) => {
+    try {
+      const indice=getColumnIndex(column);
+      await apiClient({
+        method: 'POST',
+        path: 'comment/',
+        data: {
+          file: fileDetails.id,
+          line: line,
+          colone: indice,
+          text: text
+        }
+      });
+      alert('Commentaire ajouté avec succès.');
+    } catch (error) {
+      console.error('Erreur lors de l\'ajout du commentaire:', error);
+    }
+  };
+
+  // Fonction pour récupérer les commentaires
+  const fetchComments = async () => {
+    try {
+      const response = await apiClient({
+        method: 'GET',
+        path: `comment/?file=${fileDetails.id}`,
+      });
+      setComments(response);
+      setShowComments(true); // Affiche l'onglet des commentaires
+    } catch (error) {
+      console.error('Erreur lors de la récupération des commentaires:', error);
+    }
+  };
+
+  // Fonction pour mettre en surbrillance la case associée à un commentaire
+  const handleViewCell = (line, column) => {
+    setHighlightedCell({ rowIndex: line, colId: column });
+    console.log(highlightedCell);
+  };
+
   const styles = {
     banner: {
       display: 'flex',
       justifyContent: 'space-between',
+      alignItems: 'center',
       padding: '10px',
       backgroundColor: '#f0f0f0',
+    },
+    buttonGroup: {
+      display: 'flex',
+      gap: '10px',
+      marginLeft: '100px',
     },
     button: {
       padding: '10px',
       border: 'none',
       cursor: 'pointer',
       color: 'white',
+      fontWeight: 'bold',
+      fontSize: '16px',
     },
-    saveCopyButton: {
-      backgroundColor: '#007bff',
-    },
-    saveChangesButton: {
-      backgroundColor: '#ff9800',
+    commentContainer: {
+      marginTop: '20px',
+      maxHeight: '300px',
+      overflowY: 'auto',
     },
   };
 
   return (
-    <div className="file-page">
+    <div>
       <div style={styles.banner}>
-        <button style={{ ...styles.button, ...styles.saveCopyButton }} onClick={handleSaveCopy}>
-          Enregistrer une copie dans mon espace de travail
-        </button>
-        <button style={{ ...styles.button, ...styles.saveChangesButton }} onClick={handleSaveChanges}>
-          Enregistrer les modifications
-        </button>
-        {/* Ajoutez ici les autres boutons Excel pertinents */}
+        <div style={styles.buttonGroup}>
+          <button onClick={handleSaveCopy} style={{ ...styles.button, backgroundColor: '#4CAF50' }}>Enregistrer une copie</button>
+          <button onClick={handleSaveChanges} style={{ ...styles.button, backgroundColor: '#2196F3' }}>Sauvegarder les modifications</button>
+          <button onClick={handleDownloadCopy} style={{ ...styles.button, backgroundColor: '#FF9800' }}>Télécharger sur mon ordinateur</button>
+          <button onClick={fetchComments} style={{ ...styles.button, backgroundColor: '#FF5722' }}>Voir les commentaires</button>
+          <button onClick={() => setCommenting(!commenting)} style={{ ...styles.button, backgroundColor: commenting ? '#FF5722' : '#2196F3' }}>
+            {commenting ? 'Terminer ajout de commentaire' : 'Rajouter un commentaire'}
+          </button>
+        </div>
+        <HomePageButton />
+      </div>
+      <div>
+        <ExcelToAgGrid
+          fileBuffer={doc}
+          onGridUpdate={handleGridUpdate}
+          onAddComment={handleAddComment}
+          commenting={commenting} // Passer l'état de "commenting" à la grille
+          highlightedCell={highlightedCell} // Passer la cellule à surligner
+        />
       </div>
 
-      <div
-      className="ag-theme-quartz" // applying the Data Grid theme
-      style={{ height: 500 }} // the Data Grid will fill the size of the parent container
-    >
-      <AgGridReact rowData={rowData} columnDefs={columnDefs} />
-    </div>
+      {showComments && (
+        <div style={styles.commentContainer}>
+          <h3>Commentaires :</h3>
+          <ul>
+            {comments.map((comment, index) => (
+              <li key={index}>
+                {`Ligne ${comment.line}, Colonne ${comment.colone} (${columnDefs[comment.colone - 1]}) : ${comment.text} `}
+                <button onClick={() => handleViewCell(comment.line, columnDefs[comment.colone - 1])} style={{ ...styles.button, backgroundColor: '#2196F3' }}>
+                  Voir la case
+                </button>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
     </div>
   );
 };
