@@ -107,7 +107,7 @@ export default function ExercisePage({id}) {
   const confirmDelete = async() => {
     await apiClient({
       method:'DELETE',
-      path:`file/${fileToDelete.id}`
+      path:`file/${fileToDelete.id}/`
     });
     alert(`Fichier ${fileToDelete.name} supprimé`);
     setShowDeleteModal(false);

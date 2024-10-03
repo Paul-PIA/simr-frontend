@@ -15,16 +15,22 @@ function ExcelToAgGrid({ fileBuffer, onGridUpdate, onAddComment, highlightedCell
       const worksheet = workbook.Sheets[workbook.SheetNames[0]];
       const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
 
-      const columns = jsonData[0].map((header) => ({
+      const columns = jsonData[0].map((header) => (
+        {
         headerName: header,
         field: header,
         editable: !commenting, // Rendre la cellule éditable si on n'est pas en mode commentaire
         sortable: true,
         filter: true,
         resizable: true,
+        cellStyle: params => {
+              //mark police cells as red
+              return getCellClass(params)==='highlight-cell' ? {backgroundColor: 'yellow'}:null},
+        valueFormatter: params => {
+          return params.value === '' ? '0' : params.value;
+        }
       }));
       setColumnDefs(columns);
-
       const rows = jsonData.slice(1).map((row) => {
         const rowObject = {};
         columns.forEach((col, index) => {
@@ -34,9 +40,10 @@ function ExcelToAgGrid({ fileBuffer, onGridUpdate, onAddComment, highlightedCell
       });
       setRowData(rows);
     }
-  }, [fileBuffer, commenting]);
+  }, [fileBuffer, commenting,highlightedCell]);
 
   const onCellClicked = useCallback((params) => {
+    console.log(params);
     if (commenting) {
       const { rowIndex, colDef } = params;
       setSelectedCell({ rowIndex, colId: colDef.field });
@@ -47,16 +54,38 @@ function ExcelToAgGrid({ fileBuffer, onGridUpdate, onAddComment, highlightedCell
     }
   }, [onAddComment, commenting]);
 
-  const onCellValueChanged = useCallback((params) => {
-    const updatedData = params.api.getDataAsCsv({ onlySelected: false, allColumns: true });
-    if (onGridUpdate) {
-      onGridUpdate(updatedData);
-    }
-  }, [onGridUpdate]);
+  const onCellValueChanged = (event) => {
+    rowData[event.node.rowIndex]=event.data; 
+    console.log("Données mises à jour : ", rowData);
+
+    // Si nécessaire, mettez à jour l'ArrayBuffer ou exécutez une fonction supplémentaire
+    onGridUpdate && updateArrayBufferFromTableData(rowData,columnDefs);
+  };
+
+  function updateArrayBufferFromTableData(rowData, columnDefs) {
+    const worksheetData = [columnDefs.map(colDef => colDef.headerName)];
+    
+    rowData.forEach(row => {
+        let rowArray = [];
+        columnDefs.forEach(colDef => {
+            rowArray.push(row[colDef.field]);
+        });
+        worksheetData.push(rowArray);
+    });
+    
+    const worksheet = XLSX.utils.aoa_to_sheet(worksheetData);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'Sheet1');
+    
+    // Créer un nouvel ArrayBuffer à partir du workbook
+    const updatedArrayBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+    onGridUpdate(updatedArrayBuffer);
+}
+
+
 
   const getCellClass = (params) => {
-    console.log(params);
-    if (highlightedCell && params.node.rowIndex === highlightedCell.rowIndex - 1 && params.colDef.field === highlightedCell.colId) {
+    if (highlightedCell && params.node.rowIndex === highlightedCell.rowIndex-1 && params.colDef.field === highlightedCell.colId) {
       return 'highlight-cell';
     }
     return '';
@@ -71,9 +100,10 @@ function ExcelToAgGrid({ fileBuffer, onGridUpdate, onAddComment, highlightedCell
         onCellValueChanged={onCellValueChanged}
         pagination={true}
         paginationPageSize={10}
-        getCellClass={getCellClass} // Appliquer les classes CSS pour surligner les cellules
+        // getCellClass={getCellClass} // Appliquer les classes CSS pour surligner les cellules
       />
     </div>
+    
   );
 }
 

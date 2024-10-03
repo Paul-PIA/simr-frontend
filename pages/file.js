@@ -15,6 +15,16 @@ const FilePage = () => {
   const [columnDefs, setColumnDefs] = useState([]);
   const [commenting,setCommenting]=useState(false);
 
+  const conversionPourEnvoie=(doc)=>{
+    const workbook = XLSX.read(doc, { type: 'array' });
+    // 2. Convertir le classeur en un fichier binaire Excel (.xlsx)
+    const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+    // 3. Créer un objet Blob à partir du fichier binaire
+    const blob = new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+    // 4. Créer un objet File en spécifiant le nom du fichier
+    const file = new File([blob], 'modifications.xlsx', { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+    return file
+  }
   useEffect(() => {
     const fetchFile = async () => {
       try {
@@ -57,10 +67,13 @@ const FilePage = () => {
 
   const handleSaveCopy = async () => {
     try {
+      const file=conversionPourEnvoie(doc);
       await apiClient({
         method: 'POST',
         path: 'file/',
-        data: { name: "copie de " + fileDetails.name, content: doc },
+        data: { name: "copie de " + fileDetails.name,
+           content: file, 
+           exer:fileDetails.exer, con:fileDetails.con }
       });
       alert('Copie enregistrée avec succès.');
     } catch (error) {
@@ -69,11 +82,12 @@ const FilePage = () => {
   };
 
   const handleSaveChanges = async () => {
+    const file=conversionPourEnvoie(doc);
     try {
       await apiClient({
         method: 'PATCH',
         path: `file/${fileDetails.id}/`,
-        data: { content: doc },
+        data: { content: file },
       });
       alert('Modifications enregistrées avec succès.');
     } catch (error) {
@@ -86,11 +100,13 @@ const FilePage = () => {
   };
 
   const handleDownloadCopy = () => {
-    const workbook = XLSX.utils.book_new();
-    const worksheet = XLSX.utils.aoa_to_sheet(doc);
-    XLSX.utils.book_append_sheet(workbook, worksheet, 'Sheet1');
+    // Lire le ArrayBuffer (doc)
+    const workbook = XLSX.read(doc, { type: 'array' });
+  
+    // Télécharger le fichier en .xlsx
     XLSX.writeFile(workbook, `${fileDetails.name || 'tableau'}.xlsx`);
   };
+  
 
   const getColumnIndex = (columnName) => {
     const columnIndex = columnDefs.indexOf(columnName);
@@ -134,7 +150,6 @@ const FilePage = () => {
   // Fonction pour mettre en surbrillance la case associée à un commentaire
   const handleViewCell = (line, column) => {
     setHighlightedCell({ rowIndex: line, colId: column });
-    console.log(highlightedCell);
   };
 
   const styles = {
@@ -172,7 +187,7 @@ const FilePage = () => {
           <button onClick={handleSaveCopy} style={{ ...styles.button, backgroundColor: '#4CAF50' }}>Enregistrer une copie</button>
           <button onClick={handleSaveChanges} style={{ ...styles.button, backgroundColor: '#2196F3' }}>Sauvegarder les modifications</button>
           <button onClick={handleDownloadCopy} style={{ ...styles.button, backgroundColor: '#FF9800' }}>Télécharger sur mon ordinateur</button>
-          <button onClick={fetchComments} style={{ ...styles.button, backgroundColor: '#FF5722' }}>Voir les commentaires</button>
+          {!showComments ? (<button onClick={fetchComments} style={{ ...styles.button, backgroundColor: '#FF5722' }}>Voir les commentaires</button>):null}
           <button onClick={() => setCommenting(!commenting)} style={{ ...styles.button, backgroundColor: commenting ? '#FF5722' : '#2196F3' }}>
             {commenting ? 'Terminer ajout de commentaire' : 'Rajouter un commentaire'}
           </button>
