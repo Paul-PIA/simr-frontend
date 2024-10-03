@@ -5,6 +5,7 @@ import { apiClient, apiClientGetFile } from '../services/api';
 import ExcelToAgGrid from '../contents/AffichageGrid';
 import * as XLSX from 'xlsx';
 import HomePageButton from '../components/HomePageButton';
+import { jwtDecode } from 'jwt-decode';
 
 const FilePage = () => {
   const [fileDetails, setfileDetails] = useState({});
@@ -13,7 +14,12 @@ const FilePage = () => {
   const [showComments, setShowComments] = useState(false); // Pour afficher l'onglet des commentaires
   const [highlightedCell, setHighlightedCell] = useState(null); // Pour stocker la cellule surlignée
   const [columnDefs, setColumnDefs] = useState([]);
-  const [commenting,setCommenting]=useState(false);
+  const [commenting,setCommenting]=useState(false); 
+  const [self,setSelf]=useState({});  //L'utilisateur
+  const [orgConRights,setOrgConRights]=useState({});
+  const [orgUsers,setOrgUsers]=useState([]);  //Tous les utilisateurs de mon organisation
+  const [selectedDealer,setSelectedDealer]=useState({}) //Dictionnaire {commentaire:dealer}
+  const [children,setChildren]=useState({});
 
   const conversionPourEnvoie=(doc)=>{
     const workbook = XLSX.read(doc, { type: 'array' });
@@ -40,13 +46,12 @@ const FilePage = () => {
 
       const queryParams = new URLSearchParams(window.location.search);
       const id = queryParams.get('id');
-
+      const response = await apiClient({
+        method: 'GET',
+        path: `file/${id}/`,
+      });
+      setfileDetails(response);
       try {
-        const response = await apiClient({
-          method: 'GET',
-          path: `file/${id}/`,
-        });
-        setfileDetails(response);
         const fichier = await apiClientGetFile({
           method: 'GET',
           path: response.content,
@@ -60,6 +65,28 @@ const FilePage = () => {
       } catch (error) {
         console.error('Error fetching file:', error);
       }
+        const token=localStorage.getItem('access');
+        const decoded=jwtDecode(token);
+        const user_id=decoded.user_id;
+        const user=await apiClient({
+          method:'GET',
+          path:`user/${user_id}/`
+        });
+        setSelf(user);
+        const monOrgContract=await apiClient({
+          method:'GET',
+          path:`orgconright/?org=${user.org}&con=${response.con}`
+        });
+        setOrgConRights(monOrgContract[0]);
+        if (monOrgContract[0].chief===user.id){
+          const mesCollègues=await apiClient({
+            method:'GET',
+            path:`user/?org=${user.org}`
+          });
+          setOrgUsers(mesCollègues);
+        }
+       
+
     };
 
     fetchFile();
@@ -140,13 +167,41 @@ const FilePage = () => {
         method: 'GET',
         path: `comment/?file=${fileDetails.id}`,
       });
+      response.map((comment)=>{
+        selectedDealer[comment.id]=comment.dealer
+        if (comment.parent){
+          try{
+        children[comment.parent].push(comment)}
+        catch(error){
+          children[comment.parent]=[comment]
+        } }
+      });
       setComments(response);
-      setShowComments(true); // Affiche l'onglet des commentaires
+      setShowComments(true);// Affiche l'onglet des commentaires
     } catch (error) {
       console.error('Erreur lors de la récupération des commentaires:', error);
     }
   };
 
+  const Reply=(comment)=>{
+    const commentText = window.prompt('Réponse: ');
+    if (commentText){
+      handleReply(comment,commentText)
+    }
+  }
+const handleReply=async (comment,commentText)=>{
+  await apiClient({
+    method:'POST',
+    path:'comment/',
+    data:{
+      text:commentText,
+      parent:comment.id,
+      file:comment.file,
+      line:comment.line,
+      colone:comment.colone
+    }
+  })
+}
   // Fonction pour mettre en surbrillance la case associée à un commentaire
   const handleViewCell = (line, column) => {
     setHighlightedCell({ rowIndex: line, colId: column });
@@ -194,6 +249,7 @@ const FilePage = () => {
         </div>
         <HomePageButton />
       </div>
+      <div>{commenting? 'Appuyer sur la case à commenter':null}</div>
       <div>
         <ExcelToAgGrid
           fileBuffer={doc}
@@ -204,17 +260,49 @@ const FilePage = () => {
         />
       </div>
 
-      {showComments && (
+      {showComments && (                //Onglet des commentaires
         <div style={styles.commentContainer}>
           <h3>Commentaires :</h3>
           <ul>
             {comments.map((comment, index) => (
+              comment.parent==null &&(
               <li key={index}>
                 {`Ligne ${comment.line}, Colonne ${comment.colone} (${columnDefs[comment.colone - 1]}) : ${comment.text} `}
                 <button onClick={() => handleViewCell(comment.line, columnDefs[comment.colone - 1])} style={{ ...styles.button, backgroundColor: '#2196F3' }}>
                   Voir la case
                 </button>
-              </li>
+                <div>Responsable : 
+                {self.id==orgConRights.chief ? (
+                <form 
+                name="Choose Dealer"
+                onSubmit={async (e)=>{
+                  e.preventDefault();
+                  await apiClient({
+                    method:'PATCH',
+                    path:`assigncomment/${comment.id}/`,
+                    data:{dealer:selectedDealer[comment.id]}
+                  })
+                }}>          
+                      <select
+                      name="dealer"
+                      value={selectedDealer[comment.id]}
+                      onChange={
+                        (e) => {
+                          selectedDealer[comment.id]=e.target.value} }// Mise à jour du dealer
+                    >
+                      <option value={null} >Choisir un responsable </option>
+                      {orgUsers.map((o) => (
+                        <option key={o.id} value={o.id}>
+                          {o.username}
+                        </option>
+                          ))}
+                        </select>
+                            <button type="submit" style={{ ...styles.button, backgroundColor: '#2196F3' }}>Confirmer</button>
+                            </form>
+                ):(selectedDealer[comment.id]) } </div>
+                <button style={{ ...styles.button, backgroundColor: '#2196F3' }} onClick={()=>{ Reply(comment)}}>Répondre</button>
+
+              </li>)
             ))}
           </ul>
         </div>
