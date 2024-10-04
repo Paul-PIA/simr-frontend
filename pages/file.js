@@ -161,6 +161,10 @@ const FilePage = () => {
     }
   };
 
+  const handleViewCell = (line, column) => {
+    setHighlightedCell({ rowIndex: line, colId: column });
+  };
+
   // Fonction pour récupérer les commentaires
   const fetchComments = async () => {
     try {
@@ -178,6 +182,7 @@ const FilePage = () => {
         } }
       });
       setComments(response);
+      console.log(response);
       setShowComments(true);// Affiche l'onglet des commentaires
     } catch (error) {
       console.error('Erreur lors de la récupération des commentaires:', error);
@@ -202,8 +207,7 @@ const FilePage = () => {
     commentContainer: {
       marginTop: '20px',
       maxHeight: '300px',
-      overflowY: 'auto',
-      marginLeft:'20px'
+      marginLeft:'20px',
     },
     button: {
       padding: '10px',
@@ -249,6 +253,7 @@ const FilePage = () => {
         orgConRights={orgConRights}
         columnDefs={columnDefs}
         orgUsers={orgUsers}
+        handleViewCell={handleViewCell}
         />
        </div>
       )}
