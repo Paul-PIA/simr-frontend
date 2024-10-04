@@ -6,6 +6,7 @@ import ExcelToAgGrid from '../contents/AffichageGrid';
 import * as XLSX from 'xlsx';
 import HomePageButton from '../components/HomePageButton';
 import { jwtDecode } from 'jwt-decode';
+import AffichageCommentaires from '../contents/AffichageCommentaires';
 
 const FilePage = () => {
   const [fileDetails, setfileDetails] = useState({});
@@ -183,29 +184,7 @@ const FilePage = () => {
     }
   };
 
-  const Reply=(comment)=>{
-    const commentText = window.prompt('Réponse: ');
-    if (commentText){
-      handleReply(comment,commentText)
-    }
-  }
-const handleReply=async (comment,commentText)=>{
-  await apiClient({
-    method:'POST',
-    path:'comment/',
-    data:{
-      text:commentText,
-      parent:comment.id,
-      file:comment.file,
-      line:comment.line,
-      colone:comment.colone
-    }
-  })
-}
-  // Fonction pour mettre en surbrillance la case associée à un commentaire
-  const handleViewCell = (line, column) => {
-    setHighlightedCell({ rowIndex: line, colId: column });
-  };
+  
 
   const styles = {
     banner: {
@@ -220,6 +199,12 @@ const handleReply=async (comment,commentText)=>{
       gap: '10px',
       marginLeft: '100px',
     },
+    commentContainer: {
+      marginTop: '20px',
+      maxHeight: '300px',
+      overflowY: 'auto',
+      marginLeft:'20px'
+    },
     button: {
       padding: '10px',
       border: 'none',
@@ -227,12 +212,7 @@ const handleReply=async (comment,commentText)=>{
       color: 'white',
       fontWeight: 'bold',
       fontSize: '16px',
-    },
-    commentContainer: {
-      marginTop: '20px',
-      maxHeight: '300px',
-      overflowY: 'auto',
-    },
+    }
   };
 
   return (
@@ -260,52 +240,17 @@ const handleReply=async (comment,commentText)=>{
         />
       </div>
 
-      {showComments && (                //Onglet des commentaires
-        <div style={styles.commentContainer}>
-          <h3>Commentaires :</h3>
-          <ul>
-            {comments.map((comment, index) => (
-              comment.parent==null &&(
-              <li key={index}>
-                {`Ligne ${comment.line}, Colonne ${comment.colone} (${columnDefs[comment.colone - 1]}) : ${comment.text} `}
-                <button onClick={() => handleViewCell(comment.line, columnDefs[comment.colone - 1])} style={{ ...styles.button, backgroundColor: '#2196F3' }}>
-                  Voir la case
-                </button>
-                <div>Responsable : 
-                {self.id==orgConRights.chief ? (
-                <form 
-                name="Choose Dealer"
-                onSubmit={async (e)=>{
-                  e.preventDefault();
-                  await apiClient({
-                    method:'PATCH',
-                    path:`assigncomment/${comment.id}/`,
-                    data:{dealer:selectedDealer[comment.id]}
-                  })
-                }}>          
-                      <select
-                      name="dealer"
-                      value={selectedDealer[comment.id]}
-                      onChange={
-                        (e) => {
-                          selectedDealer[comment.id]=e.target.value} }// Mise à jour du dealer
-                    >
-                      <option value={null} >Choisir un responsable </option>
-                      {orgUsers.map((o) => (
-                        <option key={o.id} value={o.id}>
-                          {o.username}
-                        </option>
-                          ))}
-                        </select>
-                            <button type="submit" style={{ ...styles.button, backgroundColor: '#2196F3' }}>Confirmer</button>
-                            </form>
-                ):(selectedDealer[comment.id]) } </div>
-                <button style={{ ...styles.button, backgroundColor: '#2196F3' }} onClick={()=>{ Reply(comment)}}>Répondre</button>
-
-              </li>)
-            ))}
-          </ul>
-        </div>
+      {showComments && (   <div style={styles.commentContainer}> 
+        <AffichageCommentaires 
+        comments={comments}
+        selectedDealer={selectedDealer}
+        children={children}
+        self={self}
+        orgConRights={orgConRights}
+        columnDefs={columnDefs}
+        orgUsers={orgUsers}
+        />
+       </div>
       )}
     </div>
   );
