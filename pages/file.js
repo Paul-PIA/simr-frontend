@@ -21,6 +21,7 @@ const FilePage = () => {
   const [orgUsers,setOrgUsers]=useState([]);  //Tous les utilisateurs de mon organisation
   const [selectedDealer,setSelectedDealer]=useState({}) //Dictionnaire {commentaire:dealer}
   const [children,setChildren]=useState({});
+  const [charts, setCharts] = useState([]);
 
   const conversionPourEnvoie=(doc)=>{
     const workbook = XLSX.read(doc, { type: 'array' });
@@ -240,7 +241,9 @@ const FilePage = () => {
           onGridUpdate={handleGridUpdate}
           onAddComment={handleAddComment}
           commenting={commenting} // Passer l'état de "commenting" à la grille
-          highlightedCell={highlightedCell} // Passer la cellule à surligner
+          highlightedCell={highlightedCell}  // Passer la cellule à surligner
+          charts={charts}
+          setCharts={setCharts}
         />
       </div>
 

@@ -3,16 +3,28 @@ import * as XLSX from 'xlsx';
 import { AgGridReact } from 'ag-grid-react';
 import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-alpine.css';
+import { AgCharts } from 'ag-charts-react'
 
-function ExcelToAgGrid({ fileBuffer, onGridUpdate, onAddComment, highlightedCell, commenting }) { // Recevoir "commenting" en prop
+
+function ExcelToAgGrid({ fileBuffer, onGridUpdate, onAddComment, highlightedCell, commenting, charts,setCharts }) { // Recevoir "commenting" en prop
   const [columnDefs, setColumnDefs] = useState([]);
   const [rowData, setRowData] = useState([]);
   const [selectedCell, setSelectedCell] = useState(null);
+  const [chartType, setChartType] = useState('line'); // Type de graphique choisi par l'utilisateur
+  const [xColumn, setXColumn] = useState('');
+  const [yColumn, setYColumn] = useState('');
+  const [showModal,setShowModal]=useState(false);
+  const [activeTab, setActiveTab] = useState(0); // Gérer les onglets
+  const [chartTitle, setChartTitle] = useState('Graphique 1');
 
   useEffect(() => {
     if (fileBuffer) {
       const workbook = XLSX.read(fileBuffer, { type: 'array' });
       const worksheet = workbook.Sheets[workbook.SheetNames[0]];
+      const chartsSheet = workbook.Sheets['Charts']; // Feuille contenant les graphiques
+      const chartsData = chartsSheet ? XLSX.utils.sheet_to_json(chartsSheet) : [];
+      setCharts(chartsData);
+  
       const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
 
       const columns = jsonData[0].map((header) => (
@@ -24,24 +36,71 @@ function ExcelToAgGrid({ fileBuffer, onGridUpdate, onAddComment, highlightedCell
         filter: true,
         resizable: true,
         cellStyle: params => {
-              //mark police cells as red
               return getCellClass(params)==='highlight-cell' ? {backgroundColor: 'yellow'}:null},
-        valueFormatter: params => {
-          return params.value === '' ? '0' : params.value;
-        }
+        // valueFormatter: params => {
+        //   return params.value === '' ? '0' : params.value;
+        // }
       }));
       setColumnDefs(columns);
       const rows = jsonData.slice(1).map((row) => {
         const rowObject = {};
         columns.forEach((col, index) => {
-          rowObject[col.field] = row[index] || ''; 
+          rowObject[col.field] = row[index] //||''; 
         });
         return rowObject;
       });
       setRowData(rows);
-    }
+
+  }
   }, [fileBuffer, commenting,highlightedCell]);
 
+
+  const addChartTab = () => {
+    setCharts([...charts, {
+      title: `Graphique ${charts.length + 1}`,
+      chartOptions: getChartOptions('line', xColumn, yColumn)
+    }]);
+    setActiveTab(charts.length);
+  };
+
+  // Supprimer un onglet
+  const removeChartTab = (index) => {
+    const newCharts = charts.filter((_, i) => i !== index);
+    setCharts(newCharts);
+    setActiveTab(0); // Retourner au premier onglet
+  };
+
+  // Obtenir les options de graphique
+  const getChartOptions = (type, xCol, yCol) => ({
+    data: rowData,
+    series: [
+      {
+        type: type,
+        xKey: xCol,
+        yKey: yCol,
+        stroke: 'blue',
+      }
+    ],
+    axes: [
+      {
+        type: 'category',
+        position: 'bottom',
+      },
+      {
+        type: 'number',
+        position: 'left',
+      }
+    ],
+  });
+
+  // Mettre à jour les options du graphique actif
+  const updateChartSettings = () => {
+    const updatedCharts = [...charts];
+    updatedCharts[activeTab].chartOptions = getChartOptions(chartType, xColumn, yColumn);
+    updatedCharts[activeTab].title = chartTitle;
+    setCharts(updatedCharts);
+  };
+  
   const onCellClicked = useCallback((params) => {
     console.log(params);
     if (commenting) {
@@ -92,6 +151,7 @@ function ExcelToAgGrid({ fileBuffer, onGridUpdate, onAddComment, highlightedCell
   };
 
   return (
+    <div>
     <div className="ag-theme-alpine" style={{ height: 500, width: '100%' }}>
       <AgGridReact
         columnDefs={columnDefs}
@@ -100,8 +160,70 @@ function ExcelToAgGrid({ fileBuffer, onGridUpdate, onAddComment, highlightedCell
         onCellValueChanged={onCellValueChanged}
         pagination={true}
         paginationPageSize={10}
-        // getCellClass={getCellClass} // Appliquer les classes CSS pour surligner les cellules
+        
       />
+    </div>
+   {/* Barre d'onglets */}
+   <div className="tabs">
+        {charts.map((chart, index) => (
+          <button
+            key={index}
+            className={index === activeTab ? 'active' : ''}
+            onClick={() => setActiveTab(index)}
+          >
+            {chart.title}
+          </button>
+        ))}
+        <button onClick={addChartTab}>Ajouter un graphique</button>
+      </div>
+
+      {/* Afficher le graphique dans l'onglet actif */}
+      {charts.length > 0 && (
+        <div>
+          <h3>{charts[activeTab].title}</h3>
+          <AgCharts options={charts[activeTab].chartOptions} />
+          <button onClick={() => removeChartTab(activeTab)}>Supprimer l'onglet</button>
+        </div>
+      )}
+
+      {/* Configuration des graphiques */}
+      <div style={{ marginTop: 20 }}>
+        <h4>Configurer les graphiques</h4>
+        <label>Nom du graphique :</label>
+        <input
+          type="text"
+          value={chartTitle}
+          onChange={(e) => setChartTitle(e.target.value)}
+        />
+
+        <label>Type de graphique :</label>
+        <select value={chartType} onChange={(e) => setChartType(e.target.value)}>
+          <option value="line">Ligne</option>
+          <option value="bar">Barres</option>
+          <option value="area">Aire</option>
+          <option value="scatter">Nuage de points</option>
+        </select>
+
+        <label>Colonne pour l'axe X :</label>
+        <select value={xColumn} onChange={(e) => setXColumn(e.target.value)}>
+          {columnDefs.map((col) => (
+            <option key={col.field} value={col.field}>
+              {col.headerName}
+            </option>
+          ))}
+        </select>
+
+        <label>Colonne pour l'axe Y :</label>
+        <select value={yColumn} onChange={(e) => setYColumn(e.target.value)}>
+          {columnDefs.map((col) => (
+            <option key={col.field} value={col.field}>
+              {col.headerName}
+            </option>
+          ))}
+        </select>
+
+        <button onClick={updateChartSettings}>Appliquer</button>
+      </div>
     </div>
     
   );
