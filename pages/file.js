@@ -56,7 +56,7 @@ const FilePage = () => {
       try {
         const fichier = await apiClientGetFile({
           method: 'GET',
-          path: response.content,
+          path: response.content
         });
         setDoc(fichier);
         const workbook = XLSX.read(fichier, { type: 'array' });

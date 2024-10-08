@@ -19,11 +19,15 @@ function ExcelToAgGrid({ fileBuffer, onGridUpdate, onAddComment, highlightedCell
 
   useEffect(() => {
     if (fileBuffer) {
+      console.log(fileBuffer);
       const workbook = XLSX.read(fileBuffer, { type: 'array' });
       const worksheet = workbook.Sheets[workbook.SheetNames[0]];
       const chartsSheet = workbook.Sheets['Charts']; // Feuille contenant les graphiques
+      console.log(chartsSheet);
       const chartsData = chartsSheet ? XLSX.utils.sheet_to_json(chartsSheet) : [];
-      setCharts(chartsData);
+      console.log(chartsData);
+      const Graphs=chartsData.map((chart)=>{return {title:chart.title,chartOptions:getChartOptions(chart.Type,chart.X,chart.Y)}})
+      setCharts(Graphs);
   
       const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
 
@@ -42,6 +46,10 @@ function ExcelToAgGrid({ fileBuffer, onGridUpdate, onAddComment, highlightedCell
         // }
       }));
       setColumnDefs(columns);
+      if (columns.length > 1 && xColumn==='' && yColumn==='') {
+        setXColumn(columns[0].field);
+        setYColumn(columns[1].field);
+      }
       const rows = jsonData.slice(1).map((row) => {
         const rowObject = {};
         columns.forEach((col, index) => {
@@ -83,7 +91,7 @@ function ExcelToAgGrid({ fileBuffer, onGridUpdate, onAddComment, highlightedCell
     ],
     axes: [
       {
-        type: 'category',
+        type: 'number' || 'category',
         position: 'bottom',
       },
       {
@@ -99,7 +107,10 @@ function ExcelToAgGrid({ fileBuffer, onGridUpdate, onAddComment, highlightedCell
     updatedCharts[activeTab].chartOptions = getChartOptions(chartType, xColumn, yColumn);
     updatedCharts[activeTab].title = chartTitle;
     setCharts(updatedCharts);
+    onGridUpdate && updateArrayBufferFromTableData(rowData,columnDefs,charts)
   };
+
+  useEffect(()=>{ if (charts[activeTab]){updateChartSettings()}},[xColumn,yColumn,chartType,chartTitle]);
   
   const onCellClicked = useCallback((params) => {
     console.log(params);
@@ -118,10 +129,10 @@ function ExcelToAgGrid({ fileBuffer, onGridUpdate, onAddComment, highlightedCell
     console.log("Données mises à jour : ", rowData);
 
     // Si nécessaire, mettez à jour l'ArrayBuffer ou exécutez une fonction supplémentaire
-    onGridUpdate && updateArrayBufferFromTableData(rowData,columnDefs);
+    onGridUpdate && updateArrayBufferFromTableData(rowData,columnDefs,charts);
   };
 
-  function updateArrayBufferFromTableData(rowData, columnDefs) {
+  function updateArrayBufferFromTableData(rowData, columnDefs,charts) {
     const worksheetData = [columnDefs.map(colDef => colDef.headerName)];
     
     rowData.forEach(row => {
@@ -133,12 +144,29 @@ function ExcelToAgGrid({ fileBuffer, onGridUpdate, onAddComment, highlightedCell
     });
     
     const worksheet = XLSX.utils.aoa_to_sheet(worksheetData);
+
+    // Créer une nouvelle feuille pour les graphiques (ChartsData)
+    const chartsData = [["title", "Type", "X", "Y"]]; // En-têtes pour la feuille des graphiques
+    charts.forEach(chart => {
+        chartsData.push([
+            chart.title,            // Titre du graphique
+            chart.chartOptions.series[0].type,  // Type de graphique (ligne, barres, etc.)
+            chart.chartOptions.series[0].xKey,  // Colonne pour X
+            chart.chartOptions.series[0].yKey   // Colonne pour Y
+        ]);
+    });
+
+    const chartsWorksheet = XLSX.utils.aoa_to_sheet(chartsData);
+
     const workbook = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(workbook, worksheet, 'Sheet1');
+    XLSX.utils.book_append_sheet(workbook, chartsWorksheet, 'Charts');
+    console.log(workbook)
     
     // Créer un nouvel ArrayBuffer à partir du workbook
     const updatedArrayBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
     onGridUpdate(updatedArrayBuffer);
+    console.log(updatedArrayBuffer)
 }
 
 
@@ -193,7 +221,7 @@ function ExcelToAgGrid({ fileBuffer, onGridUpdate, onAddComment, highlightedCell
         <input
           type="text"
           value={chartTitle}
-          onChange={(e) => setChartTitle(e.target.value)}
+          onChange={(e) => {setChartTitle(e.target.value)}}
         />
 
         <label>Type de graphique :</label>

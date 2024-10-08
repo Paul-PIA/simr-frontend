@@ -20,6 +20,21 @@ importers:
       '@fortawesome/react-fontawesome':
         specifier: ^0.2.2
         version: 0.2.2(@fortawesome/fontawesome-svg-core@6.6.0)(react@18.3.0)
+      '@mescius/spread-sheets':
+        specifier: ^17.1.6
+        version: 17.1.6
+      '@mescius/spread-sheets-charts':
+        specifier: ^17.1.6
+        version: 17.1.6
+      '@mescius/spread-sheets-io':
+        specifier: ^17.1.6
+        version: 17.1.6
+      '@mescius/spread-sheets-react':
+        specifier: ^17.1.6
+        version: 17.1.6
+      '@mescius/spread-sheets-shapes':
+        specifier: ^17.1.6
+        version: 17.1.6
       '@types/jwt-decode':
         specifier: ^3.1.0
         version: 3.1.0
@@ -865,6 +880,21 @@ packages:
 
   '@jridgewell/trace-mapping@0.3.9':
     resolution: {integrity: sha512-3Belt6tdc8bPgAtbcmdtNJlirVoTmEb5e2gC94PnkwEW9jI6CAHUeoG85tjWP5WquqfavoMtMwiG4P926ZKKuQ==}
+
+  '@mescius/spread-sheets-charts@17.1.6':
+    resolution: {integrity: sha512-6AeS8qp3FaVr+8kvw+haGTMGJAbGS6Hta2yEaLFVDhnVPPDbRoCrU9J6dUAfPArINhZI3P+Ac/IjfQGHGyMG9A==}
+
+  '@mescius/spread-sheets-io@17.1.6':
+    resolution: {integrity: sha512-PaiCVRe1BkRbXDiV8EKK7QmhIvy0DrWSVKeh9nt5cA/ZUcnZl+GeKdUXGk2LyRXChmax00vsXD/Q1MvVGc/OUg==}
+
+  '@mescius/spread-sheets-react@17.1.6':
+    resolution: {integrity: sha512-q5BY9cKZ6hGds0XpdTHTzowGzozWjViokEHEzPbi44NAVAKJIyb6IzKP5DqHCpgvijNdsfj9PJRN3IZZ01Esmw==}
+
+  '@mescius/spread-sheets-shapes@17.1.6':
+    resolution: {integrity: sha512-J+eu8HrzprqwbUyaCIcdSytvqH5gnlr6wFV5Z50rdwUkLYjQdVqu5JNfud3t3K/QwOXdZNbPECM3k0yePCu1iA==}
+
+  '@mescius/spread-sheets@17.1.6':
+    resolution: {integrity: sha512-lGXZWeQCNXL8S8x2Kjgfon/xhYWwOeB7K5DKToCU8XS8DH5GvXQtr4xfa+7ub6WmDnm+1MrOdna0Gb8FF4JFUA==}
 
   '@next/env@14.2.7':
     resolution: {integrity: sha512-OTx9y6I3xE/eih+qtthppwLytmpJVPM5PPoJxChFsbjIEFXIayG0h/xLzefHGJviAa3Q5+Fd+9uYojKkHDKxoQ==}
@@ -4093,6 +4123,25 @@ snapshots:
       '@jridgewell/resolve-uri': 3.1.2
       '@jridgewell/sourcemap-codec': 1.5.0
     optional: true
+
+  '@mescius/spread-sheets-charts@17.1.6':
+    dependencies:
+      '@mescius/spread-sheets': 17.1.6
+      '@mescius/spread-sheets-shapes': 17.1.6
+
+  '@mescius/spread-sheets-io@17.1.6':
+    dependencies:
+      '@mescius/spread-sheets': 17.1.6
+
+  '@mescius/spread-sheets-react@17.1.6':
+    dependencies:
+      '@mescius/spread-sheets': 17.1.6
+
+  '@mescius/spread-sheets-shapes@17.1.6':
+    dependencies:
+      '@mescius/spread-sheets': 17.1.6
+
+  '@mescius/spread-sheets@17.1.6': {}
 
   '@next/env@14.2.7': {}
 
