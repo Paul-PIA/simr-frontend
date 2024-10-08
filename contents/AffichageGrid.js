@@ -12,21 +12,18 @@ function ExcelToAgGrid({ fileBuffer, onGridUpdate, onAddComment, highlightedCell
   const [selectedCell, setSelectedCell] = useState(null);
   const [chartType, setChartType] = useState('line'); // Type de graphique choisi par l'utilisateur
   const [xColumn, setXColumn] = useState('');
-  const [yColumn, setYColumn] = useState('');
+  const [yColumn, setYColumn] = useState(['']);
   const [showModal,setShowModal]=useState(false);
   const [activeTab, setActiveTab] = useState(0); // Gérer les onglets
   const [chartTitle, setChartTitle] = useState('Graphique 1');
 
   useEffect(() => {
     if (fileBuffer) {
-      console.log(fileBuffer);
       const workbook = XLSX.read(fileBuffer, { type: 'array' });
       const worksheet = workbook.Sheets[workbook.SheetNames[0]];
       const chartsSheet = workbook.Sheets['Charts']; // Feuille contenant les graphiques
-      console.log(chartsSheet);
       const chartsData = chartsSheet ? XLSX.utils.sheet_to_json(chartsSheet) : [];
-      console.log(chartsData);
-      const Graphs=chartsData.map((chart)=>{return {title:chart.title,chartOptions:getChartOptions(chart.Type,chart.X,chart.Y)}})
+      const Graphs=chartsData.map((chart)=>{return {title:chart.title,chartOptions:getChartOptions(chart.Type,chart.X,JSON.parse(chart.Y))}})
       setCharts(Graphs);
   
       const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
@@ -46,9 +43,9 @@ function ExcelToAgGrid({ fileBuffer, onGridUpdate, onAddComment, highlightedCell
         // }
       }));
       setColumnDefs(columns);
-      if (columns.length > 1 && xColumn==='' && yColumn==='') {
+      if (columns.length > 1 && xColumn=='' && yColumn[0]=='') {
         setXColumn(columns[0].field);
-        setYColumn(columns[1].field);
+        setYColumn([columns[1].field]);
       }
       const rows = jsonData.slice(1).map((row) => {
         const rowObject = {};
@@ -68,6 +65,7 @@ function ExcelToAgGrid({ fileBuffer, onGridUpdate, onAddComment, highlightedCell
       title: `Graphique ${charts.length + 1}`,
       chartOptions: getChartOptions('line', xColumn, yColumn)
     }]);
+    setChartTitle(`Graphique ${charts.length + 1}`)
     setActiveTab(charts.length);
   };
 
@@ -75,20 +73,20 @@ function ExcelToAgGrid({ fileBuffer, onGridUpdate, onAddComment, highlightedCell
   const removeChartTab = (index) => {
     const newCharts = charts.filter((_, i) => i !== index);
     setCharts(newCharts);
-    setActiveTab(0); // Retourner au premier onglet
+    setActiveTab(activeTab>1 ? activeTab-1:0); 
   };
 
   // Obtenir les options de graphique
-  const getChartOptions = (type, xCol, yCol) => ({
+  const getChartOptions = (type, xCol, yCol) => {return{
     data: rowData,
-    series: [
-      {
+    series: yCol.map((y)=>
+      {return{
         type: type,
         xKey: xCol,
-        yKey: yCol,
+        yKey: y,
         stroke: 'blue',
-      }
-    ],
+      }})
+    ,
     axes: [
       {
         type: 'number' || 'category',
@@ -99,7 +97,7 @@ function ExcelToAgGrid({ fileBuffer, onGridUpdate, onAddComment, highlightedCell
         position: 'left',
       }
     ],
-  });
+  }};
 
   // Mettre à jour les options du graphique actif
   const updateChartSettings = () => {
@@ -110,7 +108,7 @@ function ExcelToAgGrid({ fileBuffer, onGridUpdate, onAddComment, highlightedCell
     onGridUpdate && updateArrayBufferFromTableData(rowData,columnDefs,charts)
   };
 
-  useEffect(()=>{ if (charts[activeTab]){updateChartSettings()}},[xColumn,yColumn,chartType,chartTitle]);
+  useEffect(()=>{ if (charts[activeTab]){updateChartSettings()}},[xColumn,yColumn,chartType,chartTitle,charts]);
   
   const onCellClicked = useCallback((params) => {
     console.log(params);
@@ -152,7 +150,7 @@ function ExcelToAgGrid({ fileBuffer, onGridUpdate, onAddComment, highlightedCell
             chart.title,            // Titre du graphique
             chart.chartOptions.series[0].type,  // Type de graphique (ligne, barres, etc.)
             chart.chartOptions.series[0].xKey,  // Colonne pour X
-            chart.chartOptions.series[0].yKey   // Colonne pour Y
+            JSON.stringify(chart.chartOptions.series.map((graph)=>graph.yKey))  // Colonnes pour Y. JSON permet de socker une liste dans un Excel
         ]);
     });
 
@@ -161,15 +159,19 @@ function ExcelToAgGrid({ fileBuffer, onGridUpdate, onAddComment, highlightedCell
     const workbook = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(workbook, worksheet, 'Sheet1');
     XLSX.utils.book_append_sheet(workbook, chartsWorksheet, 'Charts');
-    console.log(workbook)
     
     // Créer un nouvel ArrayBuffer à partir du workbook
     const updatedArrayBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
     onGridUpdate(updatedArrayBuffer);
-    console.log(updatedArrayBuffer)
 }
 
-
+const handlegraphchange=(index,chart)=>{
+  setActiveTab(index);
+  setXColumn(chart.chartOptions.series[0].xKey);
+  setYColumn(chart.chartOptions.series.map((graph)=>graph.yKey));
+  setChartTitle(chart.title);
+  setChartType(chart.chartOptions.series[0].type)
+}
 
   const getCellClass = (params) => {
     if (highlightedCell && params.node.rowIndex === highlightedCell.rowIndex-1 && params.colDef.field === highlightedCell.colId) {
@@ -197,7 +199,7 @@ function ExcelToAgGrid({ fileBuffer, onGridUpdate, onAddComment, highlightedCell
           <button
             key={index}
             className={index === activeTab ? 'active' : ''}
-            onClick={() => setActiveTab(index)}
+            onClick={() => handlegraphchange(index,chart)}
           >
             {chart.title}
           </button>
@@ -241,10 +243,17 @@ function ExcelToAgGrid({ fileBuffer, onGridUpdate, onAddComment, highlightedCell
           ))}
         </select>
 
-        <label>Colonne pour l'axe Y :</label>
-        <select value={yColumn} onChange={(e) => setYColumn(e.target.value)}>
+        <label>Colonnes pour l'axe Y :</label>
+        <select multiple  
+        onChange={(event)=>yColumn.includes(event.target.value) ?
+        setYColumn(yColumn.filter((value)=>value!==event.target.value)): //Si l'élément est déjà dans les yColumns, on l'affiche
+        setYColumn([...yColumn,event.target.value])}          //Sinon on le supprime
+        > 
           {columnDefs.map((col) => (
-            <option key={col.field} value={col.field}>
+            <option key={col.field} value={col.field} style={{
+              fontWeight: yColumn.includes(col.field) ? 'bold' : 'normal',
+              color: yColumn.includes(col.field) ? 'blue' : 'black',
+            }}>
               {col.headerName}
             </option>
           ))}

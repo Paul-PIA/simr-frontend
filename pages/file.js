@@ -183,7 +183,6 @@ const FilePage = () => {
         } }
       });
       setComments(response);
-      console.log(response);
       setShowComments(true);// Affiche l'onglet des commentaires
     } catch (error) {
       console.error('Erreur lors de la récupération des commentaires:', error);
