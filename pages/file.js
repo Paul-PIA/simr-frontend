@@ -24,9 +24,7 @@ const FilePage = () => {
   const [charts, setCharts] = useState([]);
 
   const conversionPourEnvoie=(doc)=>{
-    const workbook = XLSX.read(doc, { type: 'array' });
-    // 2. Convertir le classeur en un fichier binaire Excel (.xlsx)
-    const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+    const excelBuffer = XLSX.write(doc, { bookType: 'xlsx', type: 'array' });
     // 3. Créer un objet Blob à partir du fichier binaire
     const blob = new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
     // 4. Créer un objet File en spécifiant le nom du fichier
@@ -58,8 +56,8 @@ const FilePage = () => {
           method: 'GET',
           path: response.content
         });
-        setDoc(fichier);
         const workbook = XLSX.read(fichier, { type: 'array' });
+        setDoc(workbook);
         const worksheet = workbook.Sheets[workbook.SheetNames[0]];
         const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
         const columns = jsonData[0];
@@ -129,11 +127,8 @@ const FilePage = () => {
   };
 
   const handleDownloadCopy = () => {
-    // Lire le ArrayBuffer (doc)
-    const workbook = XLSX.read(doc, { type: 'array' });
-  
     // Télécharger le fichier en .xlsx
-    XLSX.writeFile(workbook, `${fileDetails.name || 'tableau'}.xlsx`);
+    XLSX.writeFile(doc, `${fileDetails.name || 'tableau'}.xlsx`);
   };
   
 

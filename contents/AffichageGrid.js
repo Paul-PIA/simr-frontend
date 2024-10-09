@@ -3,7 +3,7 @@ import * as XLSX from 'xlsx';
 import { AgGridReact } from 'ag-grid-react';
 import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-alpine.css';
-import { AgCharts } from 'ag-charts-react'
+import { AgCharts } from 'ag-charts-react';
 
 
 function ExcelToAgGrid({ fileBuffer, onGridUpdate, onAddComment, highlightedCell, commenting, charts,setCharts }) { // Recevoir "commenting" en prop
@@ -18,12 +18,9 @@ function ExcelToAgGrid({ fileBuffer, onGridUpdate, onAddComment, highlightedCell
 
   useEffect(() => {
     if (fileBuffer) {
-      const workbook = XLSX.read(fileBuffer, { type: 'array' });
-      const worksheet = workbook.Sheets[workbook.SheetNames[0]];
-      const chartsSheet = workbook.Sheets['Charts']; // Feuille contenant les graphiques
-      const chartsData = chartsSheet ? XLSX.utils.sheet_to_json(chartsSheet) : [];
-      const Graphs=chartsData.map((chart)=>{return {title:chart.title,chartOptions:getChartOptions(chart.Type,chart.X,JSON.parse(chart.Y))}})
-      setCharts(Graphs);
+      const worksheet = fileBuffer.Sheets[fileBuffer.SheetNames[0]];
+      const chartsSheet = fileBuffer.Sheets['Charts']; // Feuille contenant les graphiques
+
   
       const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
 
@@ -42,16 +39,6 @@ function ExcelToAgGrid({ fileBuffer, onGridUpdate, onAddComment, highlightedCell
         // }
       }));
       setColumnDefs(columns);
-      if (chartsData.length>0){
-        setXColumn(chartsData[activeTab].X);
-        setYColumn(JSON.parse(chartsData[activeTab].Y));
-        setChartTitle(chartsData[activeTab].title);
-        setChartType(chartsData[activeTab].Type)
-      }
-      else if (columns.length > 1 && xColumn=='' && yColumn[0]=='') {
-        setXColumn(columns[0].field);
-        setYColumn([columns[1].field]);
-      }
       const rows = jsonData.slice(1).map((row) => {
         const rowObject = {};
         columns.forEach((col, index) => {
@@ -60,6 +47,20 @@ function ExcelToAgGrid({ fileBuffer, onGridUpdate, onAddComment, highlightedCell
         return rowObject;
       });
       setRowData(rows);
+      const chartsData = chartsSheet ? XLSX.utils.sheet_to_json(chartsSheet) : [];
+      if (xColumn=='' && yColumn[0]==''){
+      if (chartsData.length>0){
+        setXColumn(chartsData[activeTab].X);
+        setYColumn(JSON.parse(chartsData[activeTab].Y));
+        setChartTitle(chartsData[activeTab].title);
+        setChartType(chartsData[activeTab].Type)
+      }
+      else if (columns.length > 1) {
+        setXColumn(columns[0].field);
+        setYColumn([columns[1].field]);
+      }}
+      const Graphs=chartsData.map((chart)=>{return {title:chart.title,chartOptions:getChartOptions(chart.Type,chart.X,JSON.parse(chart.Y))}})
+      setCharts(Graphs);
 
   }
   }, [fileBuffer, commenting,highlightedCell]);
@@ -84,24 +85,33 @@ function ExcelToAgGrid({ fileBuffer, onGridUpdate, onAddComment, highlightedCell
   // Obtenir les options de graphique
   const getChartOptions = (type, xCol, yCol) => {return{
     data: rowData,
-    series: yCol.map((y)=>
+    series: yCol.length==0? [{type:type,xKey:xCol,yKey:null}]:yCol.map((y)=>
       {return{
         type: type,
         xKey: xCol,
         yKey: y,
-        stroke: 'blue',
+        //stroke: 'blue',
       }})
     ,
     axes: [
       {
-        type: 'number' || 'category',
+        type: rowData[0] && typeof rowData[0][xCol]=='number'? 'number' : 'category',
+        //type:'number',
         position: 'bottom',
+        label:{fontSize:10,  formatter: (params) => {
+          const label = params.value;
+          const maxLabelLength = 10;  // Limite de caractères
+          return label.length > maxLabelLength ? label.substring(0, maxLabelLength) + '...' : label;
+      }}
       },
       {
         type: 'number',
         position: 'left',
       }
     ],
+  //   padding: {
+  //     bottom: 20,  // Ajoute de l'espace en bas du graphique pour les étiquettes
+  // }
   }};
 
   // Mettre à jour les options du graphique actif
@@ -113,7 +123,7 @@ function ExcelToAgGrid({ fileBuffer, onGridUpdate, onAddComment, highlightedCell
     onGridUpdate && updateArrayBufferFromTableData(rowData,columnDefs,charts)
   };
 
-  useEffect(()=>{ if (charts[activeTab]){updateChartSettings()}},[xColumn,yColumn,chartType,chartTitle,charts]);
+  useEffect(()=>{ if (charts[activeTab]){updateChartSettings()}},[xColumn,yColumn,chartType,chartTitle]);
   
   const onCellClicked = useCallback((params) => {
     console.log(params);
@@ -165,9 +175,7 @@ function ExcelToAgGrid({ fileBuffer, onGridUpdate, onAddComment, highlightedCell
     XLSX.utils.book_append_sheet(workbook, worksheet, 'Sheet1');
     XLSX.utils.book_append_sheet(workbook, chartsWorksheet, 'Charts');
     
-    // Créer un nouvel ArrayBuffer à partir du workbook
-    const updatedArrayBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
-    onGridUpdate(updatedArrayBuffer);
+    onGridUpdate(workbook);
 }
 
 const handlegraphchange=(index,chart)=>{
@@ -195,7 +203,6 @@ const handlegraphchange=(index,chart)=>{
         onCellValueChanged={onCellValueChanged}
         pagination={true}
         paginationPageSize={10}
-        
       />
     </div>
    {/* Barre d'onglets */}
