@@ -249,16 +249,17 @@ const handlegraphchange=(index,chart)=>{
         </select>
 
         <label>Colonnes pour l'axe Y :</label>
-        <select multiple  
-        onChange={(event)=>yColumn.includes(event.target.value) ?
-        setYColumn(yColumn.filter((value)=>value!==event.target.value)): //Si l'élément est déjà dans les yColumns, on l'affiche
-        setYColumn([...yColumn,event.target.value])}          //Sinon on le supprime
-        > 
+        <select multiple> 
           {columnDefs.map((col) => (
             <option key={col.field} value={col.field} style={{
               fontWeight: yColumn.includes(col.field) ? 'bold' : 'normal',
               color: yColumn.includes(col.field) ? 'blue' : 'black',
-            }}>
+            }}
+            onClick={() =>
+              yColumn.includes(col.field)
+                ? setYColumn(yColumn.filter((value) => value !== col.field)) // Si l'élément est déjà dans yColumns, on l'enlève
+                : setYColumn([...yColumn, col.field])  // Sinon, on l'ajoute
+            }>
               {col.headerName}
             </option>
           ))}
