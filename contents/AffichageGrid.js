@@ -11,9 +11,8 @@ function ExcelToAgGrid({ fileBuffer, onGridUpdate, onAddComment, highlightedCell
   const [rowData, setRowData] = useState([]);
   const [selectedCell, setSelectedCell] = useState(null);
   const [chartType, setChartType] = useState('line'); // Type de graphique choisi par l'utilisateur
-  const [xColumn, setXColumn] = useState('');
-  const [yColumn, setYColumn] = useState(['']);
-  const [showModal,setShowModal]=useState(false);
+  const [xColumn, setXColumn] = useState(''); //Colonne utilisée pour l'axe X
+  const [yColumn, setYColumn] = useState(['']); //Colonnes utilisées pour l'axe Y
   const [activeTab, setActiveTab] = useState(0); // Gérer les onglets
   const [chartTitle, setChartTitle] = useState('Graphique 1');
 
@@ -43,7 +42,13 @@ function ExcelToAgGrid({ fileBuffer, onGridUpdate, onAddComment, highlightedCell
         // }
       }));
       setColumnDefs(columns);
-      if (columns.length > 1 && xColumn=='' && yColumn[0]=='') {
+      if (chartsData.length>0){
+        setXColumn(chartsData[activeTab].X);
+        setYColumn(JSON.parse(chartsData[activeTab].Y));
+        setChartTitle(chartsData[activeTab].title);
+        setChartType(chartsData[activeTab].Type)
+      }
+      else if (columns.length > 1 && xColumn=='' && yColumn[0]=='') {
         setXColumn(columns[0].field);
         setYColumn([columns[1].field]);
       }
