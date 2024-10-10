@@ -1,7 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
-const HomePageButton = () => {
+const HomePageButton = ({st}) => {
 
   const handleClick = () => {
     window.location='/';
@@ -10,8 +10,8 @@ const HomePageButton = () => {
   return (
     <button
       onClick={handleClick}
-      style={{
-        position: 'fixed',
+      style={Object.assign({},st,{
+        
         top: '20px',
         left: '10px',
         padding: '10px 15px',
@@ -20,7 +20,7 @@ const HomePageButton = () => {
         border: 'none',
         borderRadius: '5px',
         cursor: 'pointer'
-      }}
+      })}
     >
       Accueil
     </button>

@@ -23,8 +23,8 @@ const { Header } = Layout;
 export default function _Header({ onMenuClick }){
     return (
         <Header className="header" style={{ padding:0, background: '#fff', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <div style={{ marginLeft: 100}}>
-                <HomePageButton/>
+            <HomePageButton/>
+            <div style={{ marginRight: 950}}>
                 <Avatar style={{ backgroundColor: '#87d068', cursor: 'pointer' }} icon={<UserOutlined />} onClick={() => onMenuClick('Profile')}/>
                 <span style={{ marginLeft: 8}}>Profile</span>
             </div>

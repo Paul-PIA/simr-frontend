@@ -217,6 +217,7 @@ const FilePage = () => {
   return (
     <div>
       <div style={styles.banner}>
+      <HomePageButton />
         <div style={styles.buttonGroup}>
           <button onClick={handleSaveCopy} style={{ ...styles.button, backgroundColor: '#4CAF50' }}>Enregistrer une copie</button>
           <button onClick={handleSaveChanges} style={{ ...styles.button, backgroundColor: '#2196F3' }}>Sauvegarder les modifications</button>
@@ -226,7 +227,6 @@ const FilePage = () => {
             {commenting ? 'Terminer ajout de commentaire' : 'Rajouter un commentaire'}
           </button>
         </div>
-        <HomePageButton />
       </div>
       <div>{commenting? 'Appuyer sur la case à commenter':null}</div>
       <div>

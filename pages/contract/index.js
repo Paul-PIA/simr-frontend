@@ -1,5 +1,3 @@
-'use client'
-
 import React, { useEffect, useState } from 'react';
 import { apiClient } from '../../services/api';
 import HomePageButton from '../../components/HomePageButton';
@@ -59,7 +57,7 @@ const handleExerciseClick = (ExId) => {
     <div style={styles.container}>
       {/* Contrat Details Section */}
       <div style={styles.contractDetailsBanner}>
-        <HomePageButton/>
+      <HomePageButton st={{position:'fixed'}}/>
         <h1 style={styles.header}>Détails du contrat : {contract.name}</h1>
         <p>Nombre d'organisations: {contract.nb_org}</p>
       </div>

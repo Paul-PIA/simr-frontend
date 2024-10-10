@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { apiClient } from '../../services/api';
 import { jwtDecode } from 'jwt-decode';
+import HomePageButton from '../../components/HomePageButton';
 
 export default function ExercisePage() {
     const [user,setUser]=useState({});
@@ -165,6 +166,7 @@ export default function ExercisePage() {
   return (
     <div style={styles.pageContainer}>
       <div style={styles.header}>
+        <HomePageButton/>
         {exercise.name || 'Exercice sans titre'}
         <button style={styles.newFileButton} onClick={handleNewFile}>
           New file

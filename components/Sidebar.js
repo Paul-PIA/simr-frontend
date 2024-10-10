@@ -37,7 +37,6 @@ export default function _Sider() {
     ));
     const ex=exercises.reduce((pre, cur) =>
       pre.concat(cur));
-    console.log(ex);
     setExercices(ex);
     const fich=await Promise.all(ex.map(
       async (exer)=>await apiClient({

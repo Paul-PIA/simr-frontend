@@ -192,9 +192,24 @@ const handlegraphchange=(index,chart)=>{
     }
     return '';
   };
+  const handleColumnNameChange = (newName, colIndex) => {
+    const updatedColumnDefs = [...columnDefs];
+    updatedColumnDefs[colIndex].headerName = newName; // Met à jour le nom de la colonne
+    setColumnDefs(updatedColumnDefs); // Réapplique les colonnes
+  };
 
   return (
     <div>
+      {columnDefs.map((colDef, index) => (
+    <div key={index}>
+      <input
+        type="text"
+        value={colDef.headerName}
+        onChange={(e) => handleColumnNameChange(e.target.value, index)}
+        placeholder={`Nom de la colonne ${index + 1}`}
+      />
+    </div>
+  ))}
     <div className="ag-theme-alpine" style={{ height: 500, width: '100%' }}>
       <AgGridReact
         columnDefs={columnDefs}
