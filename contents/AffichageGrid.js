@@ -198,8 +198,46 @@ const handlegraphchange=(index,chart)=>{
     setColumnDefs(updatedColumnDefs); // Réapplique les colonnes
   };
 
+  const addNewRow = () => {
+    const newRow={};
+    columnDefs.forEach((col)=>newRow[col.field]=null);
+    console.log(newRow);
+    rowData.push(newRow);
+    onGridUpdate && updateArrayBufferFromTableData(rowData,columnDefs,charts)
+  };
+
+  const addNewColumn = () => {
+    const newname=window.prompt('Donner un nom à la nouvelle colonne')
+    const newColumn = {
+      headerName: newname,
+      field: newname,
+      editable: !commenting,
+        sortable: true,
+        filter: true,
+        resizable: true,
+        cellStyle: params => {
+          return getCellClass(params)==='highlight-cell' ? {backgroundColor: 'yellow'}:null}
+    };
+    columnDefs.push(newColumn);
+    onGridUpdate && updateArrayBufferFromTableData(rowData,columnDefs,charts)
+  };
+
+  const styles={button: {
+    padding: '10px',
+    border: 'none',
+    cursor: 'pointer',
+    color: 'white',
+    fontWeight: 'bold',
+    fontSize: '16px'
+  }}
+
   return (
     <div>
+      <div style={{ display: 'flex', gap: '10px' }}>
+      <button onClick={addNewRow} style={{ ...styles.button, backgroundColor: '#2196F3' }}>Ajouter une ligne</button>
+      <button onClick={addNewColumn} style={{ ...styles.button, backgroundColor: '#FF5722' }}>Ajouter une colonne</button>
+      </div>
+      <div style={{ display: 'flex', gap: '10px' }}>
       {columnDefs.map((colDef, index) => (
     <div key={index}>
       <input
@@ -209,7 +247,7 @@ const handlegraphchange=(index,chart)=>{
         placeholder={`Nom de la colonne ${index + 1}`}
       />
     </div>
-  ))}
+  ))} </div>
     <div className="ag-theme-alpine" style={{ height: 500, width: '100%' }}>
       <AgGridReact
         columnDefs={columnDefs}
