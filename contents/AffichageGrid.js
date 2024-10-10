@@ -138,7 +138,24 @@ function ExcelToAgGrid({ fileBuffer, onGridUpdate, onAddComment, highlightedCell
   }, [onAddComment, commenting]);
 
   const onCellValueChanged = (event) => {
-    rowData[event.node.rowIndex]=event.data; 
+    const data=event.data;
+    const col=event.colDef.field;
+    const index=event.node.rowIndex;
+    console.log(col,data[col]);
+    if (typeof data[col]=="string" && data[col][0]=="="){ //Si c'est une expression, on la calcule
+      const expression = data[col].slice(1);
+      const variables = {};
+      columnDefs.forEach((column)=>variables[column.field]=rowData[index][column.field]);
+      const evaluatedExpression = expression.replace(
+        new RegExp(Object.keys(variables).join("|"), "g"),
+        (match) => variables[match]
+      );
+      console.log(evaluatedExpression);
+      rowData[index][col]=eval(evaluatedExpression);
+    }
+    else {
+    rowData[index]=data; 
+    }
     console.log("Données mises à jour : ", rowData);
 
     // Si nécessaire, mettez à jour l'ArrayBuffer ou exécutez une fonction supplémentaire
