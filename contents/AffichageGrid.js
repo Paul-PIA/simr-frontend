@@ -15,12 +15,13 @@ function ExcelToAgGrid({ fileBuffer, onGridUpdate, onAddComment, highlightedCell
   const [yColumn, setYColumn] = useState(['']); //Colonnes utilisées pour l'axe Y
   const [activeTab, setActiveTab] = useState(0); // Gérer les onglets
   const [chartTitle, setChartTitle] = useState('Graphique 1');
+  const [gridApi, setGridApi] = useState(null); // Garde l'API du tableau
+  const [selectedCol, setSelectedCol] = useState(null); // Pour sélectionner la colonne
 
   useEffect(() => {
     if (fileBuffer) {
       const worksheet = fileBuffer.Sheets[fileBuffer.SheetNames[0]];
       const chartsSheet = fileBuffer.Sheets['Charts']; // Feuille contenant les graphiques
-
   
       const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
 
@@ -34,9 +35,18 @@ function ExcelToAgGrid({ fileBuffer, onGridUpdate, onAddComment, highlightedCell
         resizable: true,
         cellStyle: params => {
               return getCellClass(params)==='highlight-cell' ? {backgroundColor: 'yellow'}:null},
-        // valueFormatter: params => {
-        //   return params.value === '' ? '0' : params.value;
-        // }
+        valueParser: (params) => {
+                const value = params.newValue;
+          
+                if (value[0]=='=') {
+                  // Traite l'expression comme une formule
+                  return value; // Retourner la formule sans la parser
+                } else if (!isNaN(value)) {
+                  // Si c'est un nombre, le convertir en float
+                  return parseFloat(value);
+                }
+                return value; // Pour les autres cas (comme des chaînes de texte)
+              }
       }));
       setColumnDefs(columns);
       const rows = jsonData.slice(1).map((row) => {
@@ -137,29 +147,30 @@ function ExcelToAgGrid({ fileBuffer, onGridUpdate, onAddComment, highlightedCell
     }
   }, [onAddComment, commenting]);
 
-  const onCellValueChanged = (event) => {
-    const data=event.data;
-    const col=event.colDef.field;
-    const index=event.node.rowIndex;
-    console.log(col,data[col]);
-    if (typeof data[col]=="string" && data[col][0]=="="){ //Si c'est une expression, on la calcule
-      const expression = data[col].slice(1);
+  const CalculateNewValue=(value,index)=>{
+    if (typeof value=="string" && value[0]=="="){ //Si c'est une expression, on la calcule
+      const expression = value.slice(1);
       const variables = {};
       columnDefs.forEach((column)=>variables[column.field]=rowData[index][column.field]);
       const evaluatedExpression = expression.replace(
         new RegExp(Object.keys(variables).join("|"), "g"),
         (match) => variables[match]
       );
-      console.log(evaluatedExpression);
-      rowData[index][col]=eval(evaluatedExpression);
+      return eval(evaluatedExpression)
     }
     else {
-    rowData[index]=data; 
+    return value; 
     }
-    console.log("Données mises à jour : ", rowData);
+  }
+
+  const onCellValueChanged = (event) => {
+    const data=event.data; 
+    const col=event.colDef.field;
+    const index=event.node.rowIndex;
+    rowData[index][col]=CalculateNewValue(data[col],index)
 
     // Si nécessaire, mettez à jour l'ArrayBuffer ou exécutez une fonction supplémentaire
-    onGridUpdate && updateArrayBufferFromTableData(rowData,columnDefs,charts);
+    onGridUpdate && updateArrayBufferFromTableData(rowData,columnDefs,charts)
   };
 
   function updateArrayBufferFromTableData(rowData, columnDefs,charts) {
@@ -218,13 +229,14 @@ const handlegraphchange=(index,chart)=>{
   const addNewRow = () => {
     const newRow={};
     columnDefs.forEach((col)=>newRow[col.field]=null);
-    console.log(newRow);
     rowData.push(newRow);
     onGridUpdate && updateArrayBufferFromTableData(rowData,columnDefs,charts)
   };
 
   const addNewColumn = () => {
-    const newname=window.prompt('Donner un nom à la nouvelle colonne')
+    const newname=window.prompt('Donner un nom à la nouvelle colonne');
+    const newValue=window.prompt('Donner une valeur par défaut à vos nouvelles cases ? Pour calculer à partir d\'autres colonnes, rajoutez un "="');
+    if (newname){
     const newColumn = {
       headerName: newname,
       field: newname,
@@ -233,11 +245,60 @@ const handlegraphchange=(index,chart)=>{
         filter: true,
         resizable: true,
         cellStyle: params => {
-          return getCellClass(params)==='highlight-cell' ? {backgroundColor: 'yellow'}:null}
+          return getCellClass(params)==='highlight-cell' ? {backgroundColor: 'yellow'}:null},
+        valueParser: (params) => {
+            const value = params.newValue;
+      
+            if (value[0]=='=') {
+
+              return value;
+            } else if (!isNaN(value)) {
+
+              return parseFloat(value);
+            }
+            return value
+          }
     };
     columnDefs.push(newColumn);
+    if (newValue){
+      rowData.forEach((_,index)=>rowData[index][newname]=CalculateNewValue(newValue,index))
+    }
     onGridUpdate && updateArrayBufferFromTableData(rowData,columnDefs,charts)
-  };
+  }};
+
+    // Fonction pour supprimer une ligne
+    const deleteRows = () => {
+      const selectedRows = gridApi.getSelectedRows(); // Obtenir les lignes sélectionnées
+  const updatedRowData = rowData.filter((row) => !selectedRows.includes(row)); // Filtrer les lignes non sélectionnées
+  setRowData(updatedRowData); // Mettre à jour les données du tableau
+  onGridUpdate && updateArrayBufferFromTableData(updatedRowData, columnDefs, charts)
+    };
+  
+    // Fonction pour supprimer une colonne
+    const deleteColumn = () => {
+      if (selectedCol !== null) {
+        const updatedColumnDefs = columnDefs.filter((col, index) => index !== selectedCol);
+        const updatedRowData = rowData.map(row => {
+          const updatedRow = { ...row };
+          delete updatedRow[columnDefs[selectedCol].field]; // Supprime les données de cette colonne
+          return updatedRow;
+        });
+        setColumnDefs(updatedColumnDefs);
+        setRowData(updatedRowData);
+        onGridUpdate && updateArrayBufferFromTableData(updatedRowData, updatedColumnDefs, charts); // Met à jour le backend
+        setSelectedCol(null) // Réinitialise la sélection
+      } else {
+        alert("Veuillez sélectionner une colonne à supprimer.");
+      }
+    };
+
+    const onRowSelected = (event) => {
+      setSelectedRow(event.node.rowIndex); // Met à jour l'index de la ligne sélectionnée
+    };
+  
+    const handleColumnSelection = (index) => {
+      setSelectedCol(index); // Met à jour l'index de la colonne sélectionnée
+    };
 
   const styles={button: {
     padding: '10px',
@@ -253,6 +314,9 @@ const handlegraphchange=(index,chart)=>{
       <div style={{ display: 'flex', gap: '10px' }}>
       <button onClick={addNewRow} style={{ ...styles.button, backgroundColor: '#2196F3' }}>Ajouter une ligne</button>
       <button onClick={addNewColumn} style={{ ...styles.button, backgroundColor: '#FF5722' }}>Ajouter une colonne</button>
+      <button onClick={deleteRows} style={{ ...styles.button, backgroundColor: '#f44336' }}>
+        Supprimer les lignes sélectionnées
+      </button>
       </div>
       <div style={{ display: 'flex', gap: '10px' }}>
       {columnDefs.map((colDef, index) => (
@@ -272,7 +336,10 @@ const handlegraphchange=(index,chart)=>{
         onCellClicked={onCellClicked}
         onCellValueChanged={onCellValueChanged}
         pagination={true}
-        paginationPageSize={10}
+        paginationPageSize={20}
+        selection={{mode:"multiRow",copySelectedRows:true}}
+        onGridReady={(params) => setGridApi(params.api)}
+        clipboard={true} // Active la fonctionnalité de copier-coller // Sauvegarde l'API du tableau
       />
     </div>
    {/* Barre d'onglets */}
