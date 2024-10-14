@@ -44,7 +44,7 @@ function ExcelToAgGrid({ fileBuffer, onGridUpdate, onAddComment, highlightedCell
                 } else if (!isNaN(value)) {
                   // Si c'est un nombre, le convertir en float
                   return parseFloat(value);
-                }
+                } //Cas des dates:new Date((Month-17899)* 24 * 60 * 60 * 1000).toLocaleDateString()
                 return value; // Pour les autres cas (comme des chaînes de texte)
               }
       }));
@@ -235,8 +235,8 @@ const handlegraphchange=(index,chart)=>{
 
   const addNewColumn = () => {
     const newname=window.prompt('Donner un nom à la nouvelle colonne');
-    const newValue=window.prompt('Donner une valeur par défaut à vos nouvelles cases ? Pour calculer à partir d\'autres colonnes, rajoutez un "="');
     if (newname){
+      const newValue=window.prompt('Donner une valeur par défaut à vos nouvelles cases ? Pour calculer à partir d\'autres colonnes, rajoutez un "="');
     const newColumn = {
       headerName: newname,
       field: newname,
@@ -275,7 +275,7 @@ const handlegraphchange=(index,chart)=>{
     };
   
     // Fonction pour supprimer une colonne
-    const deleteColumn = () => {
+    const deleteColumn = (selectedCol) => {
       if (selectedCol !== null) {
         const updatedColumnDefs = columnDefs.filter((col, index) => index !== selectedCol);
         const updatedRowData = rowData.map(row => {
@@ -318,6 +318,7 @@ const handlegraphchange=(index,chart)=>{
         Supprimer les lignes sélectionnées
       </button>
       </div>
+      <br></br>
       <div style={{ display: 'flex', gap: '10px' }}>
       {columnDefs.map((colDef, index) => (
     <div key={index}>
@@ -327,6 +328,7 @@ const handlegraphchange=(index,chart)=>{
         onChange={(e) => handleColumnNameChange(e.target.value, index)}
         placeholder={`Nom de la colonne ${index + 1}`}
       />
+      <button onClick={()=>deleteColumn(index)} style={{ ...styles.button, backgroundColor: '#f44336' }}>Supprimer {index==0?colDef.headerName:null}</button>
     </div>
   ))} </div>
     <div className="ag-theme-alpine" style={{ height: 500, width: '100%' }}>

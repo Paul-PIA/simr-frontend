@@ -29,12 +29,14 @@ export default function _Sider() {
       path:`contract/?org_icontains=${org}`
     });
     setContracts(con);
+    if (con.length>0){
     const exercises=await Promise.all(con.map(
       async (con)=>await apiClient({
         method:'GET',
         path:`exercise/?con=${con.id}`
       })
     ));
+    if (exercises.length>0){
     const ex=exercises.reduce((pre, cur) =>
       pre.concat(cur));
     setExercices(ex);
@@ -44,6 +46,7 @@ export default function _Sider() {
         path:`file/?exer=${exer.id}`
       })
     ));
+    if (fich.length>0){
     const fichiers=fich.reduce((pre, cur) =>
       pre.concat(cur));
 const droits=await Promise.all(fichiers.map(
@@ -53,7 +56,7 @@ const droits=await Promise.all(fichiers.map(
   })
 ));
 setFiles(fichiers.filter((file,index)=>file.is_public || droits[index].user.includes(id) || droits[index].org.includes(org)))
-  };
+}}}};
 
   useEffect(()=>{fetchContractsAndMore()},[]);
   const handleOpenChange = (keys) => {

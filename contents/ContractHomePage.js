@@ -16,8 +16,7 @@ export default function ContractHomePage() {
     const id=decoded.user_id;
     const org=await apiClient({
       method:'GET',
-      path:`user/${id}/`,
-      data:{}
+      path:`user/${id}/`
     }).org;
     const con=await apiClient({
       method:'GET',
@@ -180,6 +179,10 @@ useEffect(()=>{fetchContracts()},[]);
         )}
       </ul>
         </div>
+        <button style={styles.button} onClick={(e)=>{
+              window.location=`./contract/new_ex?con_id=${contracts[0].id}`}}>
+        Créer un nouvel exercice
+      </button>
         </div>)}
 
   if (space=="Exercise"){

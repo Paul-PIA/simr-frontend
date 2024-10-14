@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button, Card, Input} from "antd";
 import {apiClient} from "../services/api";
 import { jwtDecode } from "jwt-decode";
@@ -8,7 +8,6 @@ import { jwtDecode } from "jwt-decode";
 
 
 export default function Profile() {
-  const [first,setFirst]=useState(true);
   async function SetFirstProfile(){
     const rep=await apiClient({
       method:'POST',
@@ -21,7 +20,7 @@ export default function Profile() {
     const id=decoded.user_id;
     const response=await apiClient({
       method:'GET',
-      path:`user/${id}`,
+      path:`user/${id}/`,
       data:{}
     });
     setProfile({
@@ -42,10 +41,8 @@ export default function Profile() {
     username: "",
     city: "",
   });
-  if (first){
-  SetFirstProfile();
-  setFirst(false)}
-  const [editProfile, setEditProfile] = useState(profile);
+useEffect(()=>SetFirstProfile(),[]);
+const [editProfile, setEditProfile] = useState(profile);
 
   const handleEditToggle =async () => {
     if (isEditing) {
@@ -61,7 +58,7 @@ export default function Profile() {
       const id=decoded.user_id ;
       await apiClient({
         method: 'PATCH',
-        path: `user/${id}`,
+        path: `user/${id}/`,
         data: 
         {first_name:editProfile.first_name,
           last_name:editProfile.last_name,

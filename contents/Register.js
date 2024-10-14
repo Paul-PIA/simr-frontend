@@ -12,7 +12,7 @@ export default function Register() {
     e.preventDefault();
     await apiClientNotoken({
       method: 'POST',
-      path: 'auth/registration',
+      path: 'auth/registration/',
       data: {
         username: document.forms.register.username.value,
         email:document.forms.register.email.value,
