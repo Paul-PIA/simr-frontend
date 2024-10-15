@@ -4,6 +4,7 @@ import { AgGridReact } from 'ag-grid-react';
 import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-alpine.css';
 import { AgCharts } from 'ag-charts-react';
+import * as math from 'mathjs';
 
 
 function ExcelToAgGrid({ fileBuffer, onGridUpdate, onAddComment, highlightedCell, commenting, charts,setCharts }) { // Recevoir "commenting" en prop
@@ -16,7 +17,6 @@ function ExcelToAgGrid({ fileBuffer, onGridUpdate, onAddComment, highlightedCell
   const [activeTab, setActiveTab] = useState(0); // Gérer les onglets
   const [chartTitle, setChartTitle] = useState('Graphique 1');
   const [gridApi, setGridApi] = useState(null); // Garde l'API du tableau
-  const [selectedCol, setSelectedCol] = useState(null); // Pour sélectionner la colonne
 
   useEffect(() => {
     if (fileBuffer) {
@@ -134,6 +134,14 @@ function ExcelToAgGrid({ fileBuffer, onGridUpdate, onAddComment, highlightedCell
   };
 
   useEffect(()=>{ if (charts[activeTab]){updateChartSettings()}},[xColumn,yColumn,chartType,chartTitle]);
+
+  const CalculStatistiques=(column)=>{
+    const data={};
+    data['moyenne']=rowData.reduce((previousValue,row)=>previousValue+row[column],0)/rowData.length;
+    data['variance']=rowData.reduce((previousValue,row)=>previousValue+(row[column]-data["moyenne"])**2,0)/(rowData.length-1);
+    data["écart-type"]=math.sqrt(data['variance']);
+    return data
+  }
   
   const onCellClicked = useCallback((params) => {
     console.log(params);
@@ -156,7 +164,7 @@ function ExcelToAgGrid({ fileBuffer, onGridUpdate, onAddComment, highlightedCell
         new RegExp(Object.keys(variables).join("|"), "g"),
         (match) => variables[match]
       );
-      return eval(evaluatedExpression)
+      return math.evaluate(evaluatedExpression) //Permet d'utiliser les fonctions mathématiques usuelles, comme sin ou exp
     }
     else {
     return value; 
@@ -292,19 +300,19 @@ const handlegraphchange=(index,chart)=>{
         setColumnDefs(updatedColumnDefs);
         setRowData(updatedRowData);
         onGridUpdate && updateArrayBufferFromTableData(updatedRowData, updatedColumnDefs, charts); // Met à jour le backend
-        setSelectedCol(null) // Réinitialise la sélection
       } else {
         alert("Veuillez sélectionner une colonne à supprimer.");
       }
     };
 
-    const onRowSelected = (event) => {
-      setSelectedRow(event.node.rowIndex); // Met à jour l'index de la ligne sélectionnée
-    };
-  
-    const handleColumnSelection = (index) => {
-      setSelectedCol(index); // Met à jour l'index de la colonne sélectionnée
-    };
+    const onSortChanged=(event)=>{
+      const sortedData = [];
+      event.api.forEachNodeAfterFilterAndSort((node) => {
+        sortedData.push(node.data); // Ajoute la donnée de chaque ligne visible à sortedData
+      });
+      setRowData(sortedData);
+      onGridUpdate && updateArrayBufferFromTableData(rowData,columnDefs,charts)
+      }
 
   const styles={button: {
     padding: '10px',
@@ -350,6 +358,7 @@ const handlegraphchange=(index,chart)=>{
         selection={{mode:"multiRow",copySelectedRows:true}}
         onGridReady={(params) => setGridApi(params.api)}
         clipboard={true} // Active la fonctionnalité de copier-coller // Sauvegarde l'API du tableau
+        onSortChanged={onSortChanged}
       />
     </div>
    {/* Barre d'onglets */}
