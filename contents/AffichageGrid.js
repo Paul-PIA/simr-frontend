@@ -163,6 +163,11 @@ function ExcelToAgGrid({ fileBuffer, onGridUpdate, onAddComment, highlightedCell
     }
   }
 
+  const ExcelDate=(value)=>{
+    const startDate = new Date(1900, 0, 1); // Date de départ : 1 janvier 1900
+    return new Date(startDate.getTime() + (value - 2) * 24 * 60 * 60 * 1000).toLocaleDateString();
+  }
+
   const onCellValueChanged = (event) => {
     const data=event.data; 
     const col=event.colDef.field;
@@ -236,7 +241,8 @@ const handlegraphchange=(index,chart)=>{
   const addNewColumn = () => {
     const newname=window.prompt('Donner un nom à la nouvelle colonne');
     if (newname){
-      const newValue=window.prompt('Donner une valeur par défaut à vos nouvelles cases ? Pour calculer à partir d\'autres colonnes, rajoutez un "="');
+      const newValue=window.prompt(
+        'Donner une valeur par défaut à vos nouvelles cases ? Pour calculer à partir d\'autres colonnes, rajoutez un "="\n Si une colonne est censée afficher une date mais ne le fait pas, essayez =ExcelDate(nom_colonne)');
     const newColumn = {
       headerName: newname,
       field: newname,
@@ -319,16 +325,18 @@ const handlegraphchange=(index,chart)=>{
       </button>
       </div>
       <br></br>
-      <div style={{ display: 'flex', gap: '10px' }}>
+      <div style={{ display: 'flex', gap: '10px',overflowX:'auto' }}>
       {columnDefs.map((colDef, index) => (
     <div key={index}>
       <input
-        type="text"
+        type="text" style={{maxWidth: '200px', maxWidth: '130px'}}
         value={colDef.headerName}
         onChange={(e) => handleColumnNameChange(e.target.value, index)}
         placeholder={`Nom de la colonne ${index + 1}`}
       />
-      <button onClick={()=>deleteColumn(index)} style={{ ...styles.button, backgroundColor: '#f44336' }}>Supprimer {index==0?colDef.headerName:null}</button>
+      <button onClick={()=>deleteColumn(index)} 
+      style={{ ...styles.button, backgroundColor: '#f44336', maxWidth: '400px'}}>
+        Supprimer {index==0?colDef.headerName:null}</button>
     </div>
   ))} </div>
     <div className="ag-theme-alpine" style={{ height: 500, width: '100%' }}>
