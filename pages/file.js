@@ -229,7 +229,7 @@ const FilePage = () => {
         </div>
       </div>
       <div>{commenting? 'Appuyer sur la case à commenter':null}</div>
-      <div>
+      
         <ExcelToAgGrid
           fileBuffer={doc}
           onGridUpdate={handleGridUpdate}
@@ -239,7 +239,7 @@ const FilePage = () => {
           charts={charts}
           setCharts={setCharts}
         />
-      </div>
+      
 
       {showComments && (   <div style={styles.commentContainer}> 
         <AffichageCommentaires 

@@ -5,6 +5,7 @@ import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-alpine.css';
 import { AgCharts } from 'ag-charts-react';
 import * as math from 'mathjs';
+import ReactDOM from 'react-dom';
 
 
 function ExcelToAgGrid({ fileBuffer, onGridUpdate, onAddComment, highlightedCell, commenting, charts,setCharts }) { // Recevoir "commenting" en prop
@@ -17,6 +18,8 @@ function ExcelToAgGrid({ fileBuffer, onGridUpdate, onAddComment, highlightedCell
   const [activeTab, setActiveTab] = useState(0); // Gérer les onglets
   const [chartTitle, setChartTitle] = useState('Graphique 1');
   const [gridApi, setGridApi] = useState(null); // Garde l'API du tableau
+  const [isStatModalOpen, setIsStatModalOpen] = useState(false);
+  const [stats,setStats]=useState({});
 
   useEffect(() => {
     if (fileBuffer) {
@@ -136,11 +139,19 @@ function ExcelToAgGrid({ fileBuffer, onGridUpdate, onAddComment, highlightedCell
   useEffect(()=>{ if (charts[activeTab]){updateChartSettings()}},[xColumn,yColumn,chartType,chartTitle]);
 
   const CalculStatistiques=(column)=>{
+    try{
     const data={};
-    data['moyenne']=rowData.reduce((previousValue,row)=>previousValue+row[column],0)/rowData.length;
-    data['variance']=rowData.reduce((previousValue,row)=>previousValue+(row[column]-data["moyenne"])**2,0)/(rowData.length-1);
+    const valeurs=rowData.map((row)=>row[column]).sort(); //Liste triée des valeurs de la colonne
+    data['moyenne']=math.mean(valeurs);
+    data['variance']=valeurs.reduce((previousValue,row)=>previousValue+(row-data["moyenne"])**2,0)/(valeurs.length-1);
     data["écart-type"]=math.sqrt(data['variance']);
-    return data
+    data["min"]=valeurs[0];
+    [data["quantile 1"],data["médiane"],data["quantile 3"]]=math.quantileSeq(valeurs,[0.25,0.5,0.75]);
+    data["max"]=valeurs[valeurs.length-1]
+    return data}
+    catch(error){
+      return {"erreur":`'${column}' n'est pas une colonne de nombres`}
+    }
   }
   
   const onCellClicked = useCallback((params) => {
@@ -250,7 +261,8 @@ const handlegraphchange=(index,chart)=>{
     const newname=window.prompt('Donner un nom à la nouvelle colonne');
     if (newname){
       const newValue=window.prompt(
-        'Donner une valeur par défaut à vos nouvelles cases ? Pour calculer à partir d\'autres colonnes, rajoutez un "="\n Si une colonne est censée afficher une date mais ne le fait pas, essayez =ExcelDate(nom_colonne)');
+'Donner une valeur par défaut à vos nouvelles cases ? Pour calculer à partir d\'autres colonnes, rajoutez un "="\n Si une colonne est censée afficher une date mais ne le fait pas, essayez =ExcelDate(nom_colonne)'
+      );
     const newColumn = {
       headerName: newname,
       field: newname,
@@ -314,14 +326,43 @@ const handlegraphchange=(index,chart)=>{
       onGridUpdate && updateArrayBufferFromTableData(rowData,columnDefs,charts)
       }
 
-  const styles={button: {
-    padding: '10px',
-    border: 'none',
-    cursor: 'pointer',
-    color: 'white',
-    fontWeight: 'bold',
-    fontSize: '16px'
-  }}
+      const styles = {
+        button: {
+          padding: '10px',
+          border: 'none',
+          cursor: 'pointer',
+          color: 'white',
+          fontWeight: 'bold',
+          fontSize: '16px'
+        },
+        modal: {
+          position: 'fixed',  // Fixe la modale à la fenêtre
+          top: 0,
+          left: 0,
+          width: '100%',
+          height: '100%',
+          background: 'rgba(0, 0, 0, 0.5)',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          zIndex: 1000 // Pour s'assurer que la modale soit au-dessus du reste du contenu
+        },
+        modalContent: {
+          background: 'white',
+          padding: '20px',
+          borderRadius: '10px',
+          boxShadow: '0 2px 10px rgba(0, 0, 0, 0.1)',
+          zIndex: 1001  // S'assurer que le contenu soit au-dessus de tout
+        },
+        closeButton: {
+          backgroundColor: 'white',
+          color: '#000',
+          border: '1px solid #ccc',
+          padding: '5px 10px',
+          cursor: 'pointer',
+          marginRight: '10px',
+        }
+      };
 
   return (
     <div>
@@ -331,6 +372,7 @@ const handlegraphchange=(index,chart)=>{
       <button onClick={deleteRows} style={{ ...styles.button, backgroundColor: '#f44336' }}>
         Supprimer les lignes sélectionnées
       </button>
+      <button onClick={()=>setIsStatModalOpen(true)} style={{ ...styles.button, backgroundColor: '#2196F3' }}>Voir des statistiques</button>
       </div>
       <br></br>
       <div style={{ display: 'flex', gap: '10px',overflowX:'auto' }}>
@@ -430,6 +472,29 @@ const handlegraphchange=(index,chart)=>{
 
         <button onClick={updateChartSettings}>Appliquer</button>
       </div>
+      
+      {isStatModalOpen && 
+        <div className="modal" style={styles.modal}>
+          <div className="modal-content" style={styles.modalContent}>
+          <span class="close" style={{'position':'right'}} onClick={()=>setIsStatModalOpen(false)}>&times;</span>
+            <h3>Statistiques de la colonne</h3>
+            <select onChange={(event)=>setStats(CalculStatistiques(event.target.value))}>
+            {columnDefs.map((col) => (
+            <option key={col.field} value={col.field}>
+              {col.headerName}
+            </option>
+          ))}
+            </select>
+            <ul>
+              {Object.keys(stats).map((key) => (
+                <li key={key}>
+                  <strong>{key}:</strong> {stats[key]}
+                </li>
+              ))}
+            </ul>
+            <button onClick={()=>setIsStatModalOpen(false)} style={styles.closeButton}>Fermer</button>
+          </div>
+        </div>}
     </div>
     
   );
