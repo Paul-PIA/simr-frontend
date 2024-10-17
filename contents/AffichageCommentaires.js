@@ -29,28 +29,12 @@ const handleDelete=async(comment_id)=>{
 }    
 
 export default function AffichageCommentaires ({comments, children,self,selectedDealer,orgConRights,columnDefs,orgUsers,handleViewCell}){
-    // const handleFuse=async(parent,child)=>{
-    //   const newText=parent.text+'\r\n'+child.text
-    //   try{
-    //     await apiClient({
-    //         method:'POST',
-    //         path:'comment/',
-    //         data:{
-    //             line:parent.line,
-    //             colone:parent.colone,
-    //             text:newText,
-    //             parent:parent.parent,
-    //             file:parent.file //saut de ligne
-    //         }
-    //     });}
-    //     catch(error){ //Erreur 500 à cause de celery
-    // }
-    // const com=await apiClient({
-    //   method:'GET',
-    //   path:`comment/`
-    // });
-    // const newComment=com[-1];
-    // console.log(newComment)}
+    const handleFuse=async(parent,child)=>{
+       await apiClient({
+        method:'POST',
+        path:'fusecomments/',
+        data:{comment1:parent.id,comment2:child.id}
+       })}
     function AffichageEnfants ({profondeur,parent}){
         const styles = {
             button: {
@@ -76,13 +60,13 @@ export default function AffichageCommentaires ({comments, children,self,selected
                   <button onClick={() => handleViewCell(comment.line, columnDefs[comment.colone - 1])} style={{ ...styles.button, backgroundColor: '#2196F3' }}>
                     Voir la case
                   </button>
-                  {comment.commenter==self.id && (
+                  {/*comment.commenter==self.id && (
                     <button onClick={()=>handleDelete(comment.id)} style={{ ...styles.button, backgroundColor: '#b81414' }}>
                       Supprimer
-                    </button>)}
-                  {/* <button onClick={() => handleFuse(parent,comment)} style={{ ...styles.button, backgroundColor: '#2196F3' }}>
+                    </button>)*/}
+                  {self.id==orgConRights.chief && ( <button onClick={() => handleFuse(parent,comment)} style={{ ...styles.button, backgroundColor: '#2196F3' }}>
                     Fusionner cette réponse avec le message original
-                  </button> */}
+                  </button> )}
                   <div>Responsable : 
                   {self.id==orgConRights.chief ? (
                   <form 
