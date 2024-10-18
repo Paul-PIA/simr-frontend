@@ -83,11 +83,6 @@ export default function ExercisePage({id}) {
     fetchFiles()
   }, [selectedSpace,user]); //S'active en changeant d'espace ou à la fin de l'exécution de fetchEx
 
-  // Fonction pour ouvrir un fichier
-  const handleOpen = (fileId) => {
-    window.location=`./file?id=${fileId}`;
-  };
-
   // Ouvrir la fenêtre de confirmation de suppression
   const handleDelete = (file) => {
     setFileToDelete(file);
@@ -152,9 +147,6 @@ export default function ExercisePage({id}) {
     setShowShareModal(false);
     setFileToShare(null);
   };
-  const handleNewFile = () => {
-    window.location=`/exercise/newfile?exer_id=${exercise.id}`;
-  };
 
   if (!exercise.name) {
     return <div>Chargement...</div>;
@@ -163,10 +155,11 @@ export default function ExercisePage({id}) {
   return (
     <div style={styles.pageContainer}>
       <div style={styles.header}>
-        {exercise.name || 'Exercice sans titre'}
-        <button style={styles.newFileButton} onClick={handleNewFile}>
-          New file
-        </button>
+        {exercise.name || 'Exercice sans titre'} 
+        <a href={`${window.location.origin}/exercise/newfile?exer_id=${exercise.id}`}>
+        <button style={styles.newFileButton}> 
+          Ajouter un nouveau fichier
+        </button> </a>
       </div>
 
       <div style={styles.mainContent}>
@@ -198,9 +191,10 @@ export default function ExercisePage({id}) {
             files.map((file,index) => (
               <div key={file.id} style={styles.fileRow}>
                 <span>{file.name}</span>
-                <button style={styles.blueButton} onClick={() => handleOpen(file.id)}>
+                <a href={`${window.location.origin}/file?id=${file.id}`}>
+                <button style={styles.blueButton}>
                   Ouvrir
-                </button>
+                </button> </a>
                 { selectedSpace=="Mon espace" && !rights[index].org.includes(user.org)&&!file.is_public?(
                     <button style={styles.blueButton} onClick={() => handleShare(file)}>
                      Partager avec mon organisation

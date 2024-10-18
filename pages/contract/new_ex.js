@@ -97,10 +97,10 @@ const [contractId,setContractId]=useState(null)
   return (
     <div>
       <div className="exercise-form">
-        <h2>New Exercise</h2>
+        <h2>Créer un nouvel exercice</h2>
         <form name="exercise" onSubmit={handleSubmit}>
           <label>
-            Exercise Name&nbsp;
+            Nom de l'exercice&nbsp;
             <input
               type="text"
               name="exerciseName"
@@ -111,7 +111,7 @@ const [contractId,setContractId]=useState(null)
           </label>
 
           <label>
-            Start Date&nbsp;
+            Date de début&nbsp;
             <input
               type="date"
               name="startDate"
@@ -122,7 +122,7 @@ const [contractId,setContractId]=useState(null)
           </label>
 
           <label>
-            End Date&nbsp;
+            Date de fin&nbsp;
             <input
               type="date"
               name="endDate"
@@ -133,12 +133,12 @@ const [contractId,setContractId]=useState(null)
           </label>
 
           <label>
-            Duration (years):&nbsp;
+            Durée (années):&nbsp;
             <input type="text" value={duration} readOnly />
           </label>
 
           <label>
-            Main Organization&nbsp;
+            Organisation principale&nbsp;
             <select
               value={mainOrganization}
               onChange={(e) => setMainOrganization(e.target.value)}
@@ -152,7 +152,7 @@ const [contractId,setContractId]=useState(null)
             </select>
           </label>
 
-          <button type="submit" className="submit-btn">Submit</button>
+          <button type="submit" className="submit-btn">Créer</button>
         </form>
       </div>
       <style jsx="true">{`

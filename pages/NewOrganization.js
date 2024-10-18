@@ -29,7 +29,7 @@ export default function CreateNewOrganization() {
   };
 
   return (
-    <div>
+    <div className="">
       <HomePageButton/>
       <div className="organization-form">
         <h2>Create New Organization</h2>

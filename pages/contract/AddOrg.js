@@ -68,7 +68,7 @@ export default function EditContract() {
       newOrganizations.map(async (value)=>{
         const response=await apiClient({
           method:'GET',
-          path:`organization/?name_exact=${value.name}`
+          path:`organization/?name=${value.name}`
         });
         return response.id
       })
@@ -148,7 +148,7 @@ export default function EditContract() {
           </button>
 
           <button type="submit" className="submit-btn">
-            Soumettre
+            Envoyer des invitations
           </button>
         </form>
       </div>

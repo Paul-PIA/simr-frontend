@@ -1,15 +1,11 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
-
 const HomePageButton = ({st}) => {
 
-  const handleClick = () => {
-    window.location='/';
-  };
 
   return (
+    <a
+      href={typeof window!=='undefined'? window.location.origin:'/'}>
     <button
-      onClick={handleClick}
       style={Object.assign({},st,{
         
         top: '20px',
@@ -22,8 +18,9 @@ const HomePageButton = ({st}) => {
         cursor: 'pointer'
       })}
     >
+      
       Accueil
-    </button>
+    </button> </a>
   );
 };
 

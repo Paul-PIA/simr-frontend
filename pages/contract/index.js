@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { apiClient } from '../../services/api';
 import HomePageButton from '../../components/HomePageButton';
 
-
 export default function Contract() {  // Récupérer l'ID du contrat depuis l'URL
   const [contract, setContract] = useState(null);
   const [org_names,setOrg_names]=useState([]);
@@ -17,8 +16,8 @@ export default function Contract() {  // Récupérer l'ID du contrat depuis l'UR
       localStorage.setItem('access',tok.access);
     } catch(error){ window.location='./auth'}
     try{
-      const ind=window.location.href.indexOf('contract?id') //Position de la lettre c
-      const id = window.location.href.substring(ind+12) //12= taille de 'contract?id=
+      const queryParams = new URLSearchParams(window.location.search);
+      const id = queryParams.get('id');
       const response = await apiClient({
         method: 'GET',
         path: `contract/${id}/`,
@@ -47,9 +46,7 @@ export default function Contract() {  // Récupérer l'ID du contrat depuis l'UR
     }
   };
 useEffect(()=>{fetchContract()},[]);
-const handleExerciseClick = (ExId) => {
-  window.location=`./exercise?id=${ExId}`; // Navigation vers la page du contrat
- };
+
   if (!contract) {
     return <div>Chargement...</div>;
   }
@@ -93,12 +90,9 @@ const handleExerciseClick = (ExId) => {
           {exercises.map((exercise) => (
             <tr key={exercise.id} style={styles.row}>
             <td style={styles.td}>{exercise.id}</td>
-            <td
-              style={{ ...styles.td, cursor: 'pointer', color: 'blue' }}
-              onClick={() => handleExerciseClick(exercise.id)}
-            >
-              {exercise.name}
-            </td>
+            <td> 
+            <a href={`${window.location.origin}/exercise?id=${exercise.id}`} style={{ ...styles.td, cursor: 'pointer', color: 'blue' }}>
+            {exercise.name} </a> </td>
             <td style={styles.td}>{exercise.date_i}</td>
             <td style={styles.td}>{exercise.date_f}</td>
           </tr>
@@ -111,12 +105,10 @@ const handleExerciseClick = (ExId) => {
       </ul>
 
       {/* Button to create a new exercise */}
-      <button style={styles.button} onClick={(e)=>{
-              const ind=window.location.href.indexOf('contract?id'); //Position de la lettre c
-              const id = window.location.href.substring(ind+12); //12= taille de 'contract?id=
-              window.location=`./contract/new_ex?con_id=${id}`}}>
+      <a href={`${window.location.origin}/contract/new_ex?con_id=${new URLSearchParams(window.location.search).get('id')}`}>
+      <button style={styles.button}>
         Créer un nouvel exercice
-      </button>
+      </button> </a>
     </div>
   );
 }
@@ -169,4 +161,5 @@ const styles = {
     borderRadius: '8px',
     boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
   },
+  td:{textDecoration:null}
 };

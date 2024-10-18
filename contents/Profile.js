@@ -1,5 +1,3 @@
-'use client'
-
 import React, { useEffect, useState } from "react";
 import { Button, Card, Input} from "antd";
 import {apiClient} from "../services/api";

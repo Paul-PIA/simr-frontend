@@ -38,15 +38,6 @@ export default function ContractHomePage() {
 
 useEffect(()=>{fetchContracts()},[]);
 
-
-
-    // Fonction pour rediriger vers la page du contrat
-    const handleContractClick = (contractId) => {
-     window.location=`/contract?id=${contractId}`; // Navigation vers la page du contrat
-    };
-    const handleExerciseClick = (exId) => {
-      window.location=`/exercise?id=${exId}`; // Navigation vers la page du contrat
-     };
      const styles = {
       container: {
         display: 'flex',
@@ -121,12 +112,10 @@ useEffect(()=>{fetchContracts()},[]);
                 {contracts.map((contract) => (
                   <tr key={contract.id} style={styles.row}>
                     <td style={styles.td}>{contract.id}</td>
-                    <td
-                      style={{ ...styles.td, cursor: 'pointer', color: 'blue' }}
-                      onClick={() => handleContractClick(contract.id)}
-                    >
+                    <a href={`${window.location.origin}/contract?id=${contract.id}`}>
+                    <td style={{ ...styles.td, cursor: 'pointer', color: 'blue' }} >
                       {contract.name}
-                    </td>
+                    </td> </a>
                     <td style={styles.td}>{contract.nb_org}</td>
                   </tr>
                 ))}
@@ -162,12 +151,12 @@ useEffect(()=>{fetchContracts()},[]);
           {exercises.map((exercise) => (
             <tr key={exercise.id} style={styles.row}>
             <td style={styles.td}>{exercise.id}</td>
+            <a href={`${window.location.origin}/exercise?id=${exercise.id}`}>
             <td
               style={{ ...styles.td, cursor: 'pointer', color: 'blue' }}
-              onClick={() => handleExerciseClick(exercise.id)}
             >
               {exercise.name}
-            </td>
+            </td> </a>
             <td style={styles.td}>{exercise.date_i}</td>
             <td style={styles.td}>{exercise.date_f}</td>
           </tr>

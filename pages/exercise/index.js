@@ -155,9 +155,6 @@ export default function ExercisePage() {
     setShowShareModal(false);
     setFileToShare(null);
   };
-  const handleNewFile = () => {
-    window.location=`/exercise/newfile?exer_id=${exercise.id}`;
-  };
 
   if (!exercise.name) {
     return <div>Chargement...</div>;
@@ -168,9 +165,10 @@ export default function ExercisePage() {
       <div style={styles.header}>
         <HomePageButton/>
         {exercise.name || 'Exercice sans titre'}
-        <button style={styles.newFileButton} onClick={handleNewFile}>
-          New file
-        </button>
+        <a href={`${window.location.origin}/exercise/newfile?exer_id=${exercise.id}`}>
+        <button style={styles.newFileButton}> 
+          Ajouter un nouveau fichier
+        </button> </a>
       </div>
 
       <div style={styles.mainContent}>
@@ -202,9 +200,10 @@ export default function ExercisePage() {
             files.map((file,index) => (
               <div key={file.id} style={styles.fileRow}>
                 <span>{file.name}</span>
-                <button style={styles.blueButton} onClick={() => handleOpen(file.id)}>
+                <a href={`${window.location.origin}/file?id=${file.id}`}>
+                <button style={styles.blueButton}>
                   Ouvrir
-                </button>
+                </button> </a>
                 { selectedSpace=="Mon espace" && !rights[index].org.includes(user.org)&&!file.is_public?(
                     <button style={styles.blueButton} onClick={() => handleShare(file)}>
                      Partager avec mon organisation

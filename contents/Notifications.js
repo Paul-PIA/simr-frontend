@@ -48,14 +48,13 @@ export default function Notifications() {
     const id=decoded.user_id ;
     const response=await apiClient({
       method:'GET',
-      path:`notification/?receiver_exact=${id}`,
-      data:{}
+      path:`notification/?receiver=${id}`
     });
     const l=[];
     for (let step = 0; step < response.length; step++){
       const user_info=await apiClient({
         method:'GET',
-        path:`user/${response[step].actor}`
+        path:`user/${response[step].actor}/`
       });
       l.push({
         id:step+1,

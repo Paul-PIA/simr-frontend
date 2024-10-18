@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from "react";
 import { apiClient } from "../services/api";
 import {jwtDecode} from 'jwt-decode';
-export default function inscription() {
+export default function Inscription() {
   const [org,setOrg]=useState([]);
   const [selectedOrg, setSelectedOrg] = useState("");
   const fetchOrgs=async()=>{

@@ -7,14 +7,12 @@ export default function NewFile() {
   const [file, setFile] = useState(null);
   const [exerciseId, setExerciseId] = useState(null);
 
-  const fetchCon=async()=>
+  const fetchCon=()=>
     { if (typeof window !=='undefined'){
       const params = new URLSearchParams(window.location.search);
       const exer_id = params.get('exer_id');
       setExerciseId(exer_id);
     }
-    
-
   }
 
   useState(()=>{fetchCon()}, []);
@@ -82,7 +80,7 @@ export default function NewFile() {
             />
           </label>
 
-          <button type="submit" className="submit-btn">Créer le fichier</button>
+          <button type="submit" className="submit-btn">Enregistrer le fichier</button>
         </form>
       </div>
 

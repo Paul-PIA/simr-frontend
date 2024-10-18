@@ -21,8 +21,7 @@ export default function Settings() {
           const id=decoded.user_id ;
         const response=await apiClient({
             method:'GET',
-            path:`mailbell/${id}`,
-            data:{}
+            path:`mailbell/${id}/`
         });
         setFrequence(response.frequence);
         setFile(response.newfile);
@@ -79,7 +78,7 @@ export default function Settings() {
                 const id=decoded.user_id ;
                 await apiClient({
                     method:'PATCH',
-                    path:`mailbell/${id}`,
+                    path:`mailbell/${id}/`,
                     data:{
                         frequence:frequence,
                         newfile:file,
