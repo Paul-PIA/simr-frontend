@@ -1,7 +1,9 @@
 import React from "react";
-import { apiClient } from "../services/api";
+import { apiClient } from "../services/api";    
 
-const Reply=(comment)=>{
+export default function AffichageCommentaires ({comments, children,getComments,self,selectedDealer,orgConRights,columnDefs,orgUsers,handleViewCell}){
+
+  const Reply=(comment)=>{
     const commentText = window.prompt('Réponse: ');
     if (commentText){
       handleReply(comment,commentText)
@@ -18,24 +20,25 @@ const handleReply=async (comment,commentText)=>{
       line:comment.line,
       colone:comment.colone
     }
-  })
+  });
+  getComments()
 }
 
 const handleDelete=async(comment_id)=>{
   await apiClient({
     method:'DELETE',
     path:`comment/${comment_id}/`
-  })
-}    
-
-export default function AffichageCommentaires ({comments, children,self,selectedDealer,orgConRights,columnDefs,orgUsers,handleViewCell}){
+  });
+  getComments()
+}
     const handleFuse=async(parent,child)=>{
        await apiClient({
         method:'POST',
         path:'fusecomments/',
         data:{comment1:parent.id,comment2:child.id}
-       })}
-    function AffichageEnfants ({profondeur,parent}){
+       });
+      getComments()}
+    function AffichageEnfants ({parent}){
         const styles = {
             button: {
               padding: '10px',
@@ -98,9 +101,7 @@ export default function AffichageCommentaires ({comments, children,self,selected
                   ):(selectedDealer[comment.id]) } </div>
                   <button style={{ ...styles.button, backgroundColor: '#2196F3' }} onClick={()=>{ Reply(comment)}}>Répondre</button>
                   {children[comment.id]!==undefined &&(
-                    <AffichageEnfants
-                    profondeur={profondeur+1}
-                    parent={comment}/>
+                    <AffichageEnfants parent={comment}/>
                   )}
                 </li>
               ))} </div> )}
@@ -124,7 +125,12 @@ export default function AffichageCommentaires ({comments, children,self,selected
         {comments.map((comment, index) => (
             comment.parent==null &&(
             <li key={index}>
-              {`Ligne ${comment.line}, Colonne ${comment.colone} (${columnDefs[comment.colone - 1]}) : ${comment.text} `}
+              {`Ligne ${comment.line}, Colonne ${comment.colone} (${columnDefs[comment.colone - 1]}) :`}
+              {comment.text.split('\n').map((line, index) => ( //Pour les commentaires fusionnés: sépare chaque commentaire par ligne
+        <React.Fragment key={index}>
+          {line}
+          <br />
+        </React.Fragment> ))}
               <button onClick={() => handleViewCell(comment.line, columnDefs[comment.colone - 1])} style={{ ...styles.button, backgroundColor: '#2196F3' }}>
                 Voir la case
               </button>
@@ -159,9 +165,7 @@ export default function AffichageCommentaires ({comments, children,self,selected
               ):(selectedDealer[comment.id]) } </div>
               <button style={{ ...styles.button, backgroundColor: '#2196F3' }} onClick={()=>{ Reply(comment)}}>Répondre</button>
               {children[comment.id]!==undefined &&(
-                <AffichageEnfants
-                profondeur={1}
-                parent={comment}/>
+                <AffichageEnfants parent={comment}/>
               )}
             </li>)
           ))}

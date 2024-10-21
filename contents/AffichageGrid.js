@@ -5,7 +5,6 @@ import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-alpine.css';
 import { AgCharts } from 'ag-charts-react';
 import * as math from 'mathjs';
-import ReactDOM from 'react-dom';
 
 
 function ExcelToAgGrid({ fileBuffer, onGridUpdate, onAddComment, highlightedCell, commenting, charts,setCharts }) { // Recevoir "commenting" en prop
@@ -75,6 +74,10 @@ function ExcelToAgGrid({ fileBuffer, onGridUpdate, onAddComment, highlightedCell
       const Graphs=chartsData.map((chart)=>{return {title:chart.title,chartOptions:getChartOptions(chart.Type,chart.X,JSON.parse(chart.Y))}})
       setCharts(Graphs);
 
+      if (stats['colonne']){
+        setStats(CalculStatistiques(stats['colonne'])) //Met à jour les statistiques pour tenir compte des nouvelles données
+      }
+      else{setStats(CalculStatistiques(columns[0].field))} //Initialise les statistiques pour un meilleur confort utilisateur
   }
   }, [fileBuffer, commenting,highlightedCell]);
 
@@ -142,6 +145,7 @@ function ExcelToAgGrid({ fileBuffer, onGridUpdate, onAddComment, highlightedCell
     try{
     const data={};
     const valeurs=rowData.map((row)=>row[column]).sort(); //Liste triée des valeurs de la colonne
+    data['colonne']=column;
     data['moyenne']=math.mean(valeurs);
     data['variance']=valeurs.reduce((previousValue,row)=>previousValue+(row-data["moyenne"])**2,0)/(valeurs.length-1);
     data["écart-type"]=math.sqrt(data['variance']);
@@ -150,10 +154,9 @@ function ExcelToAgGrid({ fileBuffer, onGridUpdate, onAddComment, highlightedCell
     data["max"]=valeurs[valeurs.length-1]
     return data}
     catch(error){
-      return {"erreur":`'${column}' n'est pas une colonne de nombres`}
+      return {"colonne":column,"erreur":`'${column}' n'est pas une colonne de nombres`}
     }
   }
-  
   const onCellClicked = useCallback((params) => {
     console.log(params);
     if (commenting) {
@@ -478,7 +481,7 @@ const handlegraphchange=(index,chart)=>{
           <div className="modal-content" style={styles.modalContent}>
           <span class="close" style={{'position':'right'}} onClick={()=>setIsStatModalOpen(false)}>&times;</span>
             <h3>Statistiques de la colonne</h3>
-            <select onChange={(event)=>setStats(CalculStatistiques(event.target.value))}>
+            <select onChange={(event)=>setStats(CalculStatistiques(event.target.value))} value={stats['colonne']}>
             {columnDefs.map((col) => (
             <option key={col.field} value={col.field}>
               {col.headerName}

@@ -3,12 +3,13 @@ import { apiClient } from '../services/api';
 import { jwtDecode } from 'jwt-decode';
 
 export default function ExercisePage({id}) {
-    const [user,setUser]=useState({});
+  const [user,setUser]=useState({});
   const [exercise, setExercise] = useState({});
   const [selectedSpace, setSelectedSpace] = useState('Mon espace');
   const [allFiles,setallFiles]=useState([]);
   const [rights,setRights]=useState([]);
   const [files, setFiles] = useState([]);
+  const [orgConRights,setOrgConrights]=useState({});
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showPublicModal,setShowPublicModal]=useState(false);
   const [showShareModal,setShowShareModal]=useState(false);
@@ -54,7 +55,11 @@ export default function ExercisePage({id}) {
         path:`user/${user_id}/`
     });
     setUser(User);
-
+    const response_conRights=await apiClient({
+      method:'GET',
+      path:`orgconright/${response.con}/`
+    });
+    setOrgConrights(response_conRights)
   };
 
   // Récupérer l'ID de la requête URL

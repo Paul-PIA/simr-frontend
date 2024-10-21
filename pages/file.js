@@ -31,7 +31,7 @@ const FilePage = () => {
     const file = new File([blob], 'modifications.xlsx', { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
     return file
   }
-  useEffect(() => {
+  useEffect(() => { //Importe depuis le backend toutes les données utiles
     const fetchFile = async () => {
       try {
         const response = await apiClient({
@@ -155,6 +155,7 @@ const FilePage = () => {
     } catch (error) {
       console.error('Erreur lors de l\'ajout du commentaire:', error);
     }
+    if (commenting){await fetchComments()}
   };
 
   const handleViewCell = (line, column) => {
@@ -178,6 +179,7 @@ const FilePage = () => {
         } }
       });
       setComments(response);
+      console.log(response);
       setShowComments(true);// Affiche l'onglet des commentaires
     } catch (error) {
       console.error('Erreur lors de la récupération des commentaires:', error);
@@ -251,6 +253,7 @@ const FilePage = () => {
         columnDefs={columnDefs}
         orgUsers={orgUsers}
         handleViewCell={handleViewCell}
+        getComments={fetchComments}
         />
        </div>
       )}
