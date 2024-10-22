@@ -2,6 +2,7 @@ import React from 'react';
 import { Layout, Avatar, Space } from 'antd';
 import { UserOutlined, SettingOutlined, NotificationOutlined, LogoutOutlined} from '@ant-design/icons';
 import HomePageButton from './HomePageButton';
+import { apiClient } from '../services/api';
 
 const { Header } = Layout;
 
@@ -26,13 +27,19 @@ export default function _Header({ onMenuClick }){
             <HomePageButton/>
             <div style={{ marginRight: 950}}>
                 <Avatar style={{ backgroundColor: '#87d068', cursor: 'pointer' }} icon={<UserOutlined />} onClick={() => onMenuClick('Profile')}/>
-                <span style={{ marginLeft: 8}}>Profile</span>
+                <span style={{ marginLeft: 8}}>Profil</span>
             </div>
             <div style={{ marginRight: 24}}>
                 <Space size="middle">
-                    <Avatar style={{ backgroundColor: '#f56a00', cursor: 'pointer' }} icon={<NotificationOutlined />} onClick={() => onMenuClick('Notifications')}/>
-                    <Avatar style={{ backgroundColor: '#7265e6', cursor: 'pointer' }} icon={<SettingOutlined />} onClick={() => onMenuClick('Settings')}/>
-                    <Avatar style={{ backgroundColor: '#ffbf00', cursor: 'pointer' }} icon={<LogoutOutlined />} onClick={() => window.location.href = '/auth'}/>
+                    <Avatar title={"Notifications"} style={{ backgroundColor: '#f56a00', cursor: 'pointer' }} icon={<NotificationOutlined />} onClick={() => onMenuClick('Notifications')}/>
+                    <Avatar title={"Paramètres"} style={{ backgroundColor: '#7265e6', cursor: 'pointer' }} icon={<SettingOutlined />} onClick={() => onMenuClick('Settings')}/>
+                    <Avatar title={"Se déconnecter"} style={{ backgroundColor: '#ffbf00', cursor: 'pointer' }} icon={<LogoutOutlined />} 
+                    onClick={async() => { await apiClient({
+                        method:"POST",
+                        path:"auth/logout/",
+                        data:{access:localStorage.access}
+                    })
+                        window.location.href = '/auth'}}/>
                     {/* <Dropdown>
                         <a onClick={e =>e.preventDefault()}>
                             <Space>

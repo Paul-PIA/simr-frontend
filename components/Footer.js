@@ -1,6 +1,6 @@
 import React from "react";
 import { Layout } from "antd";
-import logo from "./logo.png";
+import logo from "../media/logo.png";
 
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -17,7 +17,8 @@ const { Footer } = Layout;
 
 
 export default function _Footer() {
-  const columns = [
+  console.log(logo.src)
+  const columns = [[<img src={logo.src} alt="Logo-PIA" height={100} width={200} title="Logo-PIA"/>],
     [
       <h3 key={1}>
         <a
@@ -87,9 +88,6 @@ export default function _Footer() {
   return (
     <>
       <Footer className="footer">
-      <div className="Logo-PIA">
-      <img src={logo} alt="Logo-PIA" height={50} width={200}/>
-    </div>
         <MultiColumn columns={columns} />
       </Footer>
       <div className="footer-bottom">

@@ -57,9 +57,9 @@ export default function ExercisePage({id}) {
     setUser(User);
     const response_conRights=await apiClient({
       method:'GET',
-      path:`orgconright/${response.con}/`
+      path:`orgconright/?org=${User.org}&con=${response.con}`
     });
-    setOrgConrights(response_conRights)
+    setOrgConrights(response_conRights[0])
   };
 
   // Récupérer l'ID de la requête URL
@@ -159,6 +159,7 @@ export default function ExercisePage({id}) {
 
   return (
     <div style={styles.pageContainer}>
+      <title>Page d'accueil simR</title>
       <div style={styles.header}>
         {exercise.name || 'Exercice sans titre'} 
         <a href={`${window.location.origin}/exercise/newfile?exer_id=${exercise.id}`}>
@@ -205,11 +206,13 @@ export default function ExercisePage({id}) {
                      Partager avec mon organisation
                   </button>
                 ):(null)}
-                { selectedSpace=="Mon organisation" && !file.is_public?(
+                { selectedSpace=="Mon organisation" && !file.is_public && orgConRights.chief==user.id?(
                     <button style={styles.blueButton} onClick={() => handlePublic(file)}>
                      Rendre public
                   </button>
                 ):(null)}
+                {//orgConRights.chief==user.id && orgConRights.is_principal && ()
+                }
                 <button style={styles.redButton} onClick={() => handleDelete(file)}>
                   Supprimer
                 </button>

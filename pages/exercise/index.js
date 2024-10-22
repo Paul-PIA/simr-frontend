@@ -162,6 +162,7 @@ export default function ExercisePage() {
 
   return (
     <div style={styles.pageContainer}>
+      <title>{exercise.name || 'Exercice sans titre'}</title>
       <div style={styles.header}>
         <HomePageButton/>
         {exercise.name || 'Exercice sans titre'}

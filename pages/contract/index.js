@@ -52,6 +52,7 @@ useEffect(()=>{fetchContract()},[]);
   }
   return (
     <div style={styles.container}>
+      <title>{contract.name}</title>
       {/* Contrat Details Section */}
       <div style={styles.contractDetailsBanner}>
       <HomePageButton st={{position:'fixed'}}/>

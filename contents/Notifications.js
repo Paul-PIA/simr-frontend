@@ -116,6 +116,7 @@ export default function Notifications() {
 
   return (
     <div style={{ flex: 1 }}>
+      <title>Notifications</title>
       <List
         itemLayout="horizontal"
         dataSource={paginatedData}

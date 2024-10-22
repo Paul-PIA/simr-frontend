@@ -400,7 +400,7 @@ const handlegraphchange=(index,chart)=>{
         onCellValueChanged={onCellValueChanged}
         pagination={true}
         paginationPageSize={20}
-        paginationPageSizeSelector={[10,20,50,100,200,rowData.length].filter((value)=>value<=rowData.length)}
+        paginationPageSizeSelector={[10,20,50,100,200,rowData.length].filter((value)=>value<=rowData.length)} //Version modifiée du Stalin sort
         selection={{mode:"multiRow",copySelectedRows:true}}
         onGridReady={(params) => setGridApi(params.api)}
         clipboard={true} // Active la fonctionnalité de copier-coller // Sauvegarde l'API du tableau

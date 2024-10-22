@@ -20,6 +20,9 @@ export default function NewFile() {
   // Gestion du changement de fichier
   const handleFileChange = (event) => {
     setFile(event.target.files[0]);
+    if (!fileName){ //S'il n'y a pas déjà de nom, on prend celui du fichier par défaut
+      setFileName(event.target.files[0].name.replace(/\.([a-z]+)$/, '')) //Retire l'extension ".xlsx" ou ".xls"
+    }
   };
 
   // Gestion de la soumission du formulaire
@@ -49,12 +52,13 @@ export default function NewFile() {
       window.location = `/exercise?id=${exerciseId}`;
     } catch (error) {
       console.error("Erreur lors de la création du fichier :", error);
-      alert("Échec de la création du fichier.");
+      alert(`Échec de la création du fichier.${error.request.response}`);
     }
   };
 
   return (
     <div>
+      <title>Nouveau fichier</title>
       <HomePageButton/>
       <div className="file-form">
         <h2>Nouveau fichier</h2>

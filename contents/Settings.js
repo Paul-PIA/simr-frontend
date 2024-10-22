@@ -40,6 +40,7 @@ export default function Settings() {
 };
     return (
         <div style={{flex:1}}>
+            <title>Paramètres</title>
         <Card name="sett" title='Email Settings' bordered={true}>
             <SettingItem name= 'freq' title='Frequence' type='number' value={frequence} 
             onChange={(e)=>{

@@ -77,6 +77,7 @@ const [editProfile, setEditProfile] = useState(profile);
 
   return (
     <div>
+      <title>Profil</title>
       <div style={{ flex: 1 }}>
         <Card
           title="Profile"

@@ -218,11 +218,15 @@ const FilePage = () => {
 
   return (
     <div>
+      <title>{fileDetails.name}</title>
       <div style={styles.banner}>
       <HomePageButton />
         <div style={styles.buttonGroup}>
           <button onClick={handleSaveCopy} style={{ ...styles.button, backgroundColor: '#4CAF50' }}>Enregistrer une copie</button>
-          <button onClick={handleSaveChanges} style={{ ...styles.button, backgroundColor: '#2196F3' }}>Sauvegarder les modifications</button>
+          {!fileDetails.is_final && !fileDetails.is_locked ?(
+          <button onClick={handleSaveChanges} style={{ ...styles.button, backgroundColor: '#2196F3' }}>Sauvegarder les modifications</button>)
+          :(<button style={{ ...styles.button, backgroundColor: '#2196F3' }}>Modifications impossibles</button>)
+          }
           <button onClick={handleDownloadCopy} style={{ ...styles.button, backgroundColor: '#FF9800' }}>Télécharger sur mon ordinateur</button>
           {!showComments ? (<button onClick={fetchComments} style={{ ...styles.button, backgroundColor: '#FF5722' }}>Voir les commentaires</button>):null}
           <button onClick={() => setCommenting(!commenting)} style={{ ...styles.button, backgroundColor: commenting ? '#FF5722' : '#2196F3' }}>

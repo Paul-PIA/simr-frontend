@@ -92,6 +92,7 @@ useEffect(()=>{fetchContracts()},[]);
     if (space=="General"){
     return (
       <div style={styles.container}>
+        <title>Page d'accueil simR</title>
         <h1 style={styles.header}>Page d'accueil</h1>
   
   
