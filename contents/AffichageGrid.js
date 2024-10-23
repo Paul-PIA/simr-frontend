@@ -215,13 +215,16 @@ function ExcelToAgGrid({ fileBuffer, onGridUpdate, onAddComment, highlightedCell
 
     // Créer une nouvelle feuille pour les graphiques (ChartsData)
     const chartsData = [["title", "Type", "X", "Y"]]; // En-têtes pour la feuille des graphiques
+    const noms_colonnes=columnDefs.map(column=>column.field);
     charts.forEach(chart => {
+      {
         chartsData.push([
             chart.title,            // Titre du graphique
             chart.chartOptions.series[0].type,  // Type de graphique (ligne, barres, etc.)
             chart.chartOptions.series[0].xKey,  // Colonne pour X
-            JSON.stringify(chart.chartOptions.series.map((graph)=>graph.yKey))  // Colonnes pour Y. JSON permet de socker une liste dans un Excel
-        ]);
+            JSON.stringify(
+              chart.chartOptions.series.map(graph=>graph.yKey).filter(y=>noms_colonnes.includes(y)))  // Colonnes pour Y. JSON permet de socker une liste dans un Excel
+        ])};
     });
 
     const chartsWorksheet = XLSX.utils.aoa_to_sheet(chartsData);
@@ -298,7 +301,7 @@ const handlegraphchange=(index,chart)=>{
     // Fonction pour supprimer une ligne
     const deleteRows = () => {
       const selectedRows = gridApi.getSelectedRows(); // Obtenir les lignes sélectionnées
-  const updatedRowData = rowData.filter((row) => !selectedRows.includes(row)); // Filtrer les lignes non sélectionnées
+  const updatedRowData = rowData.filter(row => !selectedRows.includes(row)); // Filtrer les lignes non sélectionnées
   setRowData(updatedRowData); // Mettre à jour les données du tableau
   onGridUpdate && updateArrayBufferFromTableData(updatedRowData, columnDefs, charts)
     };
@@ -405,6 +408,7 @@ const handlegraphchange=(index,chart)=>{
         onGridReady={(params) => setGridApi(params.api)}
         clipboard={true} // Active la fonctionnalité de copier-coller // Sauvegarde l'API du tableau
         onSortChanged={onSortChanged}
+        //enableCellExpressions={true}
       />
     </div>
    {/* Barre d'onglets */}

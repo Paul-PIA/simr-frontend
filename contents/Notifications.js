@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import {
   List,
   Avatar,
@@ -13,35 +13,7 @@ const { Text, Paragraph } = Typography;
 import { apiClient } from "../services/api";
 import { jwtDecode } from "jwt-decode";
 
-const list = [
-  {
-    id: 1,
-    title: "notif 1",
-    description: "",
-    icon: "bell",
-    user: "",
-    time: "",
-  },
-  {
-    id: 2,
-    title: "notif 2",
-    description: "",
-    icon: "bell",
-    user: "",
-    time: "",
-  },
-  {
-    id: 3,
-    title: "notif 3",
-    description: "",
-    icon: "bell",
-    user: "",
-    time: "",
-  },
-];
-
 export default function Notifications() {
-  const [first,setFirst]=useState(true);
   async function RetrieveNotif(){
     const token=localStorage.getItem('access');
     const decoded=jwtDecode(token);
@@ -50,25 +22,24 @@ export default function Notifications() {
       method:'GET',
       path:`notification/?receiver=${id}`
     });
-    const l=[];
-    for (let step = 0; step < response.length; step++){
+    const l=await Promise.all(response.map( async (notif,step) => {
       const user_info=await apiClient({
         method:'GET',
-        path:`user/${response[step].actor}/`
+        path:`user/${notif.actor}/`
       });
-      l.push({
+      return {
         id:step+1,
-        notif_id:id,
+        notif_id:notif.id,
         title:`notif ${step+1}`,
-        description:response[step].message,
+        description:notif.message,
         icon:"bell",
         user_info:user_info,
         user:user_info.username,
-        time:response[step].send_time,
-        object:response[step].object,
-        event:response[step].event
-      })
-    }
+        time:notif.send_time,
+        object:notif.object,
+        event:notif.event
+      }
+    }));
     setData(l)
   };
   const evenements={
@@ -88,16 +59,13 @@ export default function Notifications() {
   };
   const [currentPage, setCurrentPage] = useState(1);
   const pageSize = 1;
-  const [data, setData] = useState(list);
+  const [data, setData] = useState([{}]);
 
-  const total = list.length;
+  const total = data.length;
   const totalPages = Math.ceil(total / pageSize);
   const showTotal = (total, range) => `Total ${totalPages} pages`;
 
-  if (first){
-    RetrieveNotif();
-    setFirst(false)
-  };
+  useEffect(()=>{RetrieveNotif()},[]);
 
   const handleRead = (id) => {
     const newData = data.map((item) => {
@@ -132,7 +100,7 @@ export default function Notifications() {
                   <Avatar icon={<NotificationOutlined />} />
                 </Badge>
               }
-              title={<a href="javascript:void(0);">{item.title}</a>}
+              title={item.title}
               description={
                 <>
                 <Paragraph>{evenements[item.event]} {objets[item.object]}</Paragraph>

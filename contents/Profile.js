@@ -39,7 +39,7 @@ export default function Profile() {
     username: "",
     city: "",
   });
-useEffect(()=>SetFirstProfile(),[]);
+useEffect(()=>{SetFirstProfile()},[]);
 const [editProfile, setEditProfile] = useState(profile);
 
   const handleEditToggle =async () => {

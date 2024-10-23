@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Card, Typography,Button} from 'antd';
 import SettingItem from '../components/SettingItem';
 import CombinedSettingItem from '../components/CombinedSettingItem';
@@ -7,8 +7,7 @@ import { jwtDecode } from 'jwt-decode';
 const { Paragraph } = Typography;
 
 export default function Settings() {
-    const [isFirst,setIsFirst]=useState(true)
-    async function FirstSettings(){
+    async function GetSettings(){
 
         const resp=await apiClient({
             method:'POST',
@@ -34,10 +33,7 @@ export default function Settings() {
     const [change, setChange] = useState(true);
     const [comment, setComment] = useState(true);
     const [message, setMessage] = useState(true);
-    if (isFirst) {
-    FirstSettings();
-    setIsFirst(false)
-};
+    useEffect(()=>{GetSettings()},[])
     return (
         <div style={{flex:1}}>
             <title>Paramètres</title>

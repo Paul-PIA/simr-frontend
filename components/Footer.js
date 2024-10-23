@@ -17,7 +17,6 @@ const { Footer } = Layout;
 
 
 export default function _Footer() {
-  console.log(logo.src)
   const columns = [[<img src={logo.src} alt="Logo-PIA" height={100} width={200} title="Logo-PIA"/>],
     [
       <h3 key={1}>
