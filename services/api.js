@@ -3,9 +3,9 @@ import { csrfToken } from './jwt';
 
 
 const LOCAL_URL = 'http://127.0.0.1:8000/api';
-const SERVER_URL = 'https://simr-xxm0.onrender.com/api'; // fill in this url with your adress of backend server 
+const SERVER_URL = (window.location.origin+'/api') || 'https://simr-xxm0.onrender.com/api'; // fill in this url with your adress of backend server 
 
-const API_URL = LOCAL_URL; // switch LOCAL_URL or SERVER_URL to adapt the environment 
+const API_URL = SERVER_URL; // switch LOCAL_URL or SERVER_URL to adapt the environment 
 
 axios.defaults.withCredentials = true;
 
