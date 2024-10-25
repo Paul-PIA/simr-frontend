@@ -1,6 +1,6 @@
 import axios from "axios";
 
-export function getCookie(name) {
+function getCookie(name) {
     let cookieValue = null;
     if (document.cookie && document.cookie !== '') {
         const cookies = document.cookie.split(';');
@@ -19,7 +19,7 @@ export function getCookie(name) {
 
 
 // Fonction pour récupérer et définir le token CSRF
-export const fetchCsrfToken = async () => {
+const fetchCsrfToken = async () => {
     try {
         // On peut effectuer un appel pour s'assurer que le token est bien envoyé
         await axios.get('https://simr-xxm0.onrender.com/set-csrf-token', { withCredentials: true });
@@ -37,3 +37,6 @@ export const fetchCsrfToken = async () => {
         console.error('Failed to get CSRF Token', error);
     }
 };
+
+export const csrfToken=await fetchCsrfToken()
+console.log(csrfToken)

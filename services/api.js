@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { fetchCsrfToken} from './jwt';
+import { csrfToken } from './jwt';
 
 
 const LOCAL_URL = 'http://127.0.0.1:8000/api';
@@ -12,7 +12,6 @@ axios.defaults.withCredentials = true;
 export const apiClient = async ({ method, path, data }) => {
     const url = `${API_URL}/${path}`;
     const token = localStorage.getItem('access');
-    const csrfToken=await fetchCsrfToken();
     try {
         const response = await axios({ method, url, headers: {
             'Authorization': `Bearer ${token}`,
@@ -28,7 +27,6 @@ export const apiClient = async ({ method, path, data }) => {
 
 export const apiClientNotoken = async ({ method, path, data }) => {
     const url = `${API_URL}/${path}`;
-    const csrfToken=await fetchCsrfToken();
     try {
         const response = await axios({ method, url, headers: {
             'X-CSRFToken': csrfToken,
@@ -43,7 +41,6 @@ export const apiClientNotoken = async ({ method, path, data }) => {
 
 export const apiClientGetoken = async ({ method, path, data }) => {
     const url = `${API_URL}/${path}`;
-    const csrfToken=await fetchCsrfToken();
     try {
         const response = await axios({ method, url, headers: {
             'X-CSRFToken': csrfToken
@@ -63,7 +60,6 @@ export const apiClientGetoken = async ({ method, path, data }) => {
 export const apiClientGetFile = async ({ method, path, data }) => {
     const url = path;
     const token = localStorage.getItem('access');
-    const csrfToken=await fetchCsrfToken();
     try {
         const response = await axios({ method, url, headers: {
             'Authorization': `Bearer ${token}`,
