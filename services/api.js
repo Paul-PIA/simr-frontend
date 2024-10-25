@@ -1,9 +1,9 @@
 import axios from 'axios';
-import { csrfToken } from './jwt';
+import { fetchCsrfToken} from './jwt';
 
 
 const LOCAL_URL = 'http://127.0.0.1:8000/api';
-const SERVER_URL = typeof window !=='undefined'?(window.location.origin+'/api'):'https://simr-xxm0.onrender.com/api'; // fill in this url with your adress of backend server 
+const SERVER_URL = typeof window !=='undefined'?(window.location.origin+'/api'):('https://simr-xxm0.onrender.com/api'); // fill in this url with your adress of backend server 
 
 const API_URL = SERVER_URL; // switch LOCAL_URL or SERVER_URL to adapt the environment 
 
@@ -12,6 +12,7 @@ axios.defaults.withCredentials = true;
 export const apiClient = async ({ method, path, data }) => {
     const url = `${API_URL}/${path}`;
     const token = localStorage.getItem('access');
+    const csrfToken=await fetchCsrfToken();
     try {
         const response = await axios({ method, url, headers: {
             'Authorization': `Bearer ${token}`,
@@ -27,6 +28,7 @@ export const apiClient = async ({ method, path, data }) => {
 
 export const apiClientNotoken = async ({ method, path, data }) => {
     const url = `${API_URL}/${path}`;
+    const csrfToken=await fetchCsrfToken();
     try {
         const response = await axios({ method, url, headers: {
             'X-CSRFToken': csrfToken,
@@ -41,6 +43,7 @@ export const apiClientNotoken = async ({ method, path, data }) => {
 
 export const apiClientGetoken = async ({ method, path, data }) => {
     const url = `${API_URL}/${path}`;
+    const csrfToken=await fetchCsrfToken();
     try {
         const response = await axios({ method, url, headers: {
             'X-CSRFToken': csrfToken
@@ -60,6 +63,7 @@ export const apiClientGetoken = async ({ method, path, data }) => {
 export const apiClientGetFile = async ({ method, path, data }) => {
     const url = path;
     const token = localStorage.getItem('access');
+    const csrfToken=await fetchCsrfToken();
     try {
         const response = await axios({ method, url, headers: {
             'Authorization': `Bearer ${token}`,

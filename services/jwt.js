@@ -1,15 +1,5 @@
 import axios from "axios";
 
-export const setToken = token => {
-    localStorage.setItem('token', token);
-};
-export const getToken = () => {
-    localStorage.getItem('access');
-};
-export const clearToken = () => {
-    localStorage.removeItem('token');
-};
-
 export function getCookie(name) {
     let cookieValue = null;
     if (document.cookie && document.cookie !== '') {
@@ -47,6 +37,3 @@ export const fetchCsrfToken = async () => {
         console.error('Failed to get CSRF Token', error);
     }
 };
-
-export const csrfToken=await fetchCsrfToken()
-console.log(csrfToken)
