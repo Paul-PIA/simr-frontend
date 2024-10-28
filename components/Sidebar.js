@@ -8,7 +8,7 @@ import { apiClient } from "../services/api";
 const { Sider } = Layout;
 const { SubMenu } = Menu;
 
-export default function _Sider() {
+export default function Sider_() {
   const [collapsed, setCollapsed] = useState(false); // open and close the sider
   const [openKeys, setOpenKeys] = useState([]); //open and close subMenu
   const [contracts,setContracts]=useState([]);
