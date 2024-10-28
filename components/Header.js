@@ -21,7 +21,7 @@ const { Header } = Layout;
 //     </Menu>
 // );
 
-export default function _Header({ onMenuClick }){
+export default function Header({ onMenuClick }){
     return (
         <Header className="header" style={{ padding:0, background: '#fff', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <HomePageButton/>
