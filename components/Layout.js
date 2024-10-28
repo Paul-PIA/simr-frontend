@@ -10,7 +10,7 @@ import ContractHomePage from "../contents/ContractHomePage";
 
 const { Content } = Layout;
 
-export default function Layout({ item }) {
+export default function Layout_({ item }) {
   const SiderClick = (content) => {
     setContent(content);
   };
