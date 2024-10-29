@@ -22,7 +22,7 @@ function getCookie(name) {
 const fetchCsrfToken = async () => {
     try {
         // On peut effectuer un appel pour s'assurer que le token est bien envoyé
-        await axios.get(document.domain+'/set-csrf-token', { withCredentials: true });
+        await axios.get(window.location.origin+'/set-csrf-token', { withCredentials: true });
         
         // Récupère le token CSRF à partir du cookie
         const csrfToken = getCookie('csrftoken');
