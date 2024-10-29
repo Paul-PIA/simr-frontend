@@ -5,6 +5,9 @@ const nextConfig = {trailingSlash: true,
       {
         source: '/api/:path*/',
         destination: 'https://simr-xxm0.onrender.com/api/:path*/',
+      },
+      {source:'/set-csrf-token/',
+      destination:'https://simr-xxm0.onrender.com/set-csrf-token'
       }
     ]
   }};

@@ -22,7 +22,7 @@ function getCookie(name) {
 const fetchCsrfToken = async () => {
     try {
         // On peut effectuer un appel pour s'assurer que le token est bien envoyé
-        await axios.get('https://simr-xxm0.onrender.com/set-csrf-token', { withCredentials: true });
+        await axios.get('/set-csrf-token', { withCredentials: true });
         
         // Récupère le token CSRF à partir du cookie
         const csrfToken = getCookie('csrftoken');
