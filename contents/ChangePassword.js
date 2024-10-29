@@ -8,14 +8,14 @@ export default function ChangePassword() {
         <h2>Change your password</h2>
         <form 
   name="change" 
-  onSubmit={(e) => {
+  onSubmit={async (e) => {
     e.preventDefault();
-    apiClient({
+    await apiClient({
       method:'POST',
       path:'token/refresh/',
       data:{refresh:localStorage.getItem('refresh')}
     });
-    apiClient({
+    await apiClient({
       method: 'POST',
       path: 'api/auth/password/change',
       data: {

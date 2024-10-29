@@ -404,11 +404,12 @@ const handlegraphchange=(index,chart)=>{
         pagination={true}
         paginationPageSize={20}
         paginationPageSizeSelector={[10,20,50,100,200,rowData.length].filter((value)=>value<=rowData.length)} //Version modifiée du Stalin sort
-        selection={{mode:"multiRow",copySelectedRows:true}}
+        rowSelection={{mode:"multiRow",copySelectedRows:true}}
         onGridReady={(params) => setGridApi(params.api)}
-        clipboard={true} // Active la fonctionnalité de copier-coller // Sauvegarde l'API du tableau
+        //clipboard={true} // Active la fonctionnalité de copier-coller // Sauvegarde l'API du tableau
         onSortChanged={onSortChanged}
         //enableCellExpressions={true}
+        undoRedoCellEditing={true}
       />
     </div>
    {/* Barre d'onglets */}
