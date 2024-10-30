@@ -14,7 +14,6 @@ export default function Sider_() {
   const [contracts,setContracts]=useState([]);
   const [exercices,setExercices]=useState([]);
   const [files,setFiles]=useState([]);
-  const [access,setAccess]=useState([]);
 
   const fetchContractsAndMore=async ()=>{
     const token=localStorage.getItem('access');
