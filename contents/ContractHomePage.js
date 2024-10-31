@@ -1,13 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { jwtDecode } from 'jwt-decode';
 import { apiClient } from '../services/api';
-import { Button } from 'antd';
 import ExercisePage from './filePage';
 
 export default function ContractHomePage() {
 
   const [contracts, setContracts] = useState([]);
-  const [space,setSpace]=useState("General");
+  const [space,setSpace]=useState("");
   const [exercises,setExercise]=useState([])
 
   const fetchContracts=async ()=>{
@@ -33,7 +32,7 @@ export default function ContractHomePage() {
         setSpace("Exercise")
       }
       else{setSpace("Contract")}
-    }
+    } else{setSpace("General")}
 };
 
 useEffect(()=>{fetchContracts()},[]);

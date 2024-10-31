@@ -71,7 +71,7 @@ const [contractId,setContractId]=useState(null)
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
-      const response=await apiClient({
+      await apiClient({
         method: "POST",
         path: "exercise/",
         data: {
@@ -84,7 +84,6 @@ const [contractId,setContractId]=useState(null)
           type:1
         }
       });
-      console.log('response');
       alert("Exercise created successfully!");
       window.location=`./?id=${contractId}`
     } catch (error) {

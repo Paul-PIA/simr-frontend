@@ -36,7 +36,7 @@ export default function Sider_() {
       })
     ));
     if (exercises.length>0){
-    const ex=exercises.reduce((pre, cur) =>
+    const ex=exercises.reduce((pre, cur) => //exercises étant une liste de liste, il faut l'aplatir
       pre.concat(cur));
     setExercices(ex);
     const fich=await Promise.all(ex.map(
@@ -83,10 +83,10 @@ setFiles(fichiers.filter((file,index)=>file.is_public || droits[index].user.incl
         <SubMenu
           key="sub1"
           title={collapsed ? null : "Mes Contracts"}
-          icon={<BookOutlined />}
+          icon={<BookOutlined />} 
         >
           {contracts.map((con,index)=>(
-          <Menu.Item key={index+1} >  <a href={`${window.location.origin}/contract?id=${con.id}`}></a>
+          <Menu.Item key={index+1} >  <a href={`${window.location.origin}/contract?id=${con.id}`} ></a>
             {con.name}</Menu.Item>
           ))}
         </SubMenu>

@@ -39,4 +39,3 @@ const fetchCsrfToken = async () => {
 };
 
 export const csrfToken=await fetchCsrfToken()
-console.log(csrfToken)

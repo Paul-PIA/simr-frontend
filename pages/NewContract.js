@@ -24,7 +24,6 @@ export default function NewContract(){
             method:'GET',
             path:`user/${id}/`
         });
-        console.log(user);
         await apiClient({
             method:'POST',
             path:'contract/',
