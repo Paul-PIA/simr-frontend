@@ -1,14 +1,14 @@
 import React, { useEffect } from "react";
 import { useState } from "react";
 import { Layout, Menu } from "antd";
-import { ApiOutlined, BookOutlined, TeamOutlined } from "@ant-design/icons";
+import { FileExcelOutlined, BookOutlined, TeamOutlined } from "@ant-design/icons";
 import { jwtDecode } from "jwt-decode";
 import { apiClient } from "../services/api";
 
 const { Sider } = Layout;
 const { SubMenu } = Menu;
 
-export default function Sider_() {
+export default function Sider_({fix}) {
   const [collapsed, setCollapsed] = useState(false); // open and close the sider
   const [openKeys, setOpenKeys] = useState([]); //open and close subMenu
   const [contracts,setContracts]=useState([]);
@@ -72,7 +72,7 @@ setFiles(fichiers.filter((file,index)=>file.is_public || droits[index].user.incl
       collapsed={collapsed}
       onCollapse={setCollapsed}
       width={200}
-      style={{ background: "#fff", padding: 0 }}
+      style={{ ...fix,background: "#fff", padding: 0 }}
     >
       <Menu
         mode="inline"
@@ -93,7 +93,7 @@ setFiles(fichiers.filter((file,index)=>file.is_public || droits[index].user.incl
         <SubMenu
           key="sub2"
           title={collapsed ? null : "Mes Exercices"}
-          icon={<BookOutlined />}
+          icon={<TeamOutlined />}
         >
           {exercices.map((exer,index)=>(
             
@@ -104,7 +104,7 @@ setFiles(fichiers.filter((file,index)=>file.is_public || droits[index].user.incl
         <SubMenu
           key="sub3"
           title={collapsed ? null : "Mes Fichiers"}
-          icon={<BookOutlined />}
+          icon={<FileExcelOutlined />}
         >
           {files.map((file,index)=>(
           <Menu.Item key={index+1} > <a href={`${window.location.origin}/file?id=${file.id}`}></a>

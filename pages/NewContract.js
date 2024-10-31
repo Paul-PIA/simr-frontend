@@ -2,6 +2,7 @@ import React, {useState,useEffect } from "react";
 import HomePageButton from "../components/HomePageButton";
 import { jwtDecode } from "jwt-decode";
 import { apiClient } from "../services/api";
+import _Sider from "../components/Sidebar";
 
 
 export default function NewContract(){
@@ -39,6 +40,7 @@ export default function NewContract(){
     return (
         <div>
           <HomePageButton/>
+          <_Sider/>
           <div className="contract-form">
             <h2>Créer un contract</h2>
             <form name="contract" onSubmit={handleSubmit}>

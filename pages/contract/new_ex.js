@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { apiClient } from "../../services/api";
+import { Layout } from "antd";
+import HomePageButton from "../../components/HomePageButton";
+import Sider_ from "../../components/Sidebar";
 
 export default function NewExercise() {
 const [contractId,setContractId]=useState(null)
@@ -9,7 +12,9 @@ const [contractId,setContractId]=useState(null)
   const [duration, setDuration] = useState(0);
   const [mainOrganization, setMainOrganization] = useState(null);
   const [organizations, setOrganizations] = useState([]);
-  const [orgId,setOrgId]=useState([])
+  const [orgId,setOrgId]=useState([]);
+
+  const {Content}=Layout;
 
   useEffect(() => {
     fetchContractOrganizations();
@@ -26,8 +31,8 @@ const [contractId,setContractId]=useState(null)
           localStorage.setItem('access',tok.access)}
           catch(error){window.location='../auth'}
     try {
-        const ind=window.location.href.indexOf('contract/new_ex?con_id='); //Position de la lettre c
-        const contract_Id = window.location.href.substring(ind+23);
+      const queryParams = new URLSearchParams(window.location.search);
+      const contract_Id = queryParams.get('con_id');
         setContractId(contract_Id);
       const response = await apiClient({
         method: "GET",
@@ -95,6 +100,9 @@ const [contractId,setContractId]=useState(null)
   }
   return (
     <div>
+      <HomePageButton/>
+      <Layout>
+        <Sider_/><Content>
       <div className="exercise-form">
         <h2>Créer un nouvel exercice</h2>
         <form name="exercise" onSubmit={handleSubmit}>
@@ -191,6 +199,7 @@ const [contractId,setContractId]=useState(null)
           background-color: #0056b3;
         }
       `}</style>
+      </Content></Layout>
     </div>
   );
 }

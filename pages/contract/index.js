@@ -1,11 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import { apiClient } from '../../services/api';
 import HomePageButton from '../../components/HomePageButton';
+import _Sider from "../../components/Sidebar";
+import { Layout } from 'antd';
 
 export default function Contract() {  // Récupérer l'ID du contrat depuis l'URL
   const [contract, setContract] = useState(null);
   const [org_names,setOrg_names]=useState([]);
   const [exercises, setExercises] = useState([]);
+
+  const {Content}=Layout;
   const fetchContract = async () => {
     try {
       const tok=await apiClient({
@@ -36,8 +40,7 @@ export default function Contract() {  // Récupérer l'ID du contrat depuis l'UR
 
         const l_ex=await apiClient({
             method:'GET',
-            path:`exercise/?con=${id}`,
-            data: {}
+            path:`exercise/?con=${id}`
         } );
         setExercises(l_ex);
             // Mettre à jour le contrat avec les données récupérées
@@ -50,12 +53,14 @@ useEffect(()=>{fetchContract()},[]);
   if (!contract) {
     return <div>Chargement...</div>;
   }
-  return (
+  return (<div> <HomePageButton />
+  <Layout>
+    <_Sider fix={{positiob:"absolute"}}/>
+    <Content>
     <div style={styles.container}>
       <title>{contract.name}</title>
       {/* Contrat Details Section */}
       <div style={styles.contractDetailsBanner}>
-      <HomePageButton st={{position:'fixed'}}/>
         <h1 style={styles.header}>Détails du contrat : {contract.name}</h1>
         <p>Nombre d'organisations: {contract.nb_org}</p>
       </div>
@@ -110,7 +115,7 @@ useEffect(()=>{fetchContract()},[]);
       <button style={styles.button}>
         Créer un nouvel exercice
       </button> </a>
-    </div>
+    </div></Content></Layout></div>
   );
 }
 
@@ -120,7 +125,7 @@ const styles = {
     flexDirection: 'column',
     alignItems: 'center',
     padding: '20px',
-    fontFamily: 'Arial, sans-serif',
+    fontFamily: 'Arial, sans-serif'
   },
   contractDetailsBanner: {
     backgroundColor: '#f0f0f0',

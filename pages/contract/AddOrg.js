@@ -1,11 +1,15 @@
 import React, { useState, useEffect } from "react";
 import { apiClient } from "../../services/api";
 import HomePageButton from "../../components/HomePageButton";
+import { Layout } from "antd";
+import Sider_ from "../../components/Sidebar";
 
 export default function EditContract() {
   const [contractName, setContractName] = useState("");
   const [organizations, setOrganizations] = useState([]);
   const [newOrganizations, setNewOrganizations] = useState([{ name: "", leader: "" }]);
+
+  const {Content}=Layout;
 
   const fetchContract = async () => {
     try{
@@ -90,6 +94,7 @@ export default function EditContract() {
   return (
     <div>
       <HomePageButton/>
+      <Layout><Sider_/><Content>
       <div className="contract-form">
         <h2>Modifier le Contrat</h2>
         <form name="contract" onSubmit={handleSubmit}>
@@ -217,6 +222,7 @@ export default function EditContract() {
           margin-top: 20px;
         }
       `}</style>
+      </Content></Layout>
     </div>
   );
 }

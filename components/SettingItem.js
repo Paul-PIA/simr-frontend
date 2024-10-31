@@ -1,5 +1,5 @@
 import React from 'react';
-import { InputNumber, Row, Switch, Typography } from 'antd';
+import { InputNumber, Switch, Typography } from 'antd';
 const { Paragraph } = Typography;
 
 export default function SettingItem({ title, description, type, value, onChange }) {//Here to control the format of setting bar

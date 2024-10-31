@@ -10,10 +10,7 @@ import ContractHomePage from "../contents/ContractHomePage";
 
 const { Content } = Layout;
 
-export default function Layout_({ item }) {
-  const SiderClick = (content) => {
-    setContent(content);
-  };
+export default function Layout_() {
   const HeaderClick = (contentKey) => {
     switch (contentKey) {
       case "Notifications":
@@ -36,7 +33,7 @@ export default function Layout_({ item }) {
       <Layout style={{ minHeight: "100vh", margin: 0, padding: 0 }}>
         <_Header onMenuClick={HeaderClick} />
         <Layout>
-          <_Sider onMenuClick={SiderClick} />
+          <_Sider/>
           <Content className="layout-content">
             <div style={{ flex: 1 }}>{content}</div>
             <_Footer />

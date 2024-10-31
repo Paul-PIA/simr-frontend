@@ -1,11 +1,14 @@
 import React, { useState } from "react";
 import { apiClient } from "../../services/api";
 import HomePageButton from "../../components/HomePageButton";
-
+import { Layout } from "antd";
+import Sider_ from "../../components/Sidebar";
 export default function NewFile() {
   const [fileName, setFileName] = useState("");
   const [file, setFile] = useState(null);
   const [exerciseId, setExerciseId] = useState(null);
+
+  const {Content}=Layout;
 
   const fetchCon=()=>
     { if (typeof window !=='undefined'){
@@ -60,6 +63,7 @@ export default function NewFile() {
     <div>
       <title>Nouveau fichier</title>
       <HomePageButton/>
+      <Layout><Sider_/><Content>
       <div className="file-form">
         <h2>Nouveau fichier</h2>
         <form onSubmit={handleSubmit}>
@@ -125,6 +129,7 @@ export default function NewFile() {
           background-color: #0056b3;
         }
       ` }} />
+      </Content></Layout>
     </div>
   );
 }
