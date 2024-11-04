@@ -8,10 +8,18 @@ export default function NewFile() {
   const [file, setFile] = useState(null);
   const [exerciseId, setExerciseId] = useState(null);
 
-  const {Content}=Layout;
+  const {Content,Footer}=Layout;
 
-  const fetchCon=()=>
-    { if (typeof window !=='undefined'){
+  const fetchCon=async ()=>
+    {    try {
+      const tok=await apiClient({
+          method:'POST',
+          path:'token/refresh/',
+          data:{refresh:localStorage.getItem('refresh')}
+        });
+        localStorage.setItem('access',tok.access)}
+        catch(error){window.location='../../auth'}
+       if (typeof window !=='undefined'){
       const params = new URLSearchParams(window.location.search);
       const exer_id = params.get('exer_id');
       setExerciseId(exer_id);
@@ -63,7 +71,7 @@ export default function NewFile() {
     <div>
       <title>Nouveau fichier</title>
       <HomePageButton/>
-      <Layout><Sider_/><Content>
+      <Layout style={{ minHeight: "100vh", margin: 0, padding: 0 }}><Sider_/><Content>
       <div className="file-form">
         <h2>Nouveau fichier</h2>
         <form onSubmit={handleSubmit}>
@@ -92,6 +100,7 @@ export default function NewFile() {
         </form>
       </div>
 
+      </Content></Layout>
       <style dangerouslySetInnerHTML={{ __html: `
         .file-form {
           display: flex;
@@ -129,7 +138,6 @@ export default function NewFile() {
           background-color: #0056b3;
         }
       ` }} />
-      </Content></Layout>
     </div>
   );
 }

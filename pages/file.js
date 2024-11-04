@@ -7,8 +7,12 @@ import * as XLSX from 'xlsx';
 import HomePageButton from '../components/HomePageButton';
 import { jwtDecode } from 'jwt-decode';
 import AffichageCommentaires from '../contents/AffichageCommentaires';
+import {Layout} from 'antd';
+import Sider_ from '../components/Sidebar';
 
 const FilePage = () => {
+const {Content}=Layout;
+
   const [fileDetails, setfileDetails] = useState({});
   const [doc, setDoc] = useState(null);
   const [comments, setComments] = useState([]); // Pour stocker les commentaires
@@ -218,6 +222,7 @@ const FilePage = () => {
   return (
     <div>
       <title>{fileDetails.name}</title>
+      <Layout style={{ minHeight: "100vh", margin: 0, padding: 0 }}><Sider_/><Content>
       <div style={styles.banner}>
       <HomePageButton />
         <div style={styles.buttonGroup}>
@@ -259,7 +264,7 @@ const FilePage = () => {
         getComments={fetchComments}
         />
        </div>
-      )}
+      )} </Content></Layout>
     </div>
   );
 };

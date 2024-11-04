@@ -54,7 +54,7 @@ useEffect(()=>{fetchContract()},[]);
     return <div>Chargement...</div>;
   }
   return (<div> <HomePageButton />
-  <Layout>
+  <Layout style={{ minHeight: "100vh", margin: 0, padding: 0 }}>
     <_Sider fix={{positiob:"absolute"}}/>
     <Content>
     <div style={styles.container}>

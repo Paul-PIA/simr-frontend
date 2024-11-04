@@ -2,6 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { apiClient } from '../../services/api';
 import { jwtDecode } from 'jwt-decode';
 import HomePageButton from '../../components/HomePageButton';
+import {Layout} from 'antd';
+import Sider_ from '../../components/Sidebar';
+import _Footer from "../../components/Footer";
 
 export default function ExercisePage() {
     const [user,setUser]=useState({});
@@ -16,6 +19,8 @@ export default function ExercisePage() {
   const [fileToDelete, setFileToDelete] = useState(null);
   const [fileToPublic,setFileToSharePublic]=useState(null);
   const [fileToShare,setFileToShare]=useState(null);
+
+  const {Content}=Layout;
 
   // Fonction pour récupérer les informations de l'exercice
   const fetchEx = async () => {
@@ -162,6 +167,7 @@ export default function ExercisePage() {
 
   return (
     <div style={styles.pageContainer}>
+      <Layout style={{ minHeight: "100vh", margin: 0, padding: 0 }}><Sider_/><Content className="layout-content"><div style={{flex:1}}>
       <title>{exercise.name || 'Exercice sans titre'}</title>
       <div style={styles.header}>
         <HomePageButton/>
@@ -270,7 +276,16 @@ export default function ExercisePage() {
             </div>
           </div>
         </div>
-      )}
+      )} </div><_Footer/></Content></Layout>
+            <style jsx>{`
+        .layout-content {
+          flex: 1;
+          display: flex;
+          flex-direction: column;
+          overflow-y: auto;
+          padding: 16px;
+        }
+      `}</style>
     </div>
   );
 }

@@ -101,7 +101,7 @@ const [contractId,setContractId]=useState(null)
   return (
     <div>
       <HomePageButton/>
-      <Layout>
+      <Layout style={{ minHeight: "100vh", margin: 0, padding: 0 }}>
         <Sider_/><Content>
       <div className="exercise-form">
         <h2>Créer un nouvel exercice</h2>

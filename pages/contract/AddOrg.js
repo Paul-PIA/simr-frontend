@@ -94,7 +94,7 @@ export default function EditContract() {
   return (
     <div>
       <HomePageButton/>
-      <Layout><Sider_/><Content>
+      <Layout style={{ minHeight: "100vh", margin: 0, padding: 0 }}><Sider_/><Content>
       <div className="contract-form">
         <h2>Modifier le Contrat</h2>
         <form name="contract" onSubmit={handleSubmit}>
