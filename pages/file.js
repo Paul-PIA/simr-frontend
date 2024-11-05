@@ -11,7 +11,7 @@ import {Layout} from 'antd';
 import Sider_ from '../components/Sidebar';
 
 const FilePage = () => {
-const {Content}=Layout;
+const {Content,Header}=Layout;
 
   const [fileDetails, setfileDetails] = useState({});
   const [doc, setDoc] = useState(null);
@@ -223,6 +223,7 @@ const {Content}=Layout;
     <div>
       <title>{fileDetails.name}</title>
       <Layout style={{ minHeight: "100vh", margin: 0, padding: 0 }}><Sider_/><Content>
+        <Header style={{ padding:0, background: '#fff', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
       <div style={styles.banner}>
       <HomePageButton />
         <div style={styles.buttonGroup}>
@@ -237,7 +238,7 @@ const {Content}=Layout;
             {commenting ? 'Terminer ajout de commentaire' : 'Rajouter un commentaire'}
           </button>
         </div>
-      </div>
+      </div> </Header>
       <div>{commenting? 'Appuyer sur la case à commenter':null}</div>
       
         <ExcelToAgGrid
