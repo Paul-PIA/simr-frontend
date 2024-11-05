@@ -18,7 +18,7 @@ export default function NewFile() {
           data:{refresh:localStorage.getItem('refresh')}
         });
         localStorage.setItem('access',tok.access)}
-        catch(error){window.location='../../auth'}
+        catch(error){if (typeof window !=='undefined'){window.location='../../auth'}}
        if (typeof window !=='undefined'){
       const params = new URLSearchParams(window.location.search);
       const exer_id = params.get('exer_id');
