@@ -38,7 +38,7 @@ export default function Header_({ onMenuClick }){
                         method:"POST",
                         path:"auth/logout/",
                         data:{access:localStorage.access}
-                    })
+                    });
                         window.location.href = '/auth'}}/>
                     {/* <Dropdown>
                         <a onClick={e =>e.preventDefault()}>

@@ -45,7 +45,7 @@ const {Content,Header}=Layout;
         });
         localStorage.setItem('access', response.access);
       } catch (error) {
-        window.location = './auth';
+        window.location = '../auth';
       }
 
       const queryParams = new URLSearchParams(window.location.search);
@@ -222,8 +222,7 @@ const {Content,Header}=Layout;
   return (
     <div>
       <title>{fileDetails.name}</title>
-      <Layout style={{ minHeight: "100vh", margin: 0, padding: 0 }}>
-        <Header style={{ padding:0, background: '#fff', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+      <Layout style={{ minHeight: "100vh", margin: 0, padding: 0 }}> <Sider_/> <Content>
       <div style={styles.banner}>
       <HomePageButton />
         <div style={styles.buttonGroup}>
@@ -238,7 +237,7 @@ const {Content,Header}=Layout;
             {commenting ? 'Terminer ajout de commentaire' : 'Rajouter un commentaire'}
           </button>
         </div>
-      </div> </Header><Layout><Sider_/><Content>
+      </div>
       <div>{commenting? 'Appuyer sur la case à commenter':null}</div>
       
         <ExcelToAgGrid
@@ -265,7 +264,7 @@ const {Content,Header}=Layout;
         getComments={fetchComments}
         />
        </div>
-      )} </Content></Layout></Layout>
+      )} </Content></Layout>
     </div>
   );
 };
