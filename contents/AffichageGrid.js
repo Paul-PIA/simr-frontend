@@ -169,6 +169,12 @@ function ExcelToAgGrid({ fileBuffer, onGridUpdate, onAddComment, highlightedCell
     }
   }, [onAddComment, commenting]);
 
+
+
+  const ExcelDate=(value)=>{
+    const startDate = new Date(1900, 0, 1); // Date de départ : 1 janvier 1900
+    return new Date(startDate.getTime() + (value - 2) * 24 * 60 * 60 * 1000).toLocaleDateString();
+  }
   const CalculateNewValue=(value,index)=>{
     if (typeof value=="string" && value[0]=="="){ //Si c'est une expression, on la calcule
       const expression = value.slice(1);
@@ -178,18 +184,13 @@ function ExcelToAgGrid({ fileBuffer, onGridUpdate, onAddComment, highlightedCell
         new RegExp(Object.keys(variables).join("|"), "g"),
         (match) => variables[match]
       );
-      return math.evaluate(evaluatedExpression) //Permet d'utiliser les fonctions mathématiques usuelles, comme sin ou exp
+      try {return math.evaluate(evaluatedExpression)} //Permet d'utiliser les fonctions mathématiques usuelles, comme sin ou exp
+      catch(error){return eval(evaluatedExpression)} 
     }
     else {
     return value; 
     }
   }
-
-  const ExcelDate=(value)=>{
-    const startDate = new Date(1900, 0, 1); // Date de départ : 1 janvier 1900
-    return new Date(startDate.getTime() + (value - 2) * 24 * 60 * 60 * 1000).toLocaleDateString();
-  }
-
   const onCellValueChanged = (event) => {
     const data=event.data; 
     const col=event.colDef.field;
