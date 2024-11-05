@@ -2,7 +2,7 @@ import axios from "axios";
 
 function getCookie(name) {
     let cookieValue = null;
-    if (document.cookie && document.cookie !== '') {
+    if (typeof document!=='undefined' && document.cookie && document.cookie !== '') {
         const cookies = document.cookie.split(';');
         for (let i = 0; i < cookies.length; i++) {
             const cookie = cookies[i].trim();
@@ -22,7 +22,7 @@ function getCookie(name) {
 const fetchCsrfToken = async () => {
     try {
         // On peut effectuer un appel pour s'assurer que le token est bien envoyé
-        await axios.get(window.location.origin+'/set-csrf-token', { withCredentials: true });
+        await axios.get(typeof window !=='undefined'?(window.location.origin+'/set-csrf-token'):'https://simr-xxm0.onrender.com/set-csrf-token', { withCredentials: true });
         
         // Récupère le token CSRF à partir du cookie
         const csrfToken = getCookie('csrftoken');
