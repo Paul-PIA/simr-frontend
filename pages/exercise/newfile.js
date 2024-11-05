@@ -8,7 +8,7 @@ export default function NewFile() {
   const [file, setFile] = useState(null);
   const [exerciseId, setExerciseId] = useState(null);
 
-  const {Content,Footer}=Layout;
+  const {Content}=Layout;
 
   const fetchCon=async ()=>
     {    try {
@@ -60,7 +60,8 @@ export default function NewFile() {
         }
       });
       alert("Fichier créé avec succès !");
-      window.location = `/exercise?id=${exerciseId}`;
+      if (typeof window==!'undefined'){
+      window.location = `/exercise?id=${exerciseId}`}
     } catch (error) {
       console.error("Erreur lors de la création du fichier :", error);
       alert(`Échec de la création du fichier.${error.request.response}`);
