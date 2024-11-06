@@ -2,8 +2,8 @@
   name: nextjs-static
   runtime: static
   buildCommand: yarn; yarn build
-  staticPublishPath: out
+  staticPublishPath: .next
   pullRequestPreviewsEnabled: true     # optional
   envVars:
-  - key: NODE_ENV
-    value: production
+    - key: NODE_ENV
+      value: production
