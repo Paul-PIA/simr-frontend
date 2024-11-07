@@ -19,17 +19,6 @@ export default function ExercisePage({id}) {
 
   // Fonction pour récupérer les informations de l'exercice
   const fetchEx = async () => {
-    try{
-        const response=await apiClient({
-          method:'POST',
-          path:'token/refresh/',
-          data:{refresh:localStorage.getItem('refresh')}
-        });
-        localStorage.setItem('access',response.access);
-      }
-      catch (error){
-        window.location='./auth';
-      }
     const response = await apiClient({
         method:'GET',
         path:`exercise/${id}/`

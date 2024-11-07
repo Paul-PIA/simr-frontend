@@ -18,7 +18,7 @@ export default function Contract() {  // Récupérer l'ID du contrat depuis l'UR
         data:{refresh:localStorage.getItem('refresh')}
       });
       localStorage.setItem('access',tok.access);
-    } catch(error){ window.location='./auth'}
+    } catch(error){ window.location='/auth'}
     try{
       const queryParams = new URLSearchParams(window.location.search);
       const id = queryParams.get('id');
