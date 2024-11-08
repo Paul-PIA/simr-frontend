@@ -9,6 +9,7 @@ export default function Register() {
         <form 
   name="register" 
   onSubmit={async (e) => {
+    try{
     e.preventDefault();
     await apiClientNotoken({
       method: 'POST',
@@ -20,8 +21,12 @@ export default function Register() {
         password2: document.forms.register.password2.value
       }
     });
+    alert('E-mail de confirmation envoyé');
     window.location=window.location
-  }}>
+  }catch(error){
+    alert(error.request.responseText)
+    console.log(error)
+  }}}>
           <label>
             <input
               type="text"

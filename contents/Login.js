@@ -1,8 +1,9 @@
 import React, { useState } from "react";
-import { apiClientNotoken,apiClientGetoken,apiClient } from "../services/api";
-import { getToken, setToken } from "../services/jwt";
+import { apiClientNotoken,apiClientGetoken } from "../services/api";
 
 export default function Login() {
+  const [submitted,setSubmitted]=useState(false);
+  const[erreur,setErreur]=useState(false);
   return (
     <div>
       <div className="auth-form">
@@ -10,7 +11,9 @@ export default function Login() {
         <form 
   name="login" 
   onSubmit={async (e) => {
+    try {
     e.preventDefault();
+    setSubmitted(true);
     await apiClientNotoken({
       method: 'POST',
       path: 'auth/login/',
@@ -31,8 +34,12 @@ export default function Login() {
     //   method:'GET',
     //   path:'adam'
     // })
-    window.location='..'
-  }}
+    window.location='/'
+  }catch(error){
+    setSubmitted(false);
+    setErreur(true)
+  }}}
+  
 >
           <label>
             Username&nbsp;
@@ -42,7 +49,7 @@ export default function Login() {
             Password&nbsp;&nbsp;
             <input type="password" name="password" />
           </label>
-          <button type="submit">Login</button>
+          <button type="submit">{submitted?'Connexion...':erreur?'erreur':'Login'}</button>
         </form>
 
         {/* <div className="auth-links">
