@@ -10,6 +10,7 @@ import ContractHomePage from "../contents/ContractHomePage";
 
 const { Content } = Layout;
 
+//Ce code gère l'affichage de la page d'accueil
 export default function Layout_() {
   const HeaderClick = (contentKey) => {
     switch (contentKey) {

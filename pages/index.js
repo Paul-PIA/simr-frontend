@@ -8,7 +8,7 @@ export default function Home() {
   async function test() {
     
   
-  try{
+  try{ //On vérifie que l'utilisateur est connecté. Si ce n'est pas le cas (ou que la connection a expiré), on le redirige vers la page d'authentification
     const response=await apiClient({
       method:'POST',
       path:'token/refresh/',
