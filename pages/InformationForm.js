@@ -40,25 +40,25 @@ export default function Inscription() {
   }}
 >
           <label>
-            First name&nbsp;&nbsp;
+            Prénom&nbsp;&nbsp;
             <input type="text" 
             name="first" 
             required/>
           </label>
           <label>
-            Last name&nbsp;&nbsp;
+            Nom&nbsp;&nbsp;
             <input type="text" 
             name="last" 
             required/>
           </label>
           <label>
-            Phone number&nbsp;&nbsp;
+            Téléphone&nbsp;&nbsp;
             <input type="tel" 
             name="tel" 
             required/>
           </label>
           <label>
-            City&nbsp;&nbsp;
+            Ville&nbsp;&nbsp;
             <input type="text" 
             name="city" 
             required/>
@@ -69,7 +69,7 @@ export default function Inscription() {
         onChange={(e) => setSelectedOrg(e.target.value)} // Mise à jour de l'organisation sélectionnée
         required
       >
-        <option value="" disabled>Select an organization</option>
+        <option value="" disabled>Sélectionnez votre organisation</option>
         {org.map((o) => (
           <option key={o.id} value={o.id}>
             {o.name}

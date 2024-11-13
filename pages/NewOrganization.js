@@ -35,7 +35,7 @@ export default function CreateNewOrganization() {
         <h2>Create New Organization</h2>
         <form name="organization" onSubmit={handleSubmit}>
           <label>
-            Name&nbsp;
+            Nom de l'organisation&nbsp;
             <input
               type="text"
               name="name"
@@ -55,7 +55,7 @@ export default function CreateNewOrganization() {
             />
           </label>
           <label>
-            Telephone&nbsp;
+            Téléphone&nbsp;
             <input
               type="tel"
               name="telephone"
@@ -65,7 +65,7 @@ export default function CreateNewOrganization() {
             />
           </label>
           <label>
-            Address&nbsp;
+            Addresse&nbsp;
             <input
               type="text"
               name="address"
@@ -75,7 +75,7 @@ export default function CreateNewOrganization() {
             />
           </label>
           <label>
-            Postcode&nbsp;
+            Code postal&nbsp;
             <input
               type="text"
               name="postcode"
@@ -86,7 +86,7 @@ export default function CreateNewOrganization() {
           </label>
 
           <button type="submit" className="submit-btn">
-            Create Organization
+            Créer l'organisation
           </button>
         </form>
       </div>
