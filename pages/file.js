@@ -238,7 +238,7 @@ const {Content,Header}=Layout;
           </button>
         </div>
       </div>
-      <div>{commenting? 'Appuyer sur la case à commenter':null}</div>
+      <div>{commenting && 'Appuyer sur la case à commenter'}</div>
       
         <ExcelToAgGrid
           fileBuffer={doc}

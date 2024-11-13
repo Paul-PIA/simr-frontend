@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+
+//Ce code crée le bouton de retour à l'accueil qui est utilisé par les autres pages. Le paramètre st permet de rajouter des styles supplémentaires
 const HomePageButton = ({st}) => {
   const [mouse,setMouse]=useState(false)
 

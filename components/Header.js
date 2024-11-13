@@ -28,7 +28,7 @@ export default function Header_({ onMenuClick }){
             <div style={{ marginRight: 24}}>
                 <Space size="middle">
                     <Avatar title={"Accueil"} style={{backgroundColor: '#0056b3',cursor:'pointer'}} icon ={<HomeFilled/>} onClick={()=>onMenuClick('')}/>
-                <Avatar title ={"Profil"} style={{ backgroundColor: '#87d068', cursor: 'pointer' }} icon={<UserOutlined />} onClick={() => onMenuClick('Profile')}/>
+                    <Avatar title ={"Profil"} style={{ backgroundColor: '#87d068', cursor: 'pointer' }} icon={<UserOutlined />} onClick={() => onMenuClick('Profile')}/>
                     <Avatar title={"Notifications"} style={{ backgroundColor: '#f56a00', cursor: 'pointer' }} icon={<NotificationOutlined />} onClick={() => onMenuClick('Notifications')}/>
                     <Avatar title={"Paramètres"} style={{ backgroundColor: '#7265e6', cursor: 'pointer' }} icon={<SettingOutlined />} onClick={() => onMenuClick('Settings')}/>
                     <Avatar title={"Se déconnecter"} style={{ backgroundColor: '#ffbf00', cursor: 'pointer' }} icon={<LogoutOutlined />} 
