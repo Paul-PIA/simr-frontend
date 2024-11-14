@@ -28,7 +28,7 @@ export default function Settings() {
         setComment(response.newcomment);
         setMessage(response.newmessage);
 };
-    const [frequence, setFrequence] = useState(5);
+    const [frequence, setFrequence] = useState(255);
     const [file, setFile] = useState(true);
     const [change, setChange] = useState(true);
     const [comment, setComment] = useState(true);
