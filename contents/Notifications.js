@@ -59,7 +59,7 @@ export default function Notifications() {
   };
   const [currentPage, setCurrentPage] = useState(1);
   const pageSize = 1;
-  const [data, setData] = useState([{}]);
+  const [data, setData] = useState([]);
 
   const total = data.length;
   const totalPages = Math.ceil(total / pageSize);
