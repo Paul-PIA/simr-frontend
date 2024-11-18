@@ -11,9 +11,29 @@ export default function Login() {
         <form 
   name="login" 
   onSubmit={async (e) => {
-    try {
     e.preventDefault();
     setSubmitted(true);
+    const queryParams = new URLSearchParams(window.location.search);
+    const url = queryParams.get('next_url');
+    if (url){
+      try{
+        await apiClientGetoken({
+          method: 'POST',
+          path: 'token/',
+          data: {
+            username: document.forms.login.username.value,
+            password: document.forms.login.password.value
+          }
+        });
+        window.location=url
+      }
+      catch(error){
+        setSubmitted(false);
+        setErreur(true)
+      }
+    }
+    else{
+    try {
     await apiClientNotoken({
       method: 'POST',
       path: 'auth/login/',
@@ -38,7 +58,7 @@ export default function Login() {
   }catch(error){
     setSubmitted(false);
     setErreur(true)
-  }}}
+  }}}}
   
 >
           <label>

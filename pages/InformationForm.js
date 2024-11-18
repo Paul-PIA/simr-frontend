@@ -7,11 +7,15 @@ export default function Inscription() {
   const [org,setOrg]=useState([]);
   const [selectedOrg, setSelectedOrg] = useState("");
   const fetchOrgs=async()=>{
+    try{
     const response=await apiClient({
       method:'GET',
       path:'organization/?ordering=name'
     });
     setOrg(response)
+  }
+  catch(error)
+  {window.location='/auth?next_url=/InformationForm'}
   }
   useEffect(()=>{fetchOrgs()},[]);
   return (
