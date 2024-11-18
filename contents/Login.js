@@ -30,7 +30,7 @@ export default function Login() {
         password: document.forms.login.password.value
       }
     });
-    // await apiClient({
+    // await apiClient({ // Lors de la première création de compte, il vaut mieux effectuer cette requête depuis l'interface swagger-ui
     //   method:'GET',
     //   path:'adam'
     // })

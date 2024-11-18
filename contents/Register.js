@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { apiClientNotoken } from "../services/api";
+import { apiClientNotoken,apiClientGetoken } from "../services/api";
 
 export default function Register() {
   return (
@@ -22,6 +22,14 @@ export default function Register() {
       }
     });
     alert('E-mail de confirmation envoyé');
+    await apiClientGetoken({
+      method: 'POST',
+      path: 'token/',
+      data: {
+        username: document.forms.login.username.value,
+        password: document.forms.login.password.value
+      }
+    });
     window.location=window.location
   }catch(error){
     alert(error.request.responseText)

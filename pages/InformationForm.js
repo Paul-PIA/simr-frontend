@@ -17,11 +17,12 @@ export default function Inscription() {
   return (
     <div>
       <div className="inscription-form">
-        <h2>Please fill in the necessary information</h2>
+        <h2>Veuillez remplir vos informations personnelles</h2>
         <form 
   name="inscription" 
   onSubmit={async (e) => {
     e.preventDefault();
+    try{
     const token=localStorage.getItem('access');
     const decoded=jwtDecode(token);
     const id=decoded.user_id;
@@ -36,7 +37,11 @@ export default function Inscription() {
         org: selectedOrg // Envoi de l'organisation sélectionnée
       }
     });
-    window.location='../'
+    window.location='../'}
+    catch(error){
+      alert(error.request.responseText);
+      console.log(error)
+    }
   }}
 >
           <label>
@@ -77,7 +82,7 @@ export default function Inscription() {
         ))}
       </select>
 
-          <button type="submit">Save</button>
+          <button type="submit">Valider</button>
         </form>
 
       </div>
