@@ -46,7 +46,7 @@ export default function Sider_({fix}) {
       })
     ));
     if (fich.length>0){
-    const fichiers=fich.reduce((pre, cur) =>
+    const fichiers=fich.reduce((pre, cur) => //Pareil que pour exercices: on applatit la liste
       pre.concat(cur));
 const droits=await Promise.all(fichiers.map(
   async (file)=>await apiClient({
@@ -56,6 +56,8 @@ const droits=await Promise.all(fichiers.map(
 ));
 setFiles(fichiers.filter((file,index)=>file.is_public || droits[index].user.includes(id) || droits[index].org.includes(org)))
 }}}};
+//On garde les fichiers qui sont publics, auxquels on a accès, ou auxquels notre organisation a accès
+
 
   useEffect(()=>{fetchContractsAndMore()},[]);
   const handleOpenChange = (keys) => {
