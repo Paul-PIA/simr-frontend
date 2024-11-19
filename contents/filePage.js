@@ -3,19 +3,24 @@ import { apiClient } from '../services/api';
 import { jwtDecode } from 'jwt-decode';
 
 export default function ExercisePage({id}) {
+
+if (!id){return (<div>Chargement ...</div>)}
+
   const [user,setUser]=useState({});
   const [exercise, setExercise] = useState({});
   const [selectedSpace, setSelectedSpace] = useState('Mon espace');
   const [allFiles,setallFiles]=useState([]);
-  const [rights,setRights]=useState([]);
+  const [rights,setRights]=useState([]); //Droits d'accès des fichiers
   const [files, setFiles] = useState([]);
   const [orgConRights,setOrgConrights]=useState({});
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showPublicModal,setShowPublicModal]=useState(false);
   const [showShareModal,setShowShareModal]=useState(false);
+  const [showFinalModal,setShowFinalModal]=useState(false);
   const [fileToDelete, setFileToDelete] = useState(null);
   const [fileToPublic,setFileToSharePublic]=useState(null);
   const [fileToShare,setFileToShare]=useState(null);
+  const [fileToFinalize,setFileToFinalize]=useState(null);
 
   // Fonction pour récupérer les informations de l'exercice
   const fetchEx = async () => {
@@ -92,6 +97,11 @@ export default function ExercisePage({id}) {
     setFileToShare(file);
     setShowShareModal(true);
   };
+
+  const handleFinal= (file)=>{
+    setFileToFinalize(file);
+    setShowFinalModal(true)
+  }
   // Confirmer la suppression du fichier
   const confirmDelete = async() => {
     await apiClient({
@@ -127,6 +137,17 @@ export default function ExercisePage({id}) {
     setShowShareModal(false);
     setFileToShare(null);
   };
+
+  const confirmFinal = async ()=>{
+    await apiClient({
+      method:'PATCH',
+      path:`setfilestate/${fileToFinalize.id}/`,
+      data:{is_final:true}
+    });
+    alert (`Fichier ${fileToFinalize.name} est définitf`);
+    setShowFinalModal(false);
+    setFileToFinalize(null)
+  }
   // Annuler la suppression
   const cancelDelete = () => {
     setShowDeleteModal(false);
@@ -140,6 +161,10 @@ export default function ExercisePage({id}) {
   const cancelShare = () => {
     setShowShareModal(false);
     setFileToShare(null);
+  };
+  const cancelFinal = () => {
+    setShowFinalModal(false);
+    setFileToFinalize(null);
   };
 
   if (!exercise.name) {
@@ -185,7 +210,7 @@ export default function ExercisePage({id}) {
           {files.length > 0 ? (
             files.map((file,index) => (
               <div key={file.id} style={styles.fileRow}>
-                <span>{file.name}</span>
+                <span>{file.name} {file.is_final && ("(Version finale)")}</span>
                 <a href={`${window.location.origin}/file?id=${file.id}`}>
                 <button style={styles.blueButton}>
                   Ouvrir
@@ -205,6 +230,11 @@ export default function ExercisePage({id}) {
                 <button style={styles.redButton} onClick={() => handleDelete(file)}>
                   Supprimer
                 </button>
+                {selectedSpace=="Public" && orgConRights.is_principal && orgConRights.chief==user.id && !file.is_final &&(
+                  <button style={styles.blueButton} onClick={() => handleFinal(file)}>
+                    Finaliser
+                  </button>
+                )}
               </div>
             ))
           ) : (
@@ -258,9 +288,26 @@ export default function ExercisePage({id}) {
           </div>
         </div>
       )}
+      {showFinalModal && (
+        <div style={styles.modal}>
+          <div style={styles.modalContent}>
+            <p>Etes-vous sûr(e) de vouloir valider définitivement  {fileToFinalize.name} ?</p>
+            <div>
+              <button style={styles.whiteButton} onClick={cancelFinal}>
+                Annuler
+              </button>
+              <button style={styles.redButton} onClick={confirmFinal}>
+                Confirmer
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+      
     </div>
   );
 }
+
 
 const styles = {
   pageContainer: {

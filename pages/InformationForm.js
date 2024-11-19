@@ -8,13 +8,13 @@ export default function Inscription() {
   const [selectedOrg, setSelectedOrg] = useState("");
   const fetchOrgs=async()=>{
     try{
-    const response=await apiClient({
+    const response=await apiClient({ //Récupère depuis le back toutes les organisations existences, par ordre alphabétique
       method:'GET',
       path:'organization/?ordering=name'
     });
     setOrg(response)
   }
-  catch(error)
+  catch(error) //Une erreur provient vraisemblablement d'un token invalide: on demande à l'utilisateur de se réauthentifier
   {window.location='/auth?next_url=/InformationForm'}
   }
   useEffect(()=>{fetchOrgs()},[]);

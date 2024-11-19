@@ -11,7 +11,7 @@ export default function Login() {
         <form 
   name="login" 
   onSubmit={async (e) => {
-    e.preventDefault();
+    e.preventDefault(); //Empêche le rechargement automatique de la page
     setSubmitted(true);
     const queryParams = new URLSearchParams(window.location.search);
     const url = queryParams.get('next_url');

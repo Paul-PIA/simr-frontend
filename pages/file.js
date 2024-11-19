@@ -28,10 +28,11 @@ const {Content,Header}=Layout;
   const [charts, setCharts] = useState([]);
 
   const conversionPourEnvoie=(doc)=>{
+    // créer un ArrayBuffer à partir de l'excel
     const excelBuffer = XLSX.write(doc, { bookType: 'xlsx', type: 'array' });
-    // 3. Créer un objet Blob à partir du fichier binaire
+    //  Créer un objet Blob à partir du fichier binaire
     const blob = new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-    // 4. Créer un objet File en spécifiant le nom du fichier
+    //  Créer un objet File en spécifiant le nom du fichier
     const file = new File([blob], 'modifications.xlsx', { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
     return file
   }
@@ -60,7 +61,7 @@ const {Content,Header}=Layout;
           method: 'GET',
           path: response.content
         });
-        const workbook = XLSX.read(fichier, { type: 'array' });
+        const workbook = XLSX.read(fichier, { type: 'array' }); //Convertit le ArrayBuffer reçu en fichier Excel
         setDoc(workbook);
         const worksheet = workbook.Sheets[workbook.SheetNames[0]];
         const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
