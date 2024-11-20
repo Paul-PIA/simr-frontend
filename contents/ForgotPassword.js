@@ -1,11 +1,11 @@
-import React, { useState } from "react";
+import React from "react";
 import { apiClientNotoken } from "../services/api";
 
 export default function ForgotPassword() {
   return (
     <div>
       <div className="auth-form">
-        <h2>Forgot Password</h2>
+        <h2>Mot de passe oublié</h2>
         <form 
   name="forgot" 
   onSubmit={async (e) => {
@@ -28,7 +28,7 @@ export default function ForgotPassword() {
               required
             />
           </label>
-          <button type="submit">Send email</button>
+          <button type="submit">Envoyer</button>
         </form>
       </div>
       <style jsx="true">{`

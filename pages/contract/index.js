@@ -5,10 +5,10 @@ import _Sider from "../../components/Sidebar";
 import { Layout } from 'antd';
 
 export default function Contract() {  // Récupérer l'ID du contrat depuis l'URL
-  const [contract, setContract] = useState(null);
-  const [org_names,setOrg_names]=useState([]);
-  const [exercises, setExercises] = useState([]);
-  const [orgPrincipale,setOrgPrincipale]=useState(0);
+  const [contract, setContract] = useState(null); //Dictionnaire représentant le contract. Voir "API documentation" pour les clés.
+  const [org_names,setOrg_names]=useState([]); //Noms des organisations faisant partie du contract
+  const [exercises, setExercises] = useState([]); //Liste des exercices du contract
+  const [orgPrincipale,setOrgPrincipale]=useState(-1); //Indice de l'organisation principale du contract
 
   const {Content}=Layout;
   const fetchContract = async () => {

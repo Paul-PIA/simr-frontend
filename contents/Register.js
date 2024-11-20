@@ -1,11 +1,11 @@
-import React, { useState } from "react";
+import React from "react";
 import { apiClientNotoken,apiClientGetoken } from "../services/api";
 
 export default function Register() {
   return (
     <div>
       <div className="auth-form">
-        <h2>Register</h2>
+        <h2>Créer un compte</h2>
         <form 
   name="register" 
   onSubmit={async (e) => {
@@ -67,7 +67,7 @@ export default function Register() {
               required
             />
           </label>
-          <button type="submit">Register</button>
+          <button type="submit">Enregistrer</button>
         </form>
       </div>
       <style jsx="true">{`

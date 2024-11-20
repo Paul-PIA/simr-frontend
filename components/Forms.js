@@ -20,13 +20,13 @@ export default function Forms({ item }) {
               className="link-button"
               onClick={() => setCurrentForm("register")}
             >
-              Not have account?
+              Pas de compte ?
             </button>
             <button
               className="link-button"
               onClick={() => setCurrentForm("forgot")}
             >
-              Forgot Password?
+              Mot de passe oublié ?
             </button>
           </div>
         )}
@@ -36,13 +36,13 @@ export default function Forms({ item }) {
               className="link-button"
               onClick={() => setCurrentForm("login")}
             >
-              Login
+              Se connecter
             </button>
             <button
               className="link-button"
               onClick={() => setCurrentForm("register")}
             >
-              Not have account?
+              Pas de compte ?
             </button>
           </div>
         )}
@@ -52,13 +52,13 @@ export default function Forms({ item }) {
               className="link-button"
               onClick={() => setCurrentForm("login")}
             >
-              Have already an account?
+              Déjà un compte ?
             </button>
             <button
               className="link-button"
               onClick={() => setCurrentForm("forgot")}
             >
-              Forgot Password?
+              Mot de passe oublié ?
             </button>
           </div>
         )}
