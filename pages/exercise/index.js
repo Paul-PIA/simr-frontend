@@ -4,11 +4,23 @@ import {Layout} from 'antd';
 import Sider_ from '../../components/Sidebar';
 import _Footer from "../../components/Footer";
 import ExercisePage from '../../contents/filePage';
+import { apiClient } from '../../services/api';
 
 export default function ExerPage() {
   const[id,setId]=useState(null);
 
-  const fetch=async()=>{
+  const fetch=async ()=>{
+    try{
+      const response=await apiClient({
+        method:'POST',
+        path:'token/refresh/',
+        data:{refresh:localStorage.getItem('refresh')}
+      });
+      localStorage.setItem('access',response.access);
+    }
+    catch (error){
+      window.location='/auth'
+    }
   const queryParams = new URLSearchParams(window.location.search);
   setId(queryParams.get('id')) }
 
