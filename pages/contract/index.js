@@ -8,6 +8,7 @@ export default function Contract() {  // Récupérer l'ID du contrat depuis l'UR
   const [contract, setContract] = useState(null);
   const [org_names,setOrg_names]=useState([]);
   const [exercises, setExercises] = useState([]);
+  const [orgPrincipale,setOrgPrincipale]=useState(0);
 
   const {Content}=Layout;
   const fetchContract = async () => {
@@ -31,12 +32,19 @@ export default function Contract() {  // Récupérer l'ID du contrat depuis l'UR
         response.org.map(async (orga) => {
           const Orgesponse=await apiClient({
             method: 'GET',
-            path: `organization/${orga}/`,
-            data:{}
+            path: `organization/${orga}/`
           });
           return Orgesponse.name
         }));
           setOrg_names(l);
+      const indicePrincipale=response.org.findIndex(async (org_id)=>{
+        const right=await apiClient({
+          method:'GET',
+          path:`orgconright/?org=${org_id}&con=${id}`
+        });
+        return right[0].is_principal
+      });
+      setOrgPrincipale(indicePrincipale)
 
         const l_ex=await apiClient({
             method:'GET',
@@ -71,7 +79,7 @@ useEffect(()=>{fetchContract()},[]);
         <ul>
           {org_names.length > 0 ? (
             org_names.map((orgName, index) => (
-              <li key={index} style={styles.listItem}>{orgName}</li>
+              <li key={index} style={styles.listItem}>{orgName} {orgPrincipale==index && "(Organisation principale)"}</li>
             ))
           ) : (
             <p>Aucune organisation trouvée.</p>
