@@ -9,7 +9,7 @@ const API_URL = SERVER_URL; // switch LOCAL_URL or SERVER_URL to adapt the envir
 
 axios.defaults.withCredentials = true;
 
-export const apiClient = async ({ method, path, data }) => {
+export const apiClient = async ({ method, path, data }) => { //Voir plus bas pour les cas particuliers
     const url = `${API_URL}/${path}`;
     const token = localStorage.getItem('access');
     try {
@@ -25,7 +25,7 @@ export const apiClient = async ({ method, path, data }) => {
     }
 };
 
-export const apiClientNotoken = async ({ method, path, data }) => {
+export const apiClientNotoken = async ({ method, path, data }) => { //A utiliser quand on n'a pas de token, par exemple pour créer un compte
     const url = `${API_URL}/${path}`;
     try {
         const response = await axios({ method, url, headers: {
@@ -39,7 +39,7 @@ export const apiClientNotoken = async ({ method, path, data }) => {
     }
 };
 
-export const apiClientGetoken = async ({ method, path, data }) => {
+export const apiClientGetoken = async ({ method, path, data }) => { //A utiliser pour récupérer les 2 tokens depuis le backend
     const url = `${API_URL}/${path}`;
     try {
         const response = await axios({ method, url, headers: {
@@ -55,7 +55,7 @@ export const apiClientGetoken = async ({ method, path, data }) => {
     }
 };
 
-export const apiClientGetFile = async ({ method, path, data }) => {
+export const apiClientGetFile = async ({ method, path, data }) => { //A utiliser pour récupérer les fichiers Excel depuis le backend
     const url = path;
     const token = localStorage.getItem('access');
     try {

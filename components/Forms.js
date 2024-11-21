@@ -9,7 +9,7 @@ const { Content } = Layout;
 const FormContext = createContext();
 
 export default function Forms({ item }) {
-  const [currentForm, setCurrentForm] = useState("login");
+  const [currentForm, setCurrentForm] = useState("login"); //3 états possibles: login, register et forgot
 
   const renderButton = () => {
     return (
