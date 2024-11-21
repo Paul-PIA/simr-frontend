@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { apiClient } from '../../services/api';
+import { apiClient, apiRefresh } from '../../services/api';
 import HomePageButton from '../../components/HomePageButton';
 import _Sider from "../../components/Sidebar";
 import { Layout } from 'antd';
@@ -12,14 +12,7 @@ export default function Contract() {  // Récupérer l'ID du contrat depuis l'UR
 
   const {Content}=Layout;
   const fetchContract = async () => {
-    try {
-      const tok=await apiClient({
-        method:'POST',
-        path:'token/refresh/',
-        data:{refresh:localStorage.getItem('refresh')}
-      });
-      localStorage.setItem('access',tok.access);
-    } catch(error){ window.location='/auth'}
+    await apiRefresh();
     try{
       const queryParams = new URLSearchParams(window.location.search);
       const id = queryParams.get('id');

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { apiClient } from "../../services/api";
+import { apiClient, apiRefresh } from "../../services/api";
 import HomePageButton from "../../components/HomePageButton";
 import { Layout } from "antd";
 import Sider_ from "../../components/Sidebar";
@@ -10,19 +10,12 @@ export default function NewFile() {
 
   const {Content}=Layout;
 
-  const fetchCon=async ()=>
-    {    try {
-      const tok=await apiClient({
-          method:'POST',
-          path:'token/refresh/',
-          data:{refresh:localStorage.getItem('refresh')}
-        });
-        localStorage.setItem('access',tok.access)}
-        catch(error){if (typeof window !=='undefined'){window.location='../../auth'}}
-       if (typeof window !=='undefined'){
-      const params = new URLSearchParams(window.location.search);
-      const exer_id = params.get('exer_id');
-      setExerciseId(exer_id);
+  const fetchCon=async ()=>{  
+    await apiRefresh();
+    if (typeof window !=='undefined'){
+    const params = new URLSearchParams(window.location.search);
+    const exer_id = params.get('exer_id');
+    setExerciseId(exer_id);
     }
   }
 

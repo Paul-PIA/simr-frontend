@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { apiClient } from "../../services/api";
+import { apiClient, apiRefresh } from "../../services/api";
 import { Layout } from "antd";
 import HomePageButton from "../../components/HomePageButton";
 import Sider_ from "../../components/Sidebar";
@@ -22,14 +22,7 @@ const [contractId,setContractId]=useState(null)
 
   // Récupérer les organisations du contrat
   const fetchContractOrganizations = async () => {
-    try {
-        const tok=await apiClient({
-            method:'POST',
-            path:'token/refresh/',
-            data:{refresh:localStorage.getItem('refresh')}
-          });
-          localStorage.setItem('access',tok.access)}
-          catch(error){window.location='../auth'}
+    await apiRefresh();
     try {
       const queryParams = new URLSearchParams(window.location.search);
       const contract_Id = queryParams.get('con_id');

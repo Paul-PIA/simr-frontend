@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { apiClient } from "../../services/api";
+import { apiClient, apiRefresh } from "../../services/api";
 import HomePageButton from "../../components/HomePageButton";
 import { Layout } from "antd";
 import Sider_ from "../../components/Sidebar";
@@ -12,17 +12,7 @@ export default function EditContract() {
   const {Content}=Layout;
 
   const fetchContract = async () => {
-    try{
-      const response=await apiClient({
-        method:'POST',
-        path:'token/refresh/',
-        data:{refresh:localStorage.getItem('refresh')}
-      });
-      localStorage.setItem('access',response.access);
-    }
-    catch (error){
-      window.location='./auth';
-    }
+    await apiRefresh();
     const queryParams = new URLSearchParams(window.location.search);
     const contractId = queryParams.get("id");
     const response = await apiClient({

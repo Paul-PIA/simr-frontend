@@ -5,7 +5,7 @@ import { csrfToken } from './jwt';
 const LOCAL_URL = 'http://127.0.0.1:8000/api';
 const SERVER_URL = typeof window !=='undefined'?(window.location.origin+'/api'):('https://simr-yo8m.onrender.com/api'); // fill in this url with your adress of backend server 
 
-const API_URL = SERVER_URL; // switch LOCAL_URL or SERVER_URL to adapt the environment 
+const API_URL = LOCAL_URL; // switch LOCAL_URL or SERVER_URL to adapt the environment 
 
 axios.defaults.withCredentials = true;
 
@@ -70,3 +70,17 @@ export const apiClientGetFile = async ({ method, path, data }) => { //A utiliser
         throw error;
     }
 };
+
+export const apiRefresh=async()=>{ //A utiliser pour refresh le token d'accès
+    try {
+        const response=await apiClient({
+            method:'POST',
+            path:'token/refresh/',
+            data:{refresh:localStorage.refresh}
+        });
+        localStorage.setItem('access',response.access)
+    }
+    catch(error){
+        window.location='/auth'
+    }
+}

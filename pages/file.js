@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-alpine.css';
-import { apiClient, apiClientGetFile } from '../services/api';
+import { apiClient, apiClientGetFile, apiRefresh } from '../services/api';
 import ExcelToAgGrid from '../contents/AffichageGrid';
 import * as XLSX from 'xlsx';
 import HomePageButton from '../components/HomePageButton';
@@ -38,17 +38,7 @@ const {Content,Header}=Layout;
   }
   useEffect(() => { //Importe depuis le backend toutes les données utiles
     const fetchFile = async () => {
-      try {
-        const response = await apiClient({
-          method: 'POST',
-          path: 'token/refresh/',
-          data: { refresh: localStorage.getItem('refresh') },
-        });
-        localStorage.setItem('access', response.access);
-      } catch (error) {
-        window.location = '../auth';
-      }
-
+      await apiRefresh();
       const queryParams = new URLSearchParams(window.location.search);
       const id = queryParams.get('id');
       const response = await apiClient({
