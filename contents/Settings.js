@@ -2,19 +2,14 @@ import React, { useEffect, useState } from 'react';
 import { Card, Typography,Button} from 'antd';
 import SettingItem from '../components/SettingItem';
 import CombinedSettingItem from '../components/CombinedSettingItem';
-import { apiClient } from '../services/api';
+import { apiClient, apiRefresh } from '../services/api';
 import { jwtDecode } from 'jwt-decode';
 const { Paragraph } = Typography;
 
 export default function Settings() {
     async function GetSettings(){
 
-        const resp=await apiClient({
-            method:'POST',
-            path:'token/refresh/',
-            data:{refresh:localStorage.getItem('refresh')}
-          });
-          localStorage.setItem('access',resp.access);
+        await apiRefresh();
           const token=localStorage.getItem('access');
           const decoded=jwtDecode(token);
           const id=decoded.user_id ;

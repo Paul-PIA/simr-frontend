@@ -1,18 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { Button, Card, Input} from "antd";
-import {apiClient} from "../services/api";
+import {apiClient, apiRefresh} from "../services/api";
 import { jwtDecode } from "jwt-decode";
 
 
 
 export default function Profile() {
   async function SetFirstProfile(){
-    const rep=await apiClient({
-      method:'POST',
-      path:'token/refresh/',
-      data:{refresh:localStorage.getItem('refresh')}
-    });
-    localStorage.setItem('access',rep.access);
+    await apiRefresh();
     const token=localStorage.getItem('access');
     const decoded=jwtDecode(token);
     const id=decoded.user_id;
@@ -45,12 +40,7 @@ const [editProfile, setEditProfile] = useState(profile);
   const handleEditToggle =async () => {
     if (isEditing) {
       setProfile(editProfile);
-      const rep=await apiClient({
-        method: 'POST',
-        path: 'token/refresh/',
-        data: {refresh:localStorage.getItem('refresh')}
-      });
-      localStorage.setItem('access',rep.access);
+      await apiRefresh();
       const token=localStorage.getItem('access');
       const decoded=jwtDecode(token);
       const id=decoded.user_id ;

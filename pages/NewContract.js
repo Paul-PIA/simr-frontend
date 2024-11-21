@@ -1,7 +1,7 @@
 import React, {useState,useEffect } from "react";
 import HomePageButton from "../components/HomePageButton";
 import { jwtDecode } from "jwt-decode";
-import { apiClient } from "../services/api";
+import { apiClient, apiRefresh } from "../services/api";
 import _Sider from "../components/Sidebar";
 
 //Actuellement, l'organisation de l'utilisateur qui crée le contract est supposé être l'organisation principale du contract
@@ -9,19 +9,10 @@ import _Sider from "../components/Sidebar";
 export default function NewContract(){
     const handleSubmit=async(e)=>{
         e.preventDefault();
-        try {
-            const response = await apiClient({
-              method: 'POST',
-              path: 'token/refresh/',
-              data: { refresh: localStorage.getItem('refresh') },
-            });
-            localStorage.setItem('access', response.access);
-          } catch (error) {
-            window.location = './auth';
-          }
-          const token=localStorage.getItem('access');
-          const decoded=jwtDecode(token);
-          const id=decoded.user_id ;
+        await apiRefresh();
+        const token=localStorage.getItem('access');
+        const decoded=jwtDecode(token);
+        const id=decoded.user_id ;
         const user=await apiClient({
             method:'GET',
             path:`user/${id}/`

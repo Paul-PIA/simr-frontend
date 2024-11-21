@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { apiClient } from "../services/api";
+import React from "react";
+import { apiClient, apiRefresh } from "../services/api";
 
 export default function ChangePassword() {
   return (
@@ -10,11 +10,7 @@ export default function ChangePassword() {
   name="change" 
   onSubmit={async (e) => {
     e.preventDefault();
-    await apiClient({
-      method:'POST',
-      path:'token/refresh/',
-      data:{refresh:localStorage.getItem('refresh')}
-    });
+    await apiRefresh();
     await apiClient({
       method: 'POST',
       path: 'api/auth/password/change',
