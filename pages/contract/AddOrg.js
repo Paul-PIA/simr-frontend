@@ -68,13 +68,15 @@ export default function EditContract() {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    try{
     const IdOrga= await Promise.all(
       newOrganizations.map(async (value)=>{
+        
         const response=await apiClient({
           method:'GET',
-          path:`organization/?name=${value.name}`
+          path:`organization/?name=${value.name}` //Le nom est unique, donc aucun risque d'avoir plusieurs organisations avec le même nom
         });
-        return response.id
+        return response[0].id
       })
     );
     const data={};
@@ -88,7 +90,11 @@ export default function EditContract() {
       path:`invitechief/${contractId}/`,
       data:data
     })  
-    
+  }
+  catch (error){
+    window.alert('Erreur: vérifiez les noms des organisations et les adresses mail');
+    console.log(error)
+  }
   };
 
   return (

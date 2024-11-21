@@ -178,7 +178,6 @@ useEffect(()=>{fetchContracts()},[]);
     return (
       <div styles={styles.container}>
         <ExercisePage id={exercises[0].id}/>
-        {/* <Button onClick={()=>{window.location=`/exercise?id=${exercises[0].id}`}}>Accéder à la page de mon exercice</Button> */}
       </div>
     )
   }
