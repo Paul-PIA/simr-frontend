@@ -17,7 +17,14 @@ const { Footer } = Layout;
 
 
 export default function _Footer() {
-  const columns = [[<img key={"img"} src={logo.src} alt="Logo-PIA" height={100} width={200} title="Logo-PIA"/>],
+  const columns = [
+    [<a key={"img"} href="https://parisinfrastructureadvisory.com/">
+    <img  
+      src={logo.src} 
+      alt="Logo-PIA" 
+      height={100} 
+      width={200} 
+      title="Logo-PIA"/> </a>],
     [
       <h3 key={1}>
         <a
