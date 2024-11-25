@@ -24,13 +24,13 @@ const handleReply=async (comment,commentText)=>{
   getComments()
 }
 
-const handleDelete=async(comment_id)=>{
-  await apiClient({
-    method:'DELETE',
-    path:`comment/${comment_id}/`
-  });
-  getComments()
-}
+// const handleDelete=async(comment_id)=>{ //Pour utiliser cette fonction: modifier le backend pour permettre au front de connaître l'auteur d'un commentaire
+//   await apiClient({
+//     method:'DELETE',
+//     path:`comment/${comment_id}/`
+//   });
+//   getComments()
+// }
     const handleFuse=async(parent,child)=>{
        await apiClient({
         method:'POST',

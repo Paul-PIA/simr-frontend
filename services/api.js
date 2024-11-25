@@ -62,8 +62,8 @@ export const apiClientGetFile = async ({ path}) => { //A utiliser pour récupér
         const response = await axios({ method:'GET', url, headers: {
             'Authorization': `Bearer ${token}`,
             'X-CSRFToken': csrfToken,
-            "Content-Type": "multipart/form-data",
-        }, responseType: 'arraybuffer', });
+            "Content-Type": "multipart/form-data"
+        }, responseType: 'arraybuffer' }); //responseType permet de dire au backend de renvoyer un fichier compressé
         return response.data;
     } catch (error) {
         console.error(`Failed:`, error);
