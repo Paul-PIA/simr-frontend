@@ -98,7 +98,7 @@ useEffect(()=>{fetchContract()},[]);
             <tr key={exercise.id} style={styles.row}>
             <td style={styles.td}>{exercise.id}</td>
             <td> 
-            <a href={`${window.location.origin}/exercise?id=${exercise.id}`} style={{ ...styles.td, cursor: 'pointer', color: 'blue' }}>
+            <a href={`/exercise?id=${exercise.id}`} style={{ ...styles.td, cursor: 'pointer', color: 'blue' }}>
             {exercise.name} </a> </td>
             <td style={styles.td}>{exercise.date_i}</td>
             <td style={styles.td}>{exercise.date_f}</td>
@@ -112,7 +112,7 @@ useEffect(()=>{fetchContract()},[]);
       </ul>
 
       {/* Button to create a new exercise */}
-      <a href={`${window.location.origin}/contract/new_ex?con_id=${new URLSearchParams(window.location.search).get('id')}`}>
+      <a href={`/contract/new_ex?con_id=${new URLSearchParams(window.location.search).get('id')}`}>
       <button style={styles.button}>
         Créer un nouvel exercice
       </button> </a>

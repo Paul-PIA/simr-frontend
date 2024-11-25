@@ -176,7 +176,7 @@ if (!id){return (<div>Chargement ...</div>)}
       <title>Page d'accueil simR</title>
       <div style={styles.header}>
         {exercise.name || 'Exercice sans titre'} 
-        <a href={`${window.location.origin}/exercise/newfile?exer_id=${exercise.id}`}>
+        <a href={`/exercise/newfile?exer_id=${exercise.id}`}>
         <button style={styles.newFileButton}> 
           Ajouter un nouveau fichier
         </button> </a>
@@ -211,7 +211,7 @@ if (!id){return (<div>Chargement ...</div>)}
             files.map((file,index) => (
               <div key={file.id} style={styles.fileRow}>
                 <span>{file.name} {file.is_final && ("(Version finale)")}</span>
-                <a href={`${window.location.origin}/file?id=${file.id}`}>
+                <a href={`/file?id=${file.id}`}>
                 <button style={styles.blueButton}>
                   Ouvrir
                 </button> </a>

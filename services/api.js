@@ -3,7 +3,7 @@ import { csrfToken } from './jwt';
 
 
 const LOCAL_URL = 'http://127.0.0.1:8000/api';
-const SERVER_URL = typeof window !=='undefined'?(window.location.origin+'/api'):('https://simr-yo8m.onrender.com/api'); // fill in this url with your adress of backend server 
+const SERVER_URL = '/api'; // fill in this url with your adress of backend server 
 
 const API_URL = SERVER_URL; // switch LOCAL_URL or SERVER_URL to adapt the environment 
 
@@ -39,10 +39,10 @@ export const apiClientNotoken = async ({ method, path, data }) => { //A utiliser
     }
 };
 
-export const apiClientGetoken = async ({ method, path, data }) => { //A utiliser pour récupérer les 2 tokens depuis le backend
-    const url = `${API_URL}/${path}`;
+export const apiClientGetoken = async ({ data }) => { //A utiliser pour récupérer les 2 tokens depuis le backend
+    const url = `${API_URL}/token/`;
     try {
-        const response = await axios({ method, url, headers: {
+        const response = await axios({ method:'POST', url, headers: {
             'X-CSRFToken': csrfToken
         }, data });
         const { refresh, access } = response.data;  // Récupère les tokens
@@ -55,15 +55,15 @@ export const apiClientGetoken = async ({ method, path, data }) => { //A utiliser
     }
 };
 
-export const apiClientGetFile = async ({ method, path, data }) => { //A utiliser pour récupérer les fichiers Excel depuis le backend
-    const url = path;
+export const apiClientGetFile = async ({ path}) => { //A utiliser pour récupérer les fichiers Excel depuis le backend
+    const url =(new URL(path)).pathname;
     const token = localStorage.getItem('access');
     try {
-        const response = await axios({ method, url, headers: {
+        const response = await axios({ method:'GET', url, headers: {
             'Authorization': `Bearer ${token}`,
             'X-CSRFToken': csrfToken,
             "Content-Type": "multipart/form-data",
-        }, data,  responseType: 'arraybuffer', });
+        }, responseType: 'arraybuffer', });
         return response.data;
     } catch (error) {
         console.error(`Failed:`, error);

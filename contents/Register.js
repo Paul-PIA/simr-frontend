@@ -23,8 +23,6 @@ export default function Register() {
     });
     alert('E-mail de confirmation envoyé');
     await apiClientGetoken({
-      method: 'POST',
-      path: 'token/',
       data: {
         username: document.forms.login.username.value,
         password: document.forms.login.password.value

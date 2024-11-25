@@ -48,7 +48,6 @@ const {Content,Header}=Layout;
       setfileDetails(response);
       try {
         const fichier = await apiClientGetFile({
-          method: 'GET',
           path: response.content
         });
         const workbook = XLSX.read(fichier, { type: 'array' }); //Convertit le ArrayBuffer reçu en fichier Excel

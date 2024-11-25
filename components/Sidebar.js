@@ -88,7 +88,7 @@ setFiles(fichiers.filter((file,index)=>file.is_public || droits[index].user.incl
           icon={<BookOutlined />} 
         >
           {contracts.map((con,index)=>(
-          <Menu.Item key={"contract"+(index+1)} >  <a href={`${window.location.origin}/contract?id=${con.id}`} ></a>
+          <Menu.Item key={"contract"+(index+1)} >  <a href={`/contract?id=${con.id}`} ></a>
             {con.name}</Menu.Item>
           ))}
         </SubMenu>
@@ -99,7 +99,7 @@ setFiles(fichiers.filter((file,index)=>file.is_public || droits[index].user.incl
         >
           {exercices.map((exer,index)=>(
             
-          <Menu.Item key={"exercise"+(index+1)} > <a href={`${window.location.origin}/exercise?id=${exer.id}`}></a>
+          <Menu.Item key={"exercise"+(index+1)} > <a href={`/exercise?id=${exer.id}`}></a>
             {exer.name}</Menu.Item>
           ))}
         </SubMenu>
@@ -109,7 +109,7 @@ setFiles(fichiers.filter((file,index)=>file.is_public || droits[index].user.incl
           icon={<FileExcelOutlined />}
         >
           {files.map((file,index)=>(
-          <Menu.Item key={"fil"+(index+1)} > <a href={`${window.location.origin}/file?id=${file.id}`}></a>
+          <Menu.Item key={"fil"+(index+1)} > <a href={`/file?id=${file.id}`}></a>
             {file.name}</Menu.Item>
           ))}
         </SubMenu>

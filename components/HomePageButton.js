@@ -6,7 +6,7 @@ const HomePageButton = ({st}) => {
 
   return (
       <a
-      href={typeof window !== 'undefined' ? window.location.origin : '/'}>
+      href='/'>
       <button className="button"
         style={Object.assign({}, st, {
           top: '20px',

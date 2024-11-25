@@ -18,8 +18,6 @@ export default function Login() {
     if (url){
       try{
         await apiClientGetoken({
-          method: 'POST',
-          path: 'token/',
           data: {
             username: document.forms.login.username.value,
             password: document.forms.login.password.value
@@ -43,8 +41,6 @@ export default function Login() {
       }
     });
     await apiClientGetoken({
-      method: 'POST',
-      path: 'token/',
       data: {
         username: document.forms.login.username.value,
         password: document.forms.login.password.value

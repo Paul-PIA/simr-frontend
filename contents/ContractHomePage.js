@@ -112,7 +112,7 @@ useEffect(()=>{fetchContracts()},[]);
                 {contracts.map((contract) => (
                   <tr key={contract.id} style={styles.row}>
                     <td style={styles.td}>{contract.id}</td>
-                    <a href={`${window.location.origin}/contract?id=${contract.id}`}>
+                    <a href={`/contract?id=${contract.id}`}>
                     <td style={{ ...styles.td, cursor: 'pointer', color: 'blue' }} >
                       {contract.name}
                     </td> </a>
@@ -151,7 +151,7 @@ useEffect(()=>{fetchContracts()},[]);
           {exercises.map((exercise) => (
             <tr key={exercise.id} style={styles.row}>
             <td style={styles.td}>{exercise.id}</td>
-            <a href={`${window.location.origin}/exercise?id=${exercise.id}`}>
+            <a href={`/exercise?id=${exercise.id}`}>
             <td
               style={{ ...styles.td, cursor: 'pointer', color: 'blue' }}
             >
