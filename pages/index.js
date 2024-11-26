@@ -6,7 +6,7 @@ import { apiRefresh } from "../services/api";
 export default function Home() {
   const [connecte,setConnecte]=useState(false);
   async function test() {
-  await apiRefresh({onSuccess:()=>setConnecte(true)}) }
+  await apiRefresh(()=>setConnecte(true)) }
   useEffect(() => {
       test(); 
   }, []);

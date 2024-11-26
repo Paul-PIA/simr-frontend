@@ -71,7 +71,7 @@ export const apiClientGetFile = async ({ path}) => { //A utiliser pour récupér
     }
 };
 
-export const apiRefresh=async({onSuccess})=>{ //A utiliser pour refresh le token d'accès
+export const apiRefresh=async(onSuccess)=>{ //A utiliser pour refresh le token d'accès
     try {
         const response=await apiClient({
             method:'POST',
