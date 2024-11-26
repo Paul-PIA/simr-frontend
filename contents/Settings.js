@@ -37,26 +37,26 @@ export default function Settings() {
             onChange={(e)=>{
                 setFrequence(e.target.value)
             }}
-                description='Set the maximum of mails received everyday.'
+                description="Nombre maximum d'email reçus par jour."
             />
             <CombinedSettingItem settings={[
                 {
                     title: 'New File', type: 'bool', value: file, onChange: (e)=>{
                         setFile(!file)
                     },
-                    description: 'Receive emails when there are new files uploaded.'
+                    description: 'Recevoir un email quand un nouveau fichier est uploadé.'
                 },
                 {
                     title: 'New Change', type: 'bool', value:change, onChange: (e)=>{
                         setChange(!change)
                     },
-                    description: 'Receive emails when there are new changes to the files.'
+                    description: 'Recevoir un email quand un fichier est modifié.'
                 },
             ]}/>
             <CombinedSettingItem settings={[
                 {
                     title: 'New Comment', type: 'bool', value: comment, onChange:(e)=> setComment(!comment),
-                    description: 'Receive emails when there are new comments to the files.'
+                    description: 'Recevoir un email quand un nouveau commentaire est posté sur un fichier.'
                 },
                 {
                     title: 'New Message', type: 'bool', value:message, onChange: (e)=>setMessage(!message),

@@ -5,7 +5,7 @@ import { apiClient, apiRefresh } from "../services/api";
 import _Sider from "../components/Sidebar";
 
 //Actuellement, l'organisation de l'utilisateur qui crée le contract est supposé être l'organisation principale du contract
-//A long terme, cela devrait amener à être modifié en rajoutant un champ "organisation" (voir dans InformationForm.js  comment faire)
+//A long terme, cela devrait amener à être modifié en rajoutant un champ "organisation principale" (voir dans InformationForm.js  comment faire)
 export default function NewContract(){
     const handleSubmit=async(e)=>{
         e.preventDefault();
