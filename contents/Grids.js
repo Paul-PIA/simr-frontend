@@ -5,6 +5,8 @@ import "ag-grid-community/styles/ag-grid.css"; // Mandatory CSS required by the 
 import "ag-grid-community/styles/ag-theme-quartz.css"; // Optional Theme applied to the Data Grid
 import "ag-grid-enterprise";
 
+//Ce fichier est un test de l'utilisation d'AgGrid pour afficher un excel. Il n'a pas vocation à faire partie de la version finale de simR.
+
 export function Grid() {
   // Row Data: The data to be displayed.
   const [rowData, setRowData] = useState([

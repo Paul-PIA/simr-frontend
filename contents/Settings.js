@@ -32,7 +32,7 @@ export default function Settings() {
     return (
         <div style={{flex:1}}>
             <title>Paramètres</title>
-        <Card name="sett" title='Email Settings' bordered={true}>
+        <Card name="sett" title='Réglages des emails' bordered={true}>
             <SettingItem name= 'freq' title='Frequence' type='number' value={frequence} 
             onChange={(e)=>{
                 setFrequence(e.target.value)
@@ -41,13 +41,13 @@ export default function Settings() {
             />
             <CombinedSettingItem settings={[
                 {
-                    title: 'New File', type: 'bool', value: file, onChange: (e)=>{
+                    title: 'Nouveaux fichiers', type: 'bool', value: file, onChange: (e)=>{
                         setFile(!file)
                     },
-                    description: 'Recevoir un email quand un nouveau fichier est uploadé.'
+                    description: 'Recevoir un email quand un nouveau fichier est ajouté.'
                 },
                 {
-                    title: 'New Change', type: 'bool', value:change, onChange: (e)=>{
+                    title: 'Modifications de fichiers', type: 'bool', value:change, onChange: (e)=>{
                         setChange(!change)
                     },
                     description: 'Recevoir un email quand un fichier est modifié.'
@@ -55,11 +55,11 @@ export default function Settings() {
             ]}/>
             <CombinedSettingItem settings={[
                 {
-                    title: 'New Comment', type: 'bool', value: comment, onChange:(e)=> setComment(!comment),
+                    title: 'Nouveaux commentaires', type: 'bool', value: comment, onChange:(e)=> setComment(!comment),
                     description: 'Recevoir un email quand un nouveau commentaire est posté sur un fichier.'
                 },
                 {
-                    title: 'New Message', type: 'bool', value:message, onChange: (e)=>setMessage(!message),
+                    title: 'Nouveaux messages', type: 'bool', value:message, onChange: (e)=>setMessage(!message),
                     description: 'Receive emails when there are new messages from your fellow.'
                 },
             ]}/>
