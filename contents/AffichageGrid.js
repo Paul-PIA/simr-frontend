@@ -143,11 +143,10 @@ function ExcelToAgGrid({ fileBuffer, onGridUpdate, onAddComment, highlightedCell
 
   const CalculStatistiques=(column)=>{
     try{
-    const data={};
+    const data={'colonne':column}; //Initialisation du dictionnaire qui va contenir les statistiques
     const valeurs=rowData.map((row)=>row[column]).sort((a,b)=>a-b); //Liste triée des valeurs de la colonne
-    data['colonne']=column;
     data['moyenne']=math.mean(valeurs);
-    data['variance']=valeurs.reduce((previousValue,row)=>previousValue+(row-data["moyenne"])**2,0)/(valeurs.length-1);
+    data['variance']=math.variance(valeurs);
     data["écart-type"]=math.sqrt(data['variance']);
     data["min"]=valeurs[0];
     [data["quantile 1"],data["médiane"],data["quantile 3"]]=math.quantileSeq(valeurs,[0.25,0.5,0.75]);

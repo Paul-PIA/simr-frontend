@@ -1,12 +1,15 @@
 import React, { useState } from "react";
-import { apiClient, apiRefresh } from "../../services/api";
+import { apiClient, apiClientGetFile, apiRefresh } from "../../services/api";
 import HomePageButton from "../../components/HomePageButton";
 import { Layout } from "antd";
 import Sider_ from "../../components/Sidebar";
+import * as XLSX from 'xlsx';
 export default function NewFile() {
   const [fileName, setFileName] = useState("");
   const [file, setFile] = useState(null);
   const [exerciseId, setExerciseId] = useState(null);
+  const [useTemplate,setUseTemplate]=useState(false);
+  const [templates,setTemplates]=useState([])
 
   const {Content}=Layout;
 
@@ -17,6 +20,11 @@ export default function NewFile() {
     const exer_id = params.get('exer_id');
     setExerciseId(exer_id);
     }
+    const response=await apiClient({
+      method:"GET",
+      path:"file/?is_template=true"
+    });
+    setTemplates(response)
   }
 
   useState(()=>{fetchCon()}, []);
@@ -29,9 +37,20 @@ export default function NewFile() {
     }
   };
 
+  const handleTemplate=async (path)=>{
+    const fichier=await apiClientGetFile({path});
+    const blob = new Blob([fichier], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" });
+    const file_ex = new File(
+      [blob],
+      `${path.split('/').pop().replace(/\.[^/.]+$/, '')}.xlsx`, // Ajoute ou remplace l'extension en ".xlsx"
+      { type: blob.type }
+    );
+    setFile(file_ex)
+  }
   // Gestion de la soumission du formulaire
   const handleSubmit = async (event) => {
     event.preventDefault();
+    console.log(file);
     if (!file) {
       alert("Veuillez télécharger un fichier Excel.");
       return;
@@ -79,8 +98,37 @@ export default function NewFile() {
               required
             />
           </label>
-
           <label>
+                <input
+                  type="checkbox"
+                  checked={useTemplate}
+                  onChange={(e) => {
+                    setUseTemplate(e.target.checked);
+                  }}
+                />
+                &nbsp;Créer à partir d'un template ?
+              </label>
+              <div>
+              {useTemplate ? (
+                <label>
+                  Choisir un template&nbsp;
+                  <select
+                    onChange={(e) =>
+                      handleTemplate(templates[e.target.value].content)
+                    }
+                    required
+                  >
+                    <option value="">Sélectionner</option>
+                    {templates.map((template,index) => (
+                      <option key={template.id} value={index}>
+                        {template.name}
+                      </option>
+                    ))}
+                  </select>
+                </label>
+              ) : 
+
+          (<label>
             Upload Excel File&nbsp;
             <input
               type="file"
@@ -88,7 +136,7 @@ export default function NewFile() {
               onChange={handleFileChange}
               required
             />
-          </label>
+          </label>)} </div>
 
           <button type="submit" className="submit-btn">Enregistrer le fichier</button>
         </form>
