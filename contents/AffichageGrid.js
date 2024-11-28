@@ -175,6 +175,9 @@ function ExcelToAgGrid({ fileBuffer, onGridUpdate, onAddComment, highlightedCell
     const startDate = new Date(1900, 0, 1); // Date de départ : 1 janvier 1900
     return new Date(startDate.getTime() + (value - 2) * 24 * 60 * 60 * 1000).toLocaleDateString();
   }
+  const scope={ //Permet de transférer les fonctions à l'évaluateur de math
+    ExcelDate:ExcelDate
+  }
   const CalculateNewValue=(value,index)=>{
     if (typeof value=="string" && value[0]=="="){ //Si c'est une expression, on la calcule
       const expression = value.slice(1);
@@ -184,8 +187,8 @@ function ExcelToAgGrid({ fileBuffer, onGridUpdate, onAddComment, highlightedCell
         new RegExp(Object.keys(variables).join("|"), "g"),
         (match) => variables[match]
       );
-      try {return math.evaluate(evaluatedExpression)} //Permet d'utiliser les fonctions mathématiques usuelles, comme sin ou exp
-      catch(error){return eval(evaluatedExpression)} 
+      try {return math.evaluate(evaluatedExpression,scope)} //Permet d'utiliser les fonctions mathématiques usuelles, comme sin ou exp
+      catch(error){console.error(error);return eval(evaluatedExpression)}  //En cas d'erreur, on se rabat sur la fonction d'éval par défaut
     }
     else {
     return value; 
