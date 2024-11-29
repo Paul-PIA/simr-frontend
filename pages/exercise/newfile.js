@@ -3,13 +3,12 @@ import { apiClient, apiClientGetFile, apiRefresh } from "../../services/api";
 import HomePageButton from "../../components/HomePageButton";
 import { Layout } from "antd";
 import Sider_ from "../../components/Sidebar";
-import * as XLSX from 'xlsx';
 export default function NewFile() {
   const [fileName, setFileName] = useState("");
   const [file, setFile] = useState(null);
   const [exerciseId, setExerciseId] = useState(null);
   const [useTemplate,setUseTemplate]=useState(false);
-  const [templates,setTemplates]=useState([])
+  const [templates,setTemplates]=useState([]);
 
   const {Content}=Layout;
 
@@ -38,7 +37,7 @@ export default function NewFile() {
   };
 
   const handleTemplate=async (path)=>{
-    const fichier=await apiClientGetFile({path});
+    const fichier=await apiClientGetFile({path}); //Récupère le fichier template depuis le backend et le copie
     const blob = new Blob([fichier], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" });
     const file_ex = new File(
       [blob],

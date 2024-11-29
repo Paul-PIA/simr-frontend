@@ -1,6 +1,6 @@
 import axios from "axios";
 
-function getCookie(name) {
+function getCookie(name) { //Récupère un cookie DEJA présent sur l'ordinateur
     let cookieValue = null;
     if (typeof document!=='undefined' && document.cookie && document.cookie !== '') {
         const cookies = document.cookie.split(';');
