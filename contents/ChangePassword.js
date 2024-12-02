@@ -5,7 +5,7 @@ export default function ChangePassword() {
   return (
     <div>
       <div className="change-form">
-        <h2>Change your password</h2>
+        <h2>Modifier votre mot de passe</h2>
         <form 
   name="change" 
   onSubmit={async (e) => {
@@ -13,23 +13,24 @@ export default function ChangePassword() {
     await apiRefresh();
     await apiClient({
       method: 'POST',
-      path: 'api/auth/password/change',
+      path: 'auth/password/change/',
       data: {
         new_password1: document.forms.change.new_password1.value,
         new_password2: document.forms.change.new_password2.value
       }
     });
+    window.location='/auth'
   }}
 >
           <label>
-            New password&nbsp;
+            Nouveau mot de passe&nbsp;
             <input type="password" name="new_password1" />
           </label>
           <label>
-            Confirm new password&nbsp;&nbsp;
+            Répéter le nouveau mot de passe&nbsp;&nbsp;
             <input type="password" name="new_password2" />
           </label>
-          <button type="submit">Login</button>
+          <button type="submit">Envoyer</button>
         </form>
 
       </div>

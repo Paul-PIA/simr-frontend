@@ -3,7 +3,7 @@ import { apiClient } from "../services/api";
 
 export default function AffichageCommentaires ({comments, children,getComments,self,selectedDealer,orgConRights,columnDefs,orgUsers,handleViewCell}){
 
-  const Reply=(comment)=>{
+  const Reply=(comment)=>{ //Répondre à un autre commentaire
     const commentText = window.prompt('Réponse: ');
     if (commentText){
       handleReply(comment,commentText)
@@ -38,7 +38,7 @@ const handleReply=async (comment,commentText)=>{
         data:{comment1:parent.id,comment2:child.id}
        });
       getComments()}
-    function AffichageEnfants ({parent}){
+    function AffichageEnfants ({parent}){ //Affiche les commentaires enfants du commentaire parent
         const styles = {
             button: {
               padding: '10px',
