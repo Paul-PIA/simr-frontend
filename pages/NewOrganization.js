@@ -32,7 +32,7 @@ export default function CreateNewOrganization() {
     <div>
       <HomePageButton/>
       <div className="organization-form">
-        <h2>Create New Organization</h2>
+        <h2>Créer une nouvelle organisation</h2>
         <form name="organization" onSubmit={handleSubmit}>
           <label>
             Nom de l'organisation&nbsp;
