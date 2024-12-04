@@ -1,5 +1,6 @@
 /** @type {import('next').NextConfig} */
-const nextConfig = {trailingSlash: true,output: 'export',
+const nextConfig = {trailingSlash: true,
+  output: 'export',
   async rewrites() {
     return [
       {
