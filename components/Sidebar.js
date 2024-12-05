@@ -20,6 +20,7 @@ export default function Sider_({fix}) {
       method:'GET',
       path:'sidebar/'
     });
+    console.log(response);
   setContracts(response.contracts);
   setExercices(response.exercices);
   setFiles(response.files)
