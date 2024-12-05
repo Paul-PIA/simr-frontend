@@ -16,46 +16,14 @@ export default function Sider_({fix}) {
   const [files,setFiles]=useState([]);
 
   const fetchContractsAndMore=async ()=>{
-    const token=localStorage.getItem('access');
-    const decoded=jwtDecode(token);
-    const id=decoded.user_id;
-    const org=await apiClient({
+    const response=await apiClient({
       method:'GET',
-      path:`user/${id}/`
-    }).org;
-    const con=await apiClient({
-      method:'GET',
-      path:`contract/?org_icontains=${org}`
+      path:'sidebar/'
     });
-    setContracts(con);
-    if (con.length>0){
-    const exercises=await Promise.all(con.map(
-      async (con)=>await apiClient({
-        method:'GET',
-        path:`exercise/?con=${con.id}`
-      })
-    ));
-    if (exercises.length>0){
-    const ex=exercises.reduce((pre, cur) => //exercises étant une liste de liste, il faut l'aplatir
-      pre.concat(cur));
-    setExercices(ex);
-    const fich=await Promise.all(ex.map(
-      async (exer)=>await apiClient({
-        method:'GET',
-        path:`file/?exer=${exer.id}`
-      })
-    ));
-    if (fich.length>0){
-    const fichiers=fich.reduce((pre, cur) => //Pareil que pour exercices: on applatit la liste
-      pre.concat(cur));
-const droits=await Promise.all(fichiers.map(
-  async (file)=>await apiClient({
-    method:'GET',
-    path:`access/${file.id}/`
-  })
-));
-setFiles(fichiers.filter((file,index)=>file.is_public || droits[index].user.includes(id) || droits[index].org.includes(org)))
-}}}};
+  setContracts(response.contracts);
+  setExercices(response.exercices);
+  setFiles(response.files)
+};
 //On garde les fichiers qui sont publics, auxquels on a accès, ou auxquels notre organisation a accès
 
 

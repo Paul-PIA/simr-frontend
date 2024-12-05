@@ -1,6 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {trailingSlash: true,
-  output: 'export',
+  output: 'export', //A décommenter pour faire tourner en statique
   // async rewrites() { //A décommenter pour faire tourner en web service
   //   return [
   //     {
