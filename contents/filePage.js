@@ -28,7 +28,6 @@ if (!id){return (<div>Chargement ...</div>)}
         method:'GET',
         path:`filepage/${id}/`
   });
-  console.log(response);
   setUser(response.user);
   setExercise(response.exercise);
   setallFiles(response.files);
