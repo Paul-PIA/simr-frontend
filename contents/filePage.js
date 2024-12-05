@@ -26,36 +26,15 @@ if (!id){return (<div>Chargement ...</div>)}
   const fetchEx = async () => {
     const response = await apiClient({
         method:'GET',
-        path:`exercise/${id}/`
-    });
-    setExercise(response);
-    const response_files=await apiClient({
-        method:'GET',
-        path:`file/?exer=${id}`
-    });
-    setallFiles(response_files);
-    const response_rights=await Promise.all(
-        response_files.map(async (fil)=>{const rep=await apiClient({
-        method:'GET',
-        path:`access/${fil.id}/`
-    });
-  return rep}));
-    setRights(response_rights);
-    const token=localStorage.getItem('access');
-    const decoded=jwtDecode(token);
-    const user_id=decoded.user_id;
-    const User=await apiClient({
-        method:'GET',
-        path:`user/${user_id}/`
-    });
-    setUser(User);
-    const response_conRights=await apiClient({
-      method:'GET',
-      path:`orgconright/?org=${User.org}&con=${response.con}`
-    });
-    setOrgConrights(response_conRights[0])
-  };
-
+        path:`filepage/${id}/`
+  });
+  console.log(response);
+  setUser(response.user);
+  setExercise(response.exercise);
+  setallFiles(response.files);
+  setRights(response.access);
+  setOrgConrights(response.orgconright)
+  }
   // Récupérer l'ID de la requête URL
   useEffect(() => {
     fetchEx();
