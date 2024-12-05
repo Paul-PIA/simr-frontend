@@ -10,29 +10,13 @@ export default function ContractHomePage() {
   const [exercises,setExercise]=useState([])
 
   const fetchContracts=async ()=>{
-    const token=localStorage.getItem('access');
-    const decoded=jwtDecode(token);
-    const id=decoded.user_id;
-    const org=await apiClient({
+    const response=await apiClient({
       method:'GET',
-      path:`user/${id}/`
-    }).org;
-    const con=await apiClient({
-      method:'GET',
-      path:`contract/?org_icontains=${org}`
+      path:'homedata/'
     });
-    setContracts(con);
-    if (con.length==1){
-      const ex=await apiClient({
-        method:'GET',
-        path:`exercise/?con=${con[0].id}`
-      });
-      setExercise(ex);
-      if (ex.length==1){
-        setSpace("Exercise")
-      }
-      else{setSpace("Contract")}
-    } else{setSpace("General")}
+    setSpace(response.space);
+    setContracts(response.contracts);
+    setExercise(response.exercises)
 };
 
 useEffect(()=>{fetchContracts()},[]);
