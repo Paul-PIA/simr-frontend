@@ -20,9 +20,8 @@ export default function Sider_({fix}) {
       method:'GET',
       path:'sidebar/'
     });
-    console.log(response);
   setContracts(response.contracts);
-  setExercices(response.exercices);
+  setExercices(response.exercises);
   setFiles(response.files)
 };
 //On garde les fichiers qui sont publics, auxquels on a accès, ou auxquels notre organisation a accès
