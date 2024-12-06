@@ -17,6 +17,7 @@ const { Footer } = Layout;
 
 
 export default function _Footer() {
+  console.log(logo);
   const columns = [
     [<a key={"img"} href="https://parisinfrastructureadvisory.com/">
     <img  
