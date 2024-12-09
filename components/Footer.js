@@ -17,22 +17,21 @@ const { Footer } = Layout;
 
 
 export default function Footer_() {
-  const [logo,setLogo]=useState(null);
-  const RetrieveLogo=async ()=>{
-    const response=await axios.get("media/logo.png");
-    setLogo(response.data)
-  }
-  useEffect(()=>{
-    RetrieveLogo()
-  },[]);
-  useEffect(()=>{
-    console.log(logo);
-  },[logo])
-  console.log(logo);
+  // const [logo,setLogo]=useState(null);
+  // const RetrieveLogo=async ()=>{
+  //   const response=await axios.get("media/logo.png");
+  //   setLogo(response.data)
+  // }
+  // useEffect(()=>{
+  //   RetrieveLogo()
+  // },[]);
+  // useEffect(()=>{
+  //   console.log(logo);
+  // },[logo])
   const columns = [
     [<a key={"img"} href="https://parisinfrastructureadvisory.com/">
     <img  
-      src={logo} 
+      src="media/logo.png" 
       alt="Logo-PIA" 
       height={100} 
       width={200} 
