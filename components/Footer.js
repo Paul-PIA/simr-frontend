@@ -16,7 +16,7 @@ import { MultiColumn } from "./MultiColumn";
 const { Footer } = Layout;
 
 
-export default function _Footer() {
+export default function Footer_() {
   const [logo,setLogo]=useState(null);
   const RetrieveLogo=async ()=>{
     const response=await axios.get("media/logo.png");
