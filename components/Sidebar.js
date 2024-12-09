@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { useState } from "react";
 import { Layout, Menu } from "antd";
-import { FileExcelOutlined, BookOutlined, TeamOutlined } from "@ant-design/icons";
+import { FileExcelOutlined, BookOutlined, TeamOutlined,FormOutlined } from "@ant-design/icons";
 import { jwtDecode } from "jwt-decode";
 import { apiClient } from "../services/api";
 
@@ -14,6 +14,7 @@ export default function Sider_({fix}) {
   const [contracts,setContracts]=useState([]);
   const [exercices,setExercices]=useState([]);
   const [files,setFiles]=useState([]);
+  const [isAdmin,setIsAdmin]=useState(false);
 
   const fetchContractsAndMore=async ()=>{
     const response=await apiClient({
@@ -22,7 +23,8 @@ export default function Sider_({fix}) {
     });
   setContracts(response.contracts);
   setExercices(response.exercises);
-  setFiles(response.files)
+  setFiles(response.files);
+  setIsAdmin(response.isadmin)
 };
 //On garde les fichiers qui sont publics, auxquels on a accès, ou auxquels notre organisation a accès
 
@@ -81,6 +83,26 @@ export default function Sider_({fix}) {
             {file.name}</Menu.Item>
           ))}
         </SubMenu>
+        {isAdmin && (
+        <SubMenu
+        key="actions"
+        title={collapsed ? null: "Actions"}
+        icon={<FormOutlined />}>
+          <Menu.Item key="new con"><a href="/NewContract"></a>
+          Nouveau contract</Menu.Item>
+          <Menu.Item key="new con"><a href="/NewOrganization"></a>
+          Enregistrer une nouvelle organisation</Menu.Item>
+        </SubMenu>) &&(
+        <SubMenu
+        key="Ajout"
+        title={collapsed ? null: "Ajouter des organisations aux contracts"}
+        icon={<FormOutlined />}>
+        {contracts.map((con,index)=>(
+          <Menu.Item key={"Add"+(index+1)} >  <a href={`/contract/AddOrg?id=${con.id}`} ></a>
+            {con.name}</Menu.Item>
+          ))}
+          </SubMenu>
+          )}
       </Menu>
     </Sider>
   );
