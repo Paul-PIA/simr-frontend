@@ -92,7 +92,7 @@ export default function Sider_({fix}) {
           Nouveau contract</Menu.Item>
           <Menu.Item key="new con"><Link href="/NewOrganization"></Link>
           Enregistrer une nouvelle organisation</Menu.Item>
-        </SubMenu>) &&(
+        </SubMenu>)}{isAdmin &&(
         <SubMenu
         key="Ajout"
         title={collapsed ? null: "Ajouter des organisations aux contracts"}
