@@ -1,7 +1,7 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Layout } from "antd";
-import logo from "/media_front/logo.png";
-
+//import logo from "/media_front/logo.png";
+import axios from "axios";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -17,11 +17,22 @@ const { Footer } = Layout;
 
 
 export default function _Footer() {
+  const [logo,setLogo]=useState(null);
+  const RetrieveLogo=async ()=>{
+    const response=await axios.get("media/logo.png");
+    setLogo(response.data)
+  }
+  useEffect(()=>{
+    RetrieveLogo()
+  },[]);
+  useEffect(()=>{
+    console.log(logo);
+  },[logo])
   console.log(logo);
   const columns = [
     [<a key={"img"} href="https://parisinfrastructureadvisory.com/">
     <img  
-      src={logo.src} 
+      src={logo} 
       alt="Logo-PIA" 
       height={100} 
       width={200} 
