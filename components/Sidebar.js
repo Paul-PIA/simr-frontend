@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { useState } from "react";
 import { Layout, Menu } from "antd";
 import { FileExcelOutlined, BookOutlined, TeamOutlined,FormOutlined } from "@ant-design/icons";
-import { jwtDecode } from "jwt-decode";
+import Link from 'next/link';
 import { apiClient } from "../services/api";
 
 const { Sider } = Layout;
@@ -88,9 +88,9 @@ export default function Sider_({fix}) {
         key="actions"
         title={collapsed ? null: "Actions"}
         icon={<FormOutlined />}>
-          <Menu.Item key="new con"><a href="/NewContract"></a>
+          <Menu.Item key="new con"><Link href="/NewContract"></Link>
           Nouveau contract</Menu.Item>
-          <Menu.Item key="new con"><a href="/NewOrganization"></a>
+          <Menu.Item key="new con"><Link href="/NewOrganization"></Link>
           Enregistrer une nouvelle organisation</Menu.Item>
         </SubMenu>) &&(
         <SubMenu
