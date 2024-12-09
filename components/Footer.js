@@ -1,7 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Layout } from "antd";
 //import logo from "/media_front/logo.png";
-import axios from "axios";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -17,17 +16,6 @@ const { Footer } = Layout;
 
 
 export default function Footer_() {
-  // const [logo,setLogo]=useState(null);
-  // const RetrieveLogo=async ()=>{
-  //   const response=await axios.get("media/logo.png");
-  //   setLogo(response.data)
-  // }
-  // useEffect(()=>{
-  //   RetrieveLogo()
-  // },[]);
-  // useEffect(()=>{
-  //   console.log(logo);
-  // },[logo])
   const columns = [
     [<a key={"img"} href="https://parisinfrastructureadvisory.com/">
     <img  
