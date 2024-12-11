@@ -26,6 +26,7 @@ function ExcelToAgGrid({ fileBuffer, onGridUpdate, onAddComment, highlightedCell
       const chartsSheet = fileBuffer.Sheets['Charts']; // Feuille contenant les graphiques
   
       const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
+      console.log(jsonData);
 
       const columns = jsonData[0].map((header) => (
         {

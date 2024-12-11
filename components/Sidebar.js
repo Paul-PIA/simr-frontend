@@ -18,7 +18,7 @@ export default function Sider_({fix}) {
 
   const fetchContractsAndMore=async ()=>{
     try{
-    const response=await apiClient({
+    const response=await apiClient({ //Requête optimisée pour envoyer au Sidebar les éléments nécessaires
       method:'GET',
       path:'sidebar/'
     });
