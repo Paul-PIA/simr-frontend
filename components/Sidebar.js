@@ -90,7 +90,7 @@ export default function Sider_({fix}) {
         icon={<FormOutlined />}>
           <Menu.Item key="new con"><Link href="/NewContract"></Link>
           Nouveau contract</Menu.Item>
-          <Menu.Item key="new con"><Link href="/NewOrganization"></Link>
+          <Menu.Item key="new org"><Link href="/NewOrganization"></Link>
           Nouvelle organisation</Menu.Item>
         </SubMenu>)}{isAdmin &&(
         <SubMenu
