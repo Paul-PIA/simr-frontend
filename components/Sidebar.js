@@ -17,6 +17,7 @@ export default function Sider_({fix}) {
   const [isAdmin,setIsAdmin]=useState(false);
 
   const fetchContractsAndMore=async ()=>{
+    try{
     const response=await apiClient({
       method:'GET',
       path:'sidebar/'
@@ -25,7 +26,9 @@ export default function Sider_({fix}) {
   setExercices(response.exercises);
   setFiles(response.files);
   setIsAdmin(response.isadmin)
-};
+} catch(error){
+  window.location='/auth'
+}};
 //On garde les fichiers qui sont publics, auxquels on a accès, ou auxquels notre organisation a accès
 
 
