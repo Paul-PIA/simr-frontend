@@ -22,6 +22,9 @@ export default function Sider_({fix}) {
       method:'GET',
       path:'sidebar/'
     });
+    if (response.error){
+      window.location='/InformationForm'
+    }
   setContracts(response.contracts);
   setExercices(response.exercises);
   setFiles(response.files);
@@ -29,7 +32,6 @@ export default function Sider_({fix}) {
 } catch(error){
   window.location='/auth'
 }};
-//On garde les fichiers qui sont publics, auxquels on a accès, ou auxquels notre organisation a accès
 
 
   useEffect(()=>{fetchContractsAndMore()},[]);
