@@ -29,6 +29,7 @@ function ExcelToAgGrid({ fileBuffer, onGridUpdate, onAddComment, highlightedCell
       console.log(jsonData);
       const num_col={}; //Dicionnaire qui enregistre le nombre de fois qu'apparaît chaque nom de colonne
       const columns = jsonData[0].map((header) => {
+        if (header==undefined){header="Undefined"} //Si la case du tableau est vide, on met une valeur par défaut
         num_col[header]?(num_col[header]+=1):(num_col[header]=1);
         return {
         headerName: (num_col[header]==1)?(header):(`${header}_${num_col[header]}`), //Si plusieurs colonnes ont le même nom, on modifie ce nom
