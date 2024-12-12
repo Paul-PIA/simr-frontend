@@ -48,7 +48,7 @@ function ExcelToAgGrid({ fileBuffer, onGridUpdate, onAddComment, highlightedCell
                 } else if (!isNaN(value)) {
                   // Si c'est un nombre, le convertir en float
                   return parseFloat(value);
-                } //Cas des dates:new Date((Month-17899)* 24 * 60 * 60 * 1000).toLocaleDateString()
+                }
                 return value; // Pour les autres cas (comme des chaînes de texte)
               }
       }});
@@ -63,13 +63,13 @@ function ExcelToAgGrid({ fileBuffer, onGridUpdate, onAddComment, highlightedCell
       setRowData(rows);
       const chartsData = chartsSheet ? XLSX.utils.sheet_to_json(chartsSheet) : [];
       if (xColumn=='' && yColumn[0]==''){
-      if (chartsData.length>0){
+      if (chartsData.length>0){ //On récupère les informations pour AgCharts
         setXColumn(chartsData[activeTab].X);
-        setYColumn(JSON.parse(chartsData[activeTab].Y));
+        setYColumn(JSON.parse(chartsData[activeTab].Y)); //JSON.parse permet de repérer les listes dans une case excel
         setChartTitle(chartsData[activeTab].title);
         setChartType(chartsData[activeTab].Type)
       }
-      else if (columns.length > 1) {
+      else if (columns.length > 1) { //S'il n'y a pas de graphique dans l'excel, on donne ces valeurs par défaut aux axes
         setXColumn(columns[0].field);
         setYColumn([columns[1].field]);
       }}
