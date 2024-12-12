@@ -25,13 +25,14 @@ function ExcelToAgGrid({ fileBuffer, onGridUpdate, onAddComment, highlightedCell
       const worksheet = fileBuffer.Sheets[fileBuffer.SheetNames[0]];
       const chartsSheet = fileBuffer.Sheets['Charts']; // Feuille contenant les graphiques
   
-      const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
+      const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 }); //Liste de listes, chaque liste correspond à une ligne
       console.log(jsonData);
-
-      const columns = jsonData[0].map((header) => (
-        {
-        headerName: header,
-        field: header,
+      const num_col={}; //Dicionnaire qui enregistre le nombre de fois qu'apparaît chaque nom de colonne
+      const columns = jsonData[0].map((header) => {
+        num_col[header]?(num_col[header]+=1):(num_col[header]=1);
+        return {
+        headerName: (num_col[header]==1)?(header):(`${header}_${num_col[header]}`), //Si plusieurs colonnes ont le même nom, on modifie ce nom
+        field: (num_col[header]==1)?(header):(`${header}_${num_col[header]}`),
         editable: !commenting, // Rendre la cellule éditable si on n'est pas en mode commentaire
         sortable: true,
         filter: true,
@@ -50,7 +51,7 @@ function ExcelToAgGrid({ fileBuffer, onGridUpdate, onAddComment, highlightedCell
                 } //Cas des dates:new Date((Month-17899)* 24 * 60 * 60 * 1000).toLocaleDateString()
                 return value; // Pour les autres cas (comme des chaînes de texte)
               }
-      }));
+      }});
       setColumnDefs(columns);
       const rows = jsonData.slice(1).map((row) => {
         const rowObject = {};
