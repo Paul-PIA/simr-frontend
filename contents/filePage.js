@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { apiClient } from '../services/api';
-import { jwtDecode } from 'jwt-decode';
 
 export default function ExercisePage({id}) {
 
@@ -87,6 +86,7 @@ if (!id){return (<div>Chargement ...</div>)}
       path:`file/${fileToDelete.id}/`
     });
     alert(`Fichier ${fileToDelete.name} supprimé`);
+    location.reload();
     setShowDeleteModal(false);
     setFileToDelete(null);
   };
@@ -98,6 +98,7 @@ if (!id){return (<div>Chargement ...</div>)}
       data:{is_public:true}
     });
     alert(`Fichier ${fileToPublic.name} partagé`);
+    location.reload();
     setShowPublicModal(false);
     setFileToSharePublic(null);
   };
@@ -111,7 +112,7 @@ if (!id){return (<div>Chargement ...</div>)}
       data:{org:rights[indice].org}
     });
     alert(`Fichier ${fileToShare.name} partagé`);
-
+    location.reload();
     setShowShareModal(false);
     setFileToShare(null);
   };
@@ -123,6 +124,7 @@ if (!id){return (<div>Chargement ...</div>)}
       data:{is_final:true}
     });
     alert (`Fichier ${fileToFinalize.name} est définitf`);
+    location.reload();
     setShowFinalModal(false);
     setFileToFinalize(null)
   }
