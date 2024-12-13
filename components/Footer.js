@@ -1,7 +1,6 @@
 import React from "react";
 import { Layout } from "antd";
 //import logo from "/media_front/logo.png";
-import Image from 'next/image';
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -19,7 +18,7 @@ const { Footer } = Layout;
 export default function Footer_() {
   const columns = [
     [<a key={"img"} href="https://parisinfrastructureadvisory.com/">
-    <Image  
+    <img  
       src="media/logo.png" 
       alt="Logo-PIA" 
       height={100} 
