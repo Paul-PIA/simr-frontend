@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { apiClient } from '../services/api';
+import Link from 'next/link';
 
 export default function ExercisePage({id}) {
 
