@@ -9,7 +9,7 @@ const API_URL = SERVER_URL; // switch LOCAL_URL or SERVER_URL to adapt the envir
 
 axios.defaults.withCredentials = true;
 
-export const apiClient = async ({ method, path, data }) => { //Voir plus bas pour les cas particuliers
+export const apiClient = async ({ method, path, data }) => { //Voir plus bas pour les cas particuliers d'usage de l'API
     const url = `${API_URL}/${path}`;
     const token = localStorage.getItem('access');
     try {
@@ -84,6 +84,6 @@ export const apiRefresh=async(onSuccess)=>{ //A utiliser pour refresh le token d
         }
     }
     catch(error){
-        window.location='/auth'
+        location='/auth'
     }
 }
