@@ -27,6 +27,7 @@ if (!id){return (<div>Chargement ...</div>)}
         method:'GET',
         path:`filepage/${id}/`
   });
+  console.log(response);
   setUser(response.user);
   setExercise(response.exercise);
   setallFiles(response.files);
@@ -109,10 +110,9 @@ if (!id){return (<div>Chargement ...</div>)}
     await apiClient({
       method:'PATCH',
       path:`access/${fileToShare.id}/`,
-      data:{org:rights[indice].org}
+      data:{org:user.org}
     });
     alert(`Fichier ${fileToShare.name} partagé`);
-    location.reload();
     setShowShareModal(false);
     setFileToShare(null);
   };
