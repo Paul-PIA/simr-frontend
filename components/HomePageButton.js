@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
+import Link from 'next/link';
 
 //Ce code crée le bouton de retour à l'accueil qui est utilisé par les autres pages. Le paramètre st permet de rajouter des styles supplémentaires
 const HomePageButton = ({st}) => {
   const [mouse,setMouse]=useState(false)
 
   return (
-      <a
-      href={typeof window !=="undefined"?location.origin:'/'}>
+      <Link
+      href='/'>
       <button className="button"
         style={Object.assign({}, st, {
           top: '20px',
@@ -23,7 +24,7 @@ const HomePageButton = ({st}) => {
       >
 
         Accueil
-      </button> </a>
+      </button> </Link>
   );
 };
 
