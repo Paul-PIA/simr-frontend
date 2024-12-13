@@ -63,7 +63,7 @@ export default function Sider_({fix}) {
           icon={<BookOutlined />} 
         >
           {contracts.map((con,index)=>(
-          <Menu.Item key={"contract"+(index+1)} >  <a href={`/contract?id=${con.id}`} ></a>
+          <Menu.Item key={"contract"+(index+1)} >  <Link href={`/contract?id=${con.id}`} ></Link>
             {con.name}</Menu.Item>
           ))}
         </SubMenu>
@@ -74,7 +74,7 @@ export default function Sider_({fix}) {
         >
           {exercices.map((exer,index)=>(
             
-          <Menu.Item key={"exercise"+(index+1)} > <a href={`/exercise?id=${exer.id}`}></a>
+          <Menu.Item key={"exercise"+(index+1)} > <Link href={`/exercise?id=${exer.id}`}></Link>
             {exer.name}</Menu.Item>
           ))}
         </SubMenu>
@@ -84,7 +84,7 @@ export default function Sider_({fix}) {
           icon={<FileExcelOutlined />}
         >
           {files.map((file,index)=>(
-          <Menu.Item key={"fil"+(index+1)} > <a href={`/file?id=${file.id}`}></a>
+          <Menu.Item key={"fil"+(index+1)} > <Link href={`/file?id=${file.id}`}></Link>
             {file.name}</Menu.Item>
           ))}
         </SubMenu>
@@ -103,7 +103,7 @@ export default function Sider_({fix}) {
         title={collapsed ? null: "Ajouter des organisations aux contracts"}
         icon={<FormOutlined />}>
         {contracts.map((con,index)=>(
-          <Menu.Item key={"Add"+(index+1)} >  <a href={`/contract/AddOrg?id=${con.id}`} ></a>
+          <Menu.Item key={"Add"+(index+1)} >  <Link href={`/contract/AddOrg?id=${con.id}`} ></Link>
             {con.name}</Menu.Item>
           ))}
           </SubMenu>

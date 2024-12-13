@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { jwtDecode } from 'jwt-decode';
+import Link from 'next/link';
 import { apiClient } from '../services/api';
 import ExercisePage from './filePage';
 
@@ -96,10 +96,10 @@ useEffect(()=>{fetchContracts()},[]);
                 {contracts.map((contract) => (
                   <tr key={contract.id} style={styles.row}>
                     <td style={styles.td}>{contract.id}</td>
-                    <a href={`/contract?id=${contract.id}`}>
+                    <Link href={`/contract?id=${contract.id}`}>
                     <td style={{ ...styles.td, cursor: 'pointer', color: 'blue' }} >
                       {contract.name}
-                    </td> </a>
+                    </td> </Link>
                     <td style={styles.td}>{contract.nb_org}</td>
                   </tr>
                 ))}
@@ -135,12 +135,12 @@ useEffect(()=>{fetchContracts()},[]);
           {exercises.map((exercise) => (
             <tr key={exercise.id} style={styles.row}>
             <td style={styles.td}>{exercise.id}</td>
-            <a href={`/exercise?id=${exercise.id}`}>
+            <Link href={`/exercise?id=${exercise.id}`}>
             <td
               style={{ ...styles.td, cursor: 'pointer', color: 'blue' }}
             >
               {exercise.name}
-            </td> </a>
+            </td> </Link>
             <td style={styles.td}>{exercise.date_i}</td>
             <td style={styles.td}>{exercise.date_f}</td>
           </tr>

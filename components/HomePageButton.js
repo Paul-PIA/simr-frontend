@@ -13,7 +13,7 @@ const HomePageButton = ({st}) => {
           top: '20px',
           left: '10px',
           padding: '10px 15px',
-          backgroundColor: mouse?'#0056b3':'#007BFF',
+          backgroundColor: mouse?'#0056b3':'#007BFF', //Change la couleur si on met la souris sur le boutton
           color: '#fff',
           border: 'none',
           borderRadius: '5px',

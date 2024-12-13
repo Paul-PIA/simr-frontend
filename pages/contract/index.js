@@ -3,6 +3,7 @@ import { apiClient, apiRefresh } from '../../services/api';
 import HomePageButton from '../../components/HomePageButton';
 import _Sider from "../../components/Sidebar";
 import { Layout } from 'antd';
+import Link from 'next/link';
 
 export default function Contract() {  // Récupérer l'ID du contrat depuis l'URL
   const [contract, setContract] = useState(null); //Dictionnaire représentant le contract. Voir "API documentation" pour les clés.
@@ -98,8 +99,8 @@ useEffect(()=>{fetchContract()},[]);
             <tr key={exercise.id} style={styles.row}>
             <td style={styles.td}>{exercise.id}</td>
             <td> 
-            <a href={`/exercise?id=${exercise.id}`} style={{ ...styles.td, cursor: 'pointer', color: 'blue' }}>
-            {exercise.name} </a> </td>
+            <Link href={`/exercise?id=${exercise.id}`} style={{ ...styles.td, cursor: 'pointer', color: 'blue' }}>
+            {exercise.name} </Link> </td>
             <td style={styles.td}>{exercise.date_i}</td>
             <td style={styles.td}>{exercise.date_f}</td>
           </tr>
@@ -112,10 +113,10 @@ useEffect(()=>{fetchContract()},[]);
       </ul>
 
       {/* Button to create a new exercise */}
-      <a href={`/contract/new_ex?con_id=${new URLSearchParams(location.search).get('id')}`}>
+      <Link href={`/contract/new_ex?con_id=${new URLSearchParams(location.search).get('id')}`}>
       <button style={styles.button}>
         Créer un nouvel exercice
-      </button> </a>
+      </button> </Link>
     </div></Content></Layout></div>
   );
 }

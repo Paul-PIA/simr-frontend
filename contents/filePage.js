@@ -156,10 +156,10 @@ if (!id){return (<div>Chargement ...</div>)}
       <title>Page d'accueil simR</title>
       <div style={styles.header}>
         {exercise.name || 'Exercice sans titre'} 
-        <a href={`/exercise/newfile?exer_id=${exercise.id}`}>
+        <Link href={`/exercise/newfile?exer_id=${exercise.id}`}>
         <button style={styles.newFileButton}> 
           Ajouter un nouveau fichier
-        </button> </a>
+        </button> </Link>
       </div>
 
       <div style={styles.mainContent}>
@@ -191,10 +191,10 @@ if (!id){return (<div>Chargement ...</div>)}
             files.map((file,index) => (
               <div key={file.id} style={styles.fileRow}>
                 <span>{file.name} {file.is_final && ("(Version finale)")}</span>
-                <a href={`/file?id=${file.id}`}>
+                <Link href={`/file?id=${file.id}`}>
                 <button style={styles.blueButton}>
                   Ouvrir
-                </button> </a>
+                </button> </Link>
                 { selectedSpace=="Mon espace" && !rights[index].org.includes(user.org)&&!file.is_public?(
                     <button style={styles.blueButton} onClick={() => handleShare(file)}>
                      Partager avec mon organisation
