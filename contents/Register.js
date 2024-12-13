@@ -28,7 +28,7 @@ export default function Register() {
         password: document.forms.login.password.value
       }
     });
-    window.location=window.location
+    location=location
   }catch(error){
     alert(error.request.responseText)
     console.log(error)

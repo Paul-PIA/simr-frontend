@@ -20,7 +20,7 @@ export default function CreateNewOrganization() {
       });
       // Affiche un message de succès ou redirige après soumission
       alert("Organization created successfully!");
-      window.location='..'
+      location='..'
     } catch (error) {
       console.error("Failed to create organization", error);
       // Gestion des erreurs (afficher un message à l'utilisateur)

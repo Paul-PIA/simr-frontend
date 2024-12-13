@@ -27,7 +27,6 @@ if (!id){return (<div>Chargement ...</div>)}
         method:'GET',
         path:`filepage/${id}/`
   });
-  console.log(response);
   setUser(response.user);
   setExercise(response.exercise);
   setallFiles(response.files);
@@ -60,7 +59,8 @@ if (!id){return (<div>Chargement ...</div>)}
     fetchFiles()
   }, [selectedSpace,user]); //S'active en changeant d'espace ou à la fin de l'exécution de fetchEx
 
-  // Ouvrir la fenêtre de confirmation de suppression
+  // Les fonctions ci-dessous relèvent d'une même logique: appuyer sur un boutton pour initier une action,
+  //ce qui ouvre une fenêtre deandant de confirmer l'action ou de l'annuler
   const handleDelete = (file) => {
     setFileToDelete(file);
     setShowDeleteModal(true);

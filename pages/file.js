@@ -39,7 +39,7 @@ const {Content,Header}=Layout;
   useEffect(() => { //Importe depuis le backend toutes les données utiles
     const fetchFile = async () => {
       await apiRefresh();
-      const queryParams = new URLSearchParams(window.location.search);
+      const queryParams = new URLSearchParams(location.search);
       const id = queryParams.get('id');
       const response = await apiClient({
         method: 'GET',

@@ -17,7 +17,7 @@ export default function ForgotPassword() {
         email: document.forgot.email.value,
       }
     });
-    window.location=window.location
+    location=location
   }}
 >
           <label>

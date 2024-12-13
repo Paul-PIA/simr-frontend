@@ -24,7 +24,7 @@ const [contractId,setContractId]=useState(null)
   const fetchContractOrganizations = async () => {
     await apiRefresh();
     try {
-      const queryParams = new URLSearchParams(window.location.search);
+      const queryParams = new URLSearchParams(location.search);
       const contract_Id = queryParams.get('con_id');
         setContractId(contract_Id);
       const response = await apiClient({
@@ -83,7 +83,7 @@ const [contractId,setContractId]=useState(null)
         }
       });
       alert("Exercise created successfully!");
-      window.location=`./?id=${contractId}`
+      location=`./?id=${contractId}`
     } catch (error) {
       console.error("Failed to create exercise:", error);
     }

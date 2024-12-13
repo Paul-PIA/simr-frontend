@@ -15,7 +15,7 @@ export default function Inscription() {
     setOrg(response)
   }
   catch(error) //Une erreur provient vraisemblablement d'un token invalide: on demande à l'utilisateur de se réauthentifier
-  {window.location='/auth?next_url=/InformationForm'}
+  {location='/auth?next_url=/InformationForm'}
   }
   useEffect(()=>{fetchOrgs()},[]);
   return (
@@ -41,7 +41,7 @@ export default function Inscription() {
         org: selectedOrg // Envoi de l'organisation sélectionnée
       }
     });
-    window.location='../'}
+    location='../'}
     catch(error){
       alert(error.request.responseText);
       console.log(error)

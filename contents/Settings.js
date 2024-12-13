@@ -79,7 +79,7 @@ export default function Settings() {
                         newmessage:message
                     }
                 });
-                window.location=window.location
+                location=location
             }}>
                 Save
             </Button>

@@ -13,7 +13,7 @@ export default function Login() {
   onSubmit={async (e) => {
     e.preventDefault(); //Empêche le rechargement automatique de la page
     setSubmitted(true);
-    const queryParams = new URLSearchParams(window.location.search);
+    const queryParams = new URLSearchParams(location.search);
     const url = queryParams.get('next_url');
     if (url){
       try{
@@ -23,7 +23,7 @@ export default function Login() {
             password: document.forms.login.password.value
           }
         });
-        window.location=url
+        location=url
       }
       catch(error){
         setSubmitted(false);
@@ -50,7 +50,7 @@ export default function Login() {
     //   method:'GET',
     //   path:'adam'
     // })
-    window.location='/'
+    location='/'
   }catch(error){
     setSubmitted(false);
     setErreur(true)

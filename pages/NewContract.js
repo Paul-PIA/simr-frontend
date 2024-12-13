@@ -27,7 +27,7 @@ export default function NewContract(){
                 org:user.org
             }
         });
-        window.location='./'
+        location='./'
     }
     return (
         <div>

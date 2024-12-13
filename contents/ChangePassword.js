@@ -19,7 +19,7 @@ export default function ChangePassword() {
         new_password2: document.forms.change.new_password2.value
       }
     });
-    window.location='/auth'
+    location='/auth'
   }}
 >
           <label>

@@ -14,7 +14,7 @@ export default function Contract() {  // Récupérer l'ID du contrat depuis l'UR
   const fetchContract = async () => {
     await apiRefresh();
     try{
-      const queryParams = new URLSearchParams(window.location.search);
+      const queryParams = new URLSearchParams(location.search);
       const id = queryParams.get('id');
       const response = await apiClient({
         method: 'GET',
@@ -112,7 +112,7 @@ useEffect(()=>{fetchContract()},[]);
       </ul>
 
       {/* Button to create a new exercise */}
-      <a href={`/contract/new_ex?con_id=${new URLSearchParams(window.location.search).get('id')}`}>
+      <a href={`/contract/new_ex?con_id=${new URLSearchParams(location.search).get('id')}`}>
       <button style={styles.button}>
         Créer un nouvel exercice
       </button> </a>

@@ -15,7 +15,7 @@ export default function NewFile() {
   const fetchCon=async ()=>{  
     await apiRefresh();
     if (typeof window !=='undefined'){
-    const params = new URLSearchParams(window.location.search);
+    const params = new URLSearchParams(location.search);
     const exer_id = params.get('exer_id');
     setExerciseId(exer_id);
     }
@@ -72,7 +72,7 @@ export default function NewFile() {
       });
       alert("Fichier créé avec succès !");
       if (typeof window==!'undefined'){
-      window.location = `/exercise?id=${exerciseId}`}
+      location = `/exercise?id=${exerciseId}`}
     } catch (error) {
       console.error("Erreur lors de la création du fichier :", error);
       alert(`Échec de la création du fichier.${error.request.response}`);

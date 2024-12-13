@@ -13,7 +13,7 @@ export default function EditContract() {
 
   const fetchContract = async () => {
     await apiRefresh();
-    const queryParams = new URLSearchParams(window.location.search);
+    const queryParams = new URLSearchParams(location.search);
     const contractId = queryParams.get("id");
     const response = await apiClient({
       method: "GET",
@@ -73,7 +73,7 @@ export default function EditContract() {
     IdOrga.forEach((value,index)=>{
       data[String(value)]=newOrganizations[index].leader
     });
-    const queryParams = new URLSearchParams(window.location.search);
+    const queryParams = new URLSearchParams(location.search);
     const contractId = queryParams.get("id");
     await apiClient({
       method:'POST',

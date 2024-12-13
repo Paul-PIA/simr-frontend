@@ -11,7 +11,7 @@ export default function ExerPage() {
 
   const fetch=async ()=>{
     await apiRefresh();
-    const queryParams = new URLSearchParams(window.location.search);
+    const queryParams = new URLSearchParams(location.search);
     setId(queryParams.get('id')) }
 
   useEffect(()=>{fetch()},[])

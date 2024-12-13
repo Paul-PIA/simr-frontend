@@ -23,14 +23,14 @@ export default function Sider_({fix}) {
       path:'sidebar/'
     });
     if (response.error){
-      window.location='/InformationForm'
+      location='/InformationForm'
     }
   setContracts(response.contracts);
   setExercices(response.exercises);
   setFiles(response.files);
   setIsAdmin(response.isadmin)
 } catch(error){
-  window.location='/auth'
+  location='/auth'
 }};
 
 

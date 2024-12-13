@@ -153,7 +153,7 @@ useEffect(()=>{fetchContracts()},[]);
       </ul>
         </div>
         <button style={styles.button} onClick={(e)=>{
-              window.location=`./contract/new_ex?con_id=${contracts[0].id}`}}>
+              location=`./contract/new_ex?con_id=${contracts[0].id}`}}>
         Créer un nouvel exercice
       </button>
         </div>)}
