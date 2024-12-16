@@ -7,7 +7,7 @@ import { AgCharts } from 'ag-charts-react';
 import * as math from 'mathjs';
 
 
-function ExcelToAgGrid({ fileBuffer, onGridUpdate, onAddComment, highlightedCell, commenting, charts,setCharts }) { // Recevoir "commenting" en prop
+function ExcelToAgGrid({ fileBuffer, onGridUpdate, onAddComment, highlightedCell, commenting}) {
   const [columnDefs, setColumnDefs] = useState([]);
   const [rowData, setRowData] = useState([]);
   const [selectedCell, setSelectedCell] = useState(null);
@@ -19,6 +19,7 @@ function ExcelToAgGrid({ fileBuffer, onGridUpdate, onAddComment, highlightedCell
   const [gridApi, setGridApi] = useState(null); // Garde l'API du tableau
   const [isStatModalOpen, setIsStatModalOpen] = useState(false);
   const [stats,setStats]=useState({});
+  const [charts, setCharts] = useState([]); //Contient les informations concernant les graphiques affichés
 
   useEffect(() => {
     if (fileBuffer) {
@@ -44,8 +45,8 @@ function ExcelToAgGrid({ fileBuffer, onGridUpdate, onAddComment, highlightedCell
           
                 if (value[0]=='=') {
                   // Traite l'expression comme une formule
-                  return value; // Retourner la formule sans la parser
-                } else if (!isNaN(value)) {
+                  return value // Retourner la formule sans la parser
+                } if (!isNaN(value)) {
                   // Si c'est un nombre, le convertir en float
                   return parseFloat(value);
                 }

@@ -1,5 +1,7 @@
 import axios from "axios";
 
+//Ce fichier sert exclusivement à récupérer le cookie auprès du backend et à le fournir à api.js
+
 function getCookie(name) { //Récupère un cookie DEJA présent sur l'ordinateur
     let cookieValue = null;
     if (typeof document!=='undefined' && document.cookie && document.cookie !== '') {

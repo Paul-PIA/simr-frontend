@@ -14,7 +14,7 @@ export default function ForgotPassword() {
       method: 'POST',
       path: 'forgotpassword',
       data: {
-        email: document.forgot.email.value,
+        email: document.forgot.email.value
       }
     });
     location.reload()

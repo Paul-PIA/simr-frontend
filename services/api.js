@@ -1,9 +1,11 @@
 import axios from 'axios';
 import { csrfToken } from './jwt';
 
+//Ce fichier contient toutes les fonctions permettant d'interagir via l'API avec le backend
 
 const LOCAL_URL = 'http://127.0.0.1:8000/api';
-const SERVER_URL = '/api'; // fill in this url with your adress of backend server 
+const SERVER_URL = '/api'; // fill in this url with your adress of backend server
+//Note: Avec les règles redirect/rewrite, les requêtes s'adressent au serveur frontend qui les renvoie au serveur backend
 
 const API_URL = SERVER_URL; // switch LOCAL_URL or SERVER_URL to adapt the environment 
 
@@ -59,7 +61,7 @@ export const apiClientGetFile = async ({ path}) => { //A utiliser pour récupér
     const url =(new URL(path)).pathname;
     const token = localStorage.getItem('access');
     try {
-        const response = await axios({ method:'GET', url, headers: {
+        const response = await axios({ method:'GET', url:path, headers: {
             'Authorization': `Bearer ${token}`,
             'X-CSRFToken': csrfToken,
             "Content-Type": "multipart/form-data"

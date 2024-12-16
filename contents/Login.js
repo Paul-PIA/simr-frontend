@@ -2,8 +2,8 @@ import React, { useState } from "react";
 import { apiClientNotoken,apiClientGetoken } from "../services/api";
 
 export default function Login() {
-  const [submitted,setSubmitted]=useState(false);
-  const[erreur,setErreur]=useState(false);
+  const [submitted,setSubmitted]=useState(false); //Ces 2 booléens permettent de gérer l'affichage différencié selon les cas et
+  const[erreur,setErreur]=useState(false);  //d'éviter la situation "J'appuie sur le boutton et il ne se passe rien"
   return (
     <div>
       <div className="auth-form">
