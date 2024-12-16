@@ -79,7 +79,7 @@ export default function Settings() {
                         newmessage:message
                     }
                 });
-                location=location
+                location.reload()
             }}>
                 Save
             </Button>
