@@ -84,7 +84,7 @@ function ExcelToAgGrid({ fileBuffer, onGridUpdate, onAddComment, highlightedCell
   }
   }, [fileBuffer, commenting,highlightedCell]);
 
-
+/**Ajoute un nouveau graphique */
   const addChartTab = () => {
     setCharts([...charts, {
       title: `Graphique ${charts.length + 1}`,
@@ -94,14 +94,23 @@ function ExcelToAgGrid({ fileBuffer, onGridUpdate, onAddComment, highlightedCell
     setActiveTab(charts.length);
   };
 
-  // Supprimer un onglet
+  /**
+   * Supprime un graphique
+   * @param {int} index - indice du graphique à supprimer
+   */
   const removeChartTab = (index) => {
     const newCharts = charts.filter((_, i) => i !== index);
     setCharts(newCharts);
     setActiveTab(activeTab>1 ? activeTab-1:0); 
   };
 
-  // Obtenir les options de graphique
+  /**
+   * Crée l'objet chartoptions utilisé par AgCharts pour ses graphiques
+   * @param {string} type -type de graphique (ligne, nuage, etc...)
+   * @param {string} xCol - colonne utilisée pour l'axe des abscisses
+   * @param {string[]} yCol - liste des colonnes utilisées pour l'axe des ordonnées
+   * @returns 
+   */
   const getChartOptions = (type, xCol, yCol) => {return{
     data: rowData,
     series: yCol.length==0? [{type:type,xKey:xCol,yKey:null}]:yCol.map((y)=>
@@ -133,7 +142,7 @@ function ExcelToAgGrid({ fileBuffer, onGridUpdate, onAddComment, highlightedCell
   // }
   }};
 
-  // Mettre à jour les options du graphique actif
+  /** Met à jour les options du graphique actif*/ 
   const updateChartSettings = () => {
     const updatedCharts = [...charts];
     updatedCharts[activeTab].chartOptions = getChartOptions(chartType, xColumn, yColumn);
@@ -144,6 +153,11 @@ function ExcelToAgGrid({ fileBuffer, onGridUpdate, onAddComment, highlightedCell
 
   useEffect(()=>{ if (charts[activeTab]){updateChartSettings()}},[xColumn,yColumn,chartType,chartTitle]);
 
+  /**
+   * Calcule et renvoie les statistiques usuelles pour la colonne en argument
+   * @param {string} column 
+   * @returns {object} data - Dictionnaire des différentes statistiques
+   */
   const CalculStatistiques=(column)=>{
     try{
     const data={'colonne':column}; //Initialisation du dictionnaire qui va contenir les statistiques
@@ -159,6 +173,10 @@ function ExcelToAgGrid({ fileBuffer, onGridUpdate, onAddComment, highlightedCell
       return {"colonne":column,"erreur":`'${column}' n'est pas une colonne de nombres`}
     }
   }
+  /**
+   * S'active quand l'utilisateur clique sur une case du tableau, le cas échant, lui permet d'écrire un commentaire.
+   * @param {object} params
+   */
   const onCellClicked = useCallback((params) => {
     console.log(params);
     if (commenting) {
@@ -172,7 +190,12 @@ function ExcelToAgGrid({ fileBuffer, onGridUpdate, onAddComment, highlightedCell
   }, [onAddComment, commenting]);
 
 
-
+/**
+ * Il peut y avoir incompatibilité entre la façon dont Excel représente les dates et les standards de Javascript.
+ * Dans ce cas, la colonne du tableau affichera des entiers qui n'ont pas beaucoup de sens.
+ * Cette fonction permet alors de convertir les nombres en dates
+ * @param {int} value 
+ */
   const ExcelDate=(value)=>{
     const startDate = new Date(1900, 0, 1); // Date de départ : 1 janvier 1900
     return new Date(startDate.getTime() + (value - 2) * 24 * 60 * 60 * 1000).toLocaleDateString();
@@ -180,6 +203,13 @@ function ExcelToAgGrid({ fileBuffer, onGridUpdate, onAddComment, highlightedCell
   const scope={ //Permet de transférer les fonctions à l'évaluateur de math
     ExcelDate:ExcelDate
   }
+  /**
+   * Calcule les valeurs rentreés par l'utilisateur dans le tableau. Les noms de colonne sont interprétés comme 
+   * les valeurs de ces colonnes pour la ligne index
+   * @param {any} value - valeur rentrée par l'utilisateur
+   * @param {int} index - indice de la ligne
+   * @returns {str | number} - la valeur qui sera dans le tableau
+   */
   const CalculateNewValue=(value,index)=>{
     if (typeof value=="string" && value[0]=="="){ //Si c'est une expression, on la calcule
       const expression = value.slice(1);
@@ -202,10 +232,14 @@ function ExcelToAgGrid({ fileBuffer, onGridUpdate, onAddComment, highlightedCell
     const index=event.node.rowIndex;
     rowData[index][col]=CalculateNewValue(data[col],index)
 
-    // Si nécessaire, mettez à jour l'ArrayBuffer ou exécutez une fonction supplémentaire
     onGridUpdate && updateArrayBufferFromTableData(rowData,columnDefs,charts)
   };
-
+/**
+ * Met à jour le fichier Excel qui pourra être envoyé au backend ou téléchargé localement
+ * @param {object[]} rowData 
+ * @param {object[]} columnDefs 
+ * @param {object[]} charts 
+ */
   function updateArrayBufferFromTableData(rowData, columnDefs,charts) {
     const worksheetData = [columnDefs.map(colDef => colDef.headerName)];
     
@@ -250,6 +284,11 @@ const handlegraphchange=(index,chart)=>{
   setChartType(chart.chartOptions.series[0].type)
 }
 
+/**
+ * Vérifie si la case doit être colorée ou pas
+ * @param {object} params 
+ * @returns {string}
+ */
   const getCellClass = (params) => {
     if (highlightedCell && params.node.rowIndex === highlightedCell.rowIndex-1 && params.colDef.field === highlightedCell.colId) {
       return 'highlight-cell';

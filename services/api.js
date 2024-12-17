@@ -14,11 +14,11 @@ axios.defaults.withCredentials = true;
 
 /**
  * Méthode principale pour communiquer avec le backend.
- * @param {Object} param0 
+ * @param {object} param0 
  * @param {string} param0.method - Méthodes possibles : 'GET', 'POST', 'PATCH', 'PUT'
  * @param {string} param0.path - Chemin relatif de la requête depuis 'backendurl.com/api'
- * @param {Object} param0.data - Données transmises au backend
- * @returns {Promise<Object>} - Données renvoyées par le backend
+ * @param {object} param0.data - Données transmises au backend
+ * @returns {Promise<object>} - Données renvoyées par le backend
  * @throws {Error} - Lance une erreur si la requête échoue.
  */
 export const apiClient = async ({ method, path, data }) => { //Voir plus bas pour les cas particuliers d'usage de l'API
@@ -39,11 +39,11 @@ export const apiClient = async ({ method, path, data }) => { //Voir plus bas pou
 
 /**
  * Méthode pour communiquer avec le backend quand on ne dispose pas de token d'authentification.
- * @param {Object} param0 
+ * @param {object} param0 
  * @param {string} param0.method - Méthodes possibles : 'GET', 'POST', 'PATCH', 'PUT'
  * @param {string} param0.path - Chemin relatif de la requête depuis 'backendurl.com/api'
- * @param {Object} param0.data - Données transmises au backend
- * @returns {Promise<Object>} - Données renvoyées par le backend
+ * @param {object} param0.data - Données transmises au backend
+ * @returns {Promise<object>} - Données renvoyées par le backend
  * @throws {Error} - Lance une erreur si la requête échoue.
  */
 export const apiClientNotoken = async ({ method, path, data }) => {
@@ -62,8 +62,8 @@ export const apiClientNotoken = async ({ method, path, data }) => {
 
 /**
  * Récupère les tokens d'accès et de refresh auprès du backend et les stocke dans le localStorage
- * @param {Object} param0
- * @param {Object} param0.data
+ * @param {object} param0
+ * @param {object} param0.data
  * @param {string} param0.data.username - Nom d'utilisateur
  * @param {string} param0.data.password - Mot de passe
  * @throws {Error} - Lance une erreur si la requête échoue.
@@ -90,8 +90,8 @@ export const apiClientGetoken = async ({ data }) => {
  * Elle est configurée pour gérer les fichiers compressés renvoyés par le backend, en définissant le 
  * type de réponse (`responseType`) à `arraybuffer`.
  * 
- * @param {Object} param0 - Les paramètres pour la requête.
- * @param {string} param0.path - Le chemin ou l'URL complète du fichier à récupérer.
+ * @param {object} param0 - Les paramètres pour la requête.
+ * @param {string} param0.path - L'URL complète du fichier à récupérer.
  * @returns {Promise<ArrayBuffer>} - Renvoie les données du fichier sous forme de `ArrayBuffer`.
  * @throws {Error} - Lance une erreur si la requête échoue.
  */
@@ -118,7 +118,6 @@ export const apiClientGetFile = async ({ path}) => {
  * @param {function} onSuccess - S'éxécute en cas de succès
  */
 export const apiRefresh=async(onSuccess)=>{
-    //OnS
     try {
         const response=await apiClient({
             method:'POST',

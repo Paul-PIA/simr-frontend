@@ -26,6 +26,11 @@ const {Content,Header}=Layout;
   const [selectedDealer,setSelectedDealer]=useState({}) //Dictionnaire {commentaire:dealer}
   const [children,setChildren]=useState({});
 
+  /**
+   *
+   * @param {XLSX.WorkBook} doc - Workbook Excel
+   * @returns {File} file - Fichier pouvant être envoyé au backend
+   */
   const conversionPourEnvoie=(doc)=>{
     // créer un ArrayBuffer à partir de l'excel
     const excelBuffer = XLSX.write(doc, { bookType: 'xlsx', type: 'array' });
@@ -85,6 +90,9 @@ const {Content,Header}=Layout;
     fetchFile();
   }, []);
 
+  /**
+   * Crée une copie du fichier Excel sur le backend.
+   */
   const handleSaveCopy = async () => {
     try {
       const file=conversionPourEnvoie(doc);
@@ -101,6 +109,10 @@ const {Content,Header}=Layout;
     }
   };
 
+  /**
+   * Enregistre les changements effectués sur le backend. 
+   * Uniquement possible si le fichier n'est pas bloqué (c'est donc impossible pour la version finale d'un document)
+   */
   const handleSaveChanges = async () => {
     const file=conversionPourEnvoie(doc);
     try {
@@ -119,6 +131,9 @@ const {Content,Header}=Layout;
     setDoc(updatedData);
   };
 
+  /**
+   * Télécharge une copie du fichier Excel directement sur l'ordinateur de l'utilisateur
+   */
   const handleDownloadCopy = () => {
     // Télécharger le fichier en .xlsx
     XLSX.writeFile(doc, `${fileDetails.name || 'tableau'}.xlsx`);
@@ -130,7 +145,12 @@ const {Content,Header}=Layout;
     return columnIndex >= 0 ? columnIndex + 1 : null; // Retourner l'indice (en ajoutant 1 pour la logique de l'API)
   };
 
-  // Fonction pour ajouter un commentaire
+  /**
+   * Fonction pour ajouter un commentaire
+   * @param {int} line -Ligne de la case à commenter
+   * @param {string} column -Colonne de la case à commenter
+   * @param {string} text - Commentaire à envoyer
+   */ 
   const handleAddComment = async (line, column, text) => {
     try {
       const indice=getColumnIndex(column);
@@ -155,12 +175,12 @@ const {Content,Header}=Layout;
     setHighlightedCell({ rowIndex: line, colId: column });
   };
 
-  // Fonction pour récupérer les commentaires
+  /** Fonction pour récupérer les commentaires du backend */
   const fetchComments = async () => {
     try {
       const response = await apiClient({
         method: 'GET',
-        path: `comment/?file=${fileDetails.id}`,
+        path: `comment/?file=${fileDetails.id}`
       });
       response.map((comment)=>{
         selectedDealer[comment.id]=comment.dealer
@@ -172,7 +192,7 @@ const {Content,Header}=Layout;
         } }
       });
       setComments(response);
-      setShowComments(true);// Affiche l'onglet des commentaires
+      setShowComments(true) // Affiche l'onglet des commentaires
     } catch (error) {
       console.error('Erreur lors de la récupération des commentaires:', error);
     }
