@@ -1,6 +1,17 @@
 import React from "react";
 import { apiClient } from "../services/api";    
 
+/**
+ * Affiche les commentaires du fichier
+ * 
+ * @param {object} param0 
+ * @param {object[]} param0.comments - Liste des commentaires
+ * @param {object} param0.children - Pour chaque clé id, donne les identifiants des commentaires qui sont les réponses de id
+ * @param {Function} param0.getComments -Fonction qui récupère tous les commentaires du backend
+ * @param {object} param0.self - Données de l'utilisateur
+ * @param {object} param0.selectedDealer - Pour chaque clé id, donne l'identifiant de la personne qui gère le commentaire id
+ * @param {object} param0.orgConRights - Droits de l'organisation de l'utilisateur sur le contrat concerné
+ */
 export default function AffichageCommentaires ({comments, children,getComments,self,selectedDealer,orgConRights,columnDefs,orgUsers,handleViewCell}){
 
   const Reply=(comment)=>{ //Répondre à un autre commentaire

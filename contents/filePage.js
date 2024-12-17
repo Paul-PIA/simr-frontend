@@ -38,7 +38,10 @@ if (!id){return (<div>Chargement ...</div>)}
   useEffect(() => {
     fetchEx();
   }, []);
-
+/**
+ * Modifie les fichiers qui s'affichent sur l'écran de l'utilisateur
+ * S'active en changeant d'espace ou à la fin de l'exécution de fetchEx
+ */
   const fetchFiles= ()=>{
     if (selectedSpace=='Public'){
         setFiles(allFiles.filter((file)=>file.is_public))
@@ -58,7 +61,7 @@ if (!id){return (<div>Chargement ...</div>)}
 
   useEffect(() => {
     fetchFiles()
-  }, [selectedSpace,user]); //S'active en changeant d'espace ou à la fin de l'exécution de fetchEx
+  }, [selectedSpace,user]);
 
   // Les fonctions ci-dessous relèvent d'une même logique: appuyer sur un boutton pour initier une action,
   //ce qui ouvre une fenêtre deandant de confirmer l'action ou de l'annuler
