@@ -153,7 +153,7 @@ const {Content,Header}=Layout;
    */ 
   const handleAddComment = async (line, column, text) => {
     try {
-      const indice=getColumnIndex(column);
+      const indice=getColumnIndex(column)-1;
       await apiClient({
         method: 'POST',
         path: 'comment/',
@@ -182,7 +182,8 @@ const {Content,Header}=Layout;
         method: 'GET',
         path: `comment/?file=${fileDetails.id}`
       });
-      response.map((comment)=>{
+      response.forEach((comment,index)=>{
+        response[index].colone+=1;
         selectedDealer[comment.id]=comment.dealer
         if (comment.parent){
           try{
