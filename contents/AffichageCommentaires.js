@@ -11,6 +11,9 @@ import { apiClient } from "../services/api";
  * @param {object} param0.self - Données de l'utilisateur
  * @param {object} param0.selectedDealer - Pour chaque clé id, donne l'identifiant de la personne qui gère le commentaire id
  * @param {object} param0.orgConRights - Droits de l'organisation de l'utilisateur sur le contrat concerné
+ * @param {string[]} param0.columnDefs - Liste des noms de colonne
+ * @param {object[]} param0.orgUsers - Membres de mon organisation
+ * @param {Function} param0.handleViewCell - Fonction qui met en surbrillance la case
  */
 export default function AffichageCommentaires ({comments, children,getComments,self,selectedDealer,orgConRights,columnDefs,orgUsers,handleViewCell}){
 
