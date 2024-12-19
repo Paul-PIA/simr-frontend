@@ -153,7 +153,7 @@ const {Content,Header}=Layout;
    */ 
   const handleAddComment = async (line, column, text) => {
     try {
-      const indice=getColumnIndex(column)-1;
+      const indice=getColumnIndex(column);
       await apiClient({
         method: 'POST',
         path: 'comment/',
@@ -168,7 +168,7 @@ const {Content,Header}=Layout;
     } catch (error) {
       console.error('Erreur lors de l\'ajout du commentaire:', error);
     }
-    if (commenting){await fetchComments()}
+    if (showComments){await fetchComments()}
   };
 
   const handleViewCell = (line, column) => {
