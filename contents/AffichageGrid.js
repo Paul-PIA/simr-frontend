@@ -5,6 +5,7 @@ import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-alpine.css';
 import { AgCharts } from 'ag-charts-react';
 import * as math from 'mathjs';
+import { RenameDuplicates } from '../services/outils';
 
 
 function ExcelToAgGrid({ fileBuffer, onGridUpdate, onAddComment, highlightedCell, commenting}) {
@@ -27,13 +28,10 @@ function ExcelToAgGrid({ fileBuffer, onGridUpdate, onAddComment, highlightedCell
       const chartsSheet = fileBuffer.Sheets['Charts']; // Feuille contenant les graphiques
   
       const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 }); //Liste de listes, chaque liste correspond à une ligne
-      const num_col={}; //Dicionnaire qui enregistre le nombre de fois qu'apparaît chaque nom de colonne
-      const columns = jsonData[0].map((header) => {
-        if (header==undefined){header="Undefined"} //Si la case du tableau est vide, on met une valeur par défaut
-        num_col[header]?(num_col[header]+=1):(num_col[header]=1); //Si déjà défini, on rajoute 1
+      const columns = RenameDuplicates(jsonData[0]).map((header) => {
         return {
-        headerName: (num_col[header]==1)?(header):(`${header}_${num_col[header]}`), //Si plusieurs colonnes ont le même nom, on modifie ce nom
-        field: (num_col[header]==1)?(header):(`${header}_${num_col[header]}`),
+        headerName: header, //Si plusieurs colonnes ont le même nom, on modifie ce nom
+        field: header,
         editable: !commenting, // Rendre la cellule éditable si on n'est pas en mode commentaire
         sortable: true,
         filter: true,

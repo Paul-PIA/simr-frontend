@@ -49,7 +49,6 @@ export default function NewFile() {
   // Gestion de la soumission du formulaire
   const handleSubmit = async (event) => {
     event.preventDefault();
-    console.log(file);
     if (!file) {
       alert("Veuillez télécharger un fichier Excel.");
       return;

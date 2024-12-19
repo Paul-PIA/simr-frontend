@@ -9,9 +9,10 @@ import { jwtDecode } from 'jwt-decode';
 import AffichageCommentaires from '../contents/AffichageCommentaires';
 import {Layout} from 'antd';
 import Sider_ from '../components/Sidebar';
+import { RenameDuplicates } from '../services/outils';
 
 const FilePage = () => {
-const {Content,Header}=Layout;
+const {Content}=Layout;
 
   const [fileDetails, setfileDetails] = useState({});
   const [doc, setDoc] = useState(null);
@@ -58,7 +59,7 @@ const {Content,Header}=Layout;
         setDoc(workbook);
         const worksheet = workbook.Sheets[workbook.SheetNames[0]];
         const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
-        const columns = jsonData[0];
+        const columns = RenameDuplicates(jsonData[0]);
         setColumnDefs(columns);
       } catch (error) {
         console.error('Error fetching file:', error);
@@ -182,8 +183,7 @@ const {Content,Header}=Layout;
         method: 'GET',
         path: `comment/?file=${fileDetails.id}`
       });
-      response.forEach((comment,index)=>{
-        response[index].colone+=1;
+      response.forEach((comment)=>{
         selectedDealer[comment.id]=comment.dealer
         if (comment.parent){
           try{
