@@ -1,8 +1,9 @@
 
 /**
  * Renvoie une version modifiée d'une liste remplaçant les valeurs dupliquées par des valeurs uniques
- * @param {(str | undefined)[]} liste -
- * @returns 
+ * A vocation à être utiisé sur les noms de colonne des fichiers Excel, qui sont parfois vides ou dupliquées (notamment en cas de fusion)
+ * @param {(string | undefined)[]} liste
+ * @returns {string[]} 
  */
 export function RenameDuplicates(liste){
     const occurences={} //Nombre d'occurences de chaque valeur
